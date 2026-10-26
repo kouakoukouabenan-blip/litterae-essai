@@ -1,0 +1,135 @@
+{
+ "connecteurs": [
+  {
+   "titre": "Pour les arguments (progression)",
+   "mots": [
+    "D'abord",
+    "Ensuite",
+    "Enfin",
+    "Par ailleurs",
+    "De plus",
+    "Premièrement",
+    "Deuxièmement",
+    "Troisièmement"
+   ]
+  },
+  {
+   "titre": "Pour l'explication",
+   "mots": [
+    "En effet",
+    "C'est-à-dire",
+    "En clair",
+    "Autrement dit",
+    "Mieux encore",
+    "Car",
+    "Cela signifie que",
+    "En d'autres termes"
+   ]
+  },
+  {
+   "titre": "Pour l'illustration",
+   "mots": [
+    "Par exemple",
+    "En illustration",
+    "En guise d'exemple",
+    "Nous en voulons pour preuve",
+    "Cela est corroboré par",
+    "C'est le cas de"
+   ]
+  },
+  {
+   "titre": "Pour l'opposition (transition)",
+   "mots": [
+    "Cependant",
+    "Toutefois",
+    "Néanmoins",
+    "Pourtant",
+    "En revanche",
+    "Or",
+    "Mais"
+   ]
+  },
+  {
+   "titre": "Pour la conclusion",
+   "mots": [
+    "Au terme de notre analyse",
+    "En conclusion",
+    "Pour finir",
+    "En définitive",
+    "En somme",
+    "Il ressort que",
+    "Retenons que"
+   ]
+  }
+ ],
+ "orientations": [
+  {
+   "titre": "Engagement / Militante",
+   "mots": [
+    "La lutte",
+    "La dénonciation",
+    "La critique",
+    "La satire",
+    "L'éveil des consciences",
+    "Le guide",
+    "L'éclaireur",
+    "Le porte-parole",
+    "La réalité sociale",
+    "La vigie"
+   ],
+   "oppose": "S'oppose à l'esthétique et à l'évasion"
+  },
+  {
+   "titre": "Esthétique / Art pour l'art",
+   "mots": [
+    "Le beau",
+    "Le culte de la forme",
+    "Le style",
+    "L'ornement",
+    "Les figures de style",
+    "La perfection formelle",
+    "Le maniement de la langue"
+   ],
+   "oppose": "S'oppose à l'engagement"
+  },
+  {
+   "titre": "Évasion / Divertissement",
+   "mots": [
+    "La fiction",
+    "Le rire",
+    "Le rêve",
+    "Le divertissement",
+    "Le voyage imaginaire",
+    "L'utopie",
+    "L'imagination",
+    "Le passetemps",
+    "La distraction"
+   ],
+   "oppose": "S'oppose à l'engagement"
+  },
+  {
+   "titre": "Lyrique / Intime",
+   "mots": [
+    "L'expression des sentiments",
+    "La douleur de l'auteur",
+    "La joie de l'auteur",
+    "L'amour",
+    "L'intériorité",
+    "Le vécu personnel"
+   ],
+   "oppose": "S'oppose à la fonction sociale"
+  },
+  {
+   "titre": "Sociale / Collective",
+   "mots": [
+    "L'expression des vécus collectifs",
+    "La société",
+    "Les mœurs",
+    "La mémoire collective",
+    "Le témoignage",
+    "L'histoire commune"
+   ],
+   "oppose": "S'oppose à la fonction lyrique"
+  }
+ ]
+}

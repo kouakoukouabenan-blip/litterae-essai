@@ -1,0 +1,64 @@
+// Vérifie les données avant chaque build : un contenu cassé ne doit jamais partir en ligne.
+import { readFileSync } from "node:fs";
+
+const load = f => JSON.parse(readFileSync(new URL(`../src/data/${f}`, import.meta.url), "utf8"));
+const oeuvres = load("oeuvres.json");
+const sujets = load("sujets.json");
+const dico = load("dictionnaire.json");
+const FONCTIONS = ["Engagement", "Esthétique", "Évasion", "Lyrique", "Sociale"];
+const errors = [];
+const err = (where, msg) => errors.push(`${where} : ${msg}`);
+
+const ids = new Set();
+for (const w of oeuvres) {
+  const at = `œuvre « ${w.titre ?? w.id} »`;
+  if (!w.id || !/^[a-z0-9-]+$/.test(w.id)) err(at, `identifiant invalide (${w.id})`);
+  if (ids.has(w.id)) err(at, "identifiant en double");
+  ids.add(w.id);
+  if (w.pays?.length && !w.paysTexte?.trim()) err(at, "paysTexte manquant");
+  for (const k of ["titre", "auteur", "genre"]) if (!w[k]?.trim()) err(at, `${k} manquant`);
+  for (const k of ["pays", "aires", "fonctions", "themes", "motsCles", "idees"]) if (!Array.isArray(w[k])) err(at, `${k} doit être une liste`);
+  if (!w.fonctions?.length) err(at, "aucune fonction littéraire");
+  for (const f of [...(w.fonctions ?? []), ...(w.idees ?? []).map(i => i.fonction)]) if (!FONCTIONS.includes(f)) err(at, `fonction inconnue « ${f} »`);
+  // Le site est public : une fiche payante ne doit contenir ni résumé ni texte d'illustration.
+  // Les 10 fiches gratuites sont au choix de l'élève et demandées au serveur : aucune n'est publiée en entier.
+  if (w.libre || w.resume || w.exemple || w.idees?.some(i => i.texte)) err(at, "contenu payant présent dans les données publiques");
+}
+
+const motsDico = new Set();
+for (const e of dico.entrees) {
+  const at = `dictionnaire « ${e.mot} »`;
+  if (!e.mot?.trim() || !e.nature?.trim()) err(at, "mot ou nature manquant");
+  if (motsDico.has(e.mot)) err(at, "mot en double");
+  motsDico.add(e.mot);
+  for (const f of e.fonctions ?? []) if (!FONCTIONS.includes(f)) err(at, `fonction inconnue « ${f} »`);
+  // Le sens des mots est payant : le site public n'a que la liste des mots.
+  // « cles » : mots de la définition en vrac (triés, sans doublon), pour chercher sans révéler le texte.
+  if (Object.keys(e).some(k => !["mot", "nature", "fonctions", "cles"].includes(k))) err(at, "contenu payant présent dans les données publiques");
+  const cles = (e.cles ?? "").split(" ");
+  if (e.cles && cles.some((m, i) => i > 0 && m <= cles[i - 1])) err(at, "« cles » doit être une liste de mots triés sans doublon");
+}
+
+const nums = new Set();
+for (const s of sujets) {
+  const at = `sujet ${s.num}`;
+  if (nums.has(s.num)) err(at, "numéro en double");
+  nums.add(s.num);
+  for (const k of ["citation", "auteur", "orientation"]) if (!s[k]?.trim()) err(at, `${k} manquant`);
+  const complet = "intro" in s;
+  if (complet !== sujets.indexOf(s) < 3) err(at, complet ? "corrigé payant présent dans les données publiques" : "corrigé gratuit incomplet");
+  if (complet) {
+    for (const k of ["intro", "transition", "conclu"]) if (!s[k]?.trim()) err(at, `${k} manquant`);
+    for (const axe of ["axe1", "axe2"]) if (!s[axe]?.args?.length) err(at, `${axe} sans argument`);
+  }
+}
+
+// Leçons : le site public n'a que leurs titres (5 gratuites au choix, demandées au serveur).
+const lecons = readFileSync(new URL("../src/data/lecons.ts", import.meta.url), "utf8");
+if (/blocs:\s*\[\s*[^\]\s]/.test(lecons)) err("leçons", "texte de leçon présent dans les données publiques");
+
+if (errors.length) {
+  console.error(`${errors.length} problème(s) dans les données :\n- ${errors.join("\n- ")}`);
+  process.exit(1);
+}
+console.log(`Données valides : ${oeuvres.length} œuvres, ${sujets.length} sujets.`);

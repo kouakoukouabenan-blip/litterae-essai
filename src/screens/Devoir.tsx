@@ -1,0 +1,327 @@
+import { useEffect, useMemo, useState } from "preact/hooks";
+import { Page } from "../components/Page";
+import { PageHeader } from "../components/PageHeader";
+import { Icon } from "../components/Icon";
+import { useStored, write } from "../lib/storage";
+import { normalize, sansEtoiles } from "../lib/text";
+import { Texte } from "../components/Texte";
+import { FONCTIONS, type Fonction } from "../data/types";
+import { analyserSujet, decouperSujet, genreDu, OBJETS, type Exemple, type Objet } from "../lib/devoir";
+import { fnClass } from "../lib/fonctions";
+import { ajouterSujetPerso, CONSIGNE } from "../lib/entrainement";
+import { brouillonVide, lireBrouillon } from "../lib/atelier";
+import { marquer } from "../lib/progres";
+import { noter } from "../lib/stats";
+import { devoirDe, estGarde, garderDevoir, majDevoir, retirerDevoir, useDevoirs, type DevoirGarde } from "../lib/devoirs";
+import { jourLocal } from "../lib/progres";
+import { EmptyState } from "../components/EmptyState";
+import { toast } from "../components/Toast";
+import { SujetsOnglets } from "../components/SujetsOnglets";
+
+/** J'ai un devoir : l'élève colle son sujet, l'appli propose un plan, des œuvres, des mots et des sujets corrigés proches. */
+export function DevoirScreen() {
+  const [texte, setTexte] = useStored<string>("devoir-texte", "");
+  const [auteur, setAuteur] = useStored<string>("devoir-auteur", "");
+  const [lu, setLu] = useState(() => texte.trim().length >= 20);
+  // Fonction corrigée par l'élève, gardée sur le téléphone pour ce sujet (rien n'est envoyé).
+  const [choisies, setChoisies] = useStored<Record<string, Fonction>>("devoir-fonctions", {});
+  const cleSujet = normalize(texte);
+  const choisie = choisies[cleSujet];
+  const [corriger, setCorriger] = useState(false);
+  // De qui parle le sujet (l'écrivain, la poésie…), corrigé par l'élève : gardé sur le téléphone, rien n'est envoyé.
+  const [objetsChoisis, setObjetsChoisis] = useStored<Record<string, Objet>>("devoir-objets", {});
+  const objetChoisi = objetsChoisis[cleSujet];
+  const [corrigerObjet, setCorrigerObjet] = useState(false);
+  // L'élève confirme que c'est bien une dissertation littéraire, quand l'appli pense le contraire.
+  const [quandMeme, setQuandMeme] = useState(false);
+  const analyse = useMemo(() => (lu ? analyserSujet(texte, 6, choisie, objetChoisi) : null), [lu, texte, choisie, objetChoisi]);
+  const autreExercice = !!analyse && analyse.nature !== "dissertation" && !quandMeme && !choisie;
+  function choisir(f: Fonction | null) {
+    const suite = { ...choisies };
+    delete suite[cleSujet];
+    if (f) suite[cleSujet] = f;
+    // Les 50 derniers sujets suffisent.
+    setChoisies(Object.fromEntries(Object.entries(suite).slice(-50)));
+    setCorriger(false);
+  }
+  function choisirObjet(o: Objet | null) {
+    const suite = { ...objetsChoisis };
+    delete suite[cleSujet];
+    if (o) suite[cleSujet] = o;
+    setObjetsChoisis(Object.fromEntries(Object.entries(suite).slice(-50)));
+    setCorrigerObjet(false);
+  }
+  // Arrivée avec le sujet déjà tapé sur l'accueil : on montre directement les résultats.
+  useEffect(() => { if (lu) setTimeout(() => {
+    // Sous la barre du haut, qui reste affichée.
+    const el = document.querySelector(".devoir-resultat");
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90 });
+  }, 50); }, []);
+
+  function analyser(e: Event) {
+    e.preventDefault();
+    (document.activeElement as HTMLElement | null)?.blur();
+    setLu(true);
+    marquer("devoir");
+    noter({ t: "progres", ref: "devoir" });
+  }
+
+  const [devoirs] = useDevoirs();
+  const garde = estGarde(devoirs, texte);
+  const gardeLe = devoirDe(devoirs, texte);
+
+  /** Date du devoir : l'atelier est préparé tout de suite, et l'accueil découpe le travail jour par jour. */
+  function fixerDate(pour: string) {
+    if (!gardeLe) return;
+    majDevoir(gardeLe.id, { pour: pour || undefined, num: pour ? preparerAtelier() ?? gardeLe.num : gardeLe.num });
+    if (pour) toast("C'est noté : l'accueil te dira quoi faire chaque jour.");
+  }
+
+  function garder() {
+    garderDevoir(texte, auteur || analyse?.auteur || "");
+    toast("Devoir gardé dans Mon espace.");
+  }
+
+  /** Page vide pour taper le sujet suivant (le devoir précédent reste dans Mon espace s'il a été gardé). */
+  function autreDevoir() {
+    setTexte("");
+    setAuteur("");
+    setLu(false);
+    setQuandMeme(false);
+    window.scrollTo({ top: 0 });
+    setTimeout(() => (document.querySelector(".devoir-form textarea") as HTMLTextAreaElement | null)?.focus(), 50);
+  }
+
+  /** L'atelier reprend le sujet avec les thèmes, la fonction et le plan proposés (si l'élève ne l'a pas déjà commencé). */
+  function rediger() {
+    const num = preparerAtelier();
+    if (num) location.hash = `#/entrainement/${num}`;
+  }
+
+  function preparerAtelier(): string | null {
+    if (!analyse) return null;
+    const { citation, consigne } = decouperSujet(texte);
+    const num = ajouterSujetPerso(citation, auteur.trim() || analyse.auteur || "Sujet de mon devoir", consigne || CONSIGNE);
+    if (!lireBrouillon(num)) {
+      const b = brouillonVide();
+      b.theme = analyse.themes.slice(0, 3).join(", ");
+      b.orientations = analyse.fonctions.slice(0, 1);
+      b.problematique = analyse.plan.problematique;
+      b.axe1.titre = analyse.plan.axe1;
+      b.axe2.titre = analyse.plan.axe2;
+      // Les arguments proposés deviennent les arguments du plan (l'élève écrit l'explication et l'exemple).
+      // Un sujet qui énumère trois éléments donne trois arguments : l'atelier leur fait de la place.
+      while (b.axe1.args.length < analyse.plan.args1.length) b.axe1.args.push({ arg: "", expl: "", ex: "" });
+      analyse.plan.args1.forEach((a, i) => { if (b.axe1.args[i]) Object.assign(b.axe1.args[i], { arg: a, ex: enTexte(analyse.plan.ex1[i]) }); });
+      analyse.plan.args2.forEach((a, i) => { if (b.axe2.args[i]) Object.assign(b.axe2.args[i], { arg: a, ex: enTexte(analyse.plan.ex2[i]) }); });
+      write(`atelier:${num}`, { ...b, modifie: Date.now() });
+    }
+    return num;
+  }
+
+  return (
+    <Page title="J'ai un devoir">
+      <SujetsOnglets actif="devoir" />
+      <PageHeader title="J'ai un devoir" compact>Colle ton sujet : on t'aide à le comprendre et à bâtir ton plan. La rédaction, c'est toi.</PageHeader>
+
+      <form class="devoir-form" onSubmit={analyser}>
+        <label class="devoir-champ">
+          <span class="field-label">Ton sujet</span>
+          <textarea class="textarea" rows={4} value={texte} placeholder="« La littérature doit être une arme au service du peuple. » Expliquez et discutez."
+            onInput={e => { setTexte((e.target as HTMLTextAreaElement).value); setLu(false); setQuandMeme(false); }} />
+        </label>
+        <label class="devoir-champ">
+          <span class="field-label">Auteur de la citation (facultatif)</span>
+          <input class="input input-texte" value={auteur} placeholder="Ex. : Mongo Beti" onInput={e => setAuteur((e.target as HTMLInputElement).value)} />
+        </label>
+        <button type="submit" class="btn btn-primary btn-block" disabled={texte.trim().length < 20}>Analyser mon sujet</button>
+      </form>
+
+      {analyse && (
+        <div class="devoir-resultat" aria-live="polite">
+          <p class="devoir-avertissement"><Icon name="info" size={18} />Ce sont des propositions faites par l'appli : elles peuvent contenir des erreurs. Vérifie-les avec ton cours et ton professeur.</p>
+          {autreExercice && (
+            <div class="devoir-note">
+              <p>{AUTRE_EXERCICE[analyse.nature]}</p>
+              <button type="button" class="link-btn" onClick={() => setQuandMeme(true)}>C'est bien une dissertation littéraire : voir les pistes</button>
+            </div>
+          )}
+          {analyse.corrige && (
+            <div class="devoir-note devoir-note-corrige">
+              <p>Ton sujet est presque le <strong>sujet corrigé {Number(analyse.corrige.num)}</strong>.{analyse.corrige.ouvert ? " Le plan ci-dessous est celui du corrigé." : ""}</p>
+              <a class="link-btn" href={`#/sujets/${analyse.corrige.num}`}>Voir le corrigé</a>
+            </div>
+          )}
+          {!autreExercice && <section>
+            <h2 class="section-title">Ce que dit ton sujet</h2>
+            {analyse.themes.length || analyse.fonctions.length ? (
+              <p class="tags">
+                {analyse.fonctions.map(f => <span key={f} class={`tag ${fnClass(f)}`}>{f}</span>)}
+                {analyse.themes.map(t => <span key={t} class="tag">{t}</span>)}
+              </p>
+            ) : <p class="small muted">Pas de thème reconnu : vérifie que tu as bien collé toute la citation.</p>}
+            {corrigerObjet ? (
+              <div class="devoir-corriger">
+                <p class="small">De qui ou de quoi parle ton sujet ?</p>
+                <p class="tags">
+                  {(Object.keys(OBJETS) as Objet[]).map(o => (
+                    <button key={o} type="button" class="tag tag-link" aria-pressed={analyse.objet === o} onClick={() => choisirObjet(o)}>{OBJETS[o].choix}</button>
+                  ))}
+                </p>
+                <button type="button" class="link-btn devoir-changer" onClick={() => (objetChoisi ? choisirObjet(null) : setCorrigerObjet(false))}>
+                  {objetChoisi ? "Revenir à la proposition de l'appli" : "Annuler"}
+                </button>
+              </div>
+            ) : (
+              <p class="small devoir-objet">Le sujet parle {analyse.objetSur || objetChoisi ? "" : "sans doute "}{deNom(OBJETS[analyse.objet].nom)}{" "}
+                <button type="button" class="link-btn" onClick={() => setCorrigerObjet(true)}>Changer</button></p>
+            )}
+            {corriger ? (
+              <div class="devoir-corriger">
+                <p class="small">Quelle fonction de la littérature ton sujet évoque-t-il ?</p>
+                <p class="tags">
+                  {FONCTIONS.map(f => (
+                    <button key={f} type="button" class={`tag tag-link ${fnClass(f)}`} aria-pressed={analyse.fonctions[0] === f} onClick={() => choisir(f)}>{f}</button>
+                  ))}
+                </p>
+                <button type="button" class="link-btn devoir-changer" onClick={() => (choisie ? choisir(null) : setCorriger(false))}>
+                  {choisie ? "Revenir à la proposition de l'appli" : "Annuler"}
+                </button>
+              </div>
+            ) : (
+              <button type="button" class="link-btn devoir-changer" onClick={() => setCorriger(true)}>
+                {choisie ? "Fonction choisie par toi · Changer" : analyse.fonctions.length ? "Ce n'est pas la bonne fonction ?" : "Choisir la fonction"}
+              </button>
+            )}
+            {!corriger && analyse.rejet && <p class="small devoir-indice">L'auteur rejette la fonction {NOM[analyse.rejet]} : le plan défend ce qu'il pense vraiment.</p>}
+            {!corriger && analyse.doute && (
+              <p class="small devoir-indice">L'appli hésite : ton sujet peut aussi se lire avec la fonction {NOM[analyse.doute]}.{" "}
+                <button type="button" class="link-btn" onClick={() => choisir(analyse.doute)}>Voir ce plan-là</button></p>
+            )}
+            {!corriger && !analyse.doute && analyse.faible && <p class="small devoir-indice">Ton sujet donne peu d'indices : vérifie la fonction avec ton cours.</p>}
+            <p class="small muted devoir-consigne">Consigne : {analyse.travail.toLowerCase()}{!auteur.trim() && analyse.auteur ? ` · Auteur : ${analyse.auteur}` : ""}</p>
+          </section>}
+
+          {!autreExercice && <section>
+            <h2 class="section-title">Des pistes pour ton plan</h2>
+            {analyse.plan.problematique && <p class="devoir-problematique"><strong>Problématique.</strong> {analyse.plan.problematique}</p>}
+            <ol class="devoir-plan">
+              <li><strong>Partie 1.</strong> {analyse.plan.axe1}<Arguments liste={analyse.plan.args1} exemples={analyse.plan.ex1} /></li>
+              <li><strong>Partie 2.</strong> {analyse.plan.axe2}<Arguments liste={analyse.plan.args2} exemples={analyse.plan.ex2} /></li>
+            </ol>
+            {analyse.genres.length > 0 && !analyse.corrige?.ouvert && <p class="small muted">Ton sujet parle {genreDu(analyse.genres)} : les exemples sont choisis dans {analyse.genres.length > 1 ? "ces genres" : "ce genre"}.</p>}
+            <p class="small devoir-base"><strong>À toi de rédiger.</strong> Ces pistes t'aident à démarrer : explique chaque argument avec tes mots et vérifie tes exemples dans ton cours.</p>
+          </section>}
+
+          {analyse.oeuvres.length > 0 && (
+            <section>
+              <h2 class="section-title">Des œuvres pour l'illustrer</h2>
+              <ul class="devoir-liste">
+                {analyse.oeuvres.map(w => (
+                  <li key={w.id}><a href={`#/oeuvres/${encodeURIComponent(w.id)}`}><cite>{w.titre}</cite></a><span class="muted"> · {w.auteur}</span></li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {analyse.mots.length > 0 && (
+            <section>
+              <h2 class="section-title">Des mots à bien comprendre</h2>
+              <p class="tags">{analyse.mots.map(m => <a key={m.mot} class="tag tag-link" href={`#/outils?mot=${encodeURIComponent(m.mot)}`}>{m.mot}</a>)}</p>
+            </section>
+          )}
+
+          {analyse.proches.length > 0 && (
+            <section>
+              <h2 class="section-title">Des sujets corrigés proches</h2>
+              <ul class="devoir-liste">
+                {analyse.proches.map(s => (
+                  <li key={s.num}><a href={`#/sujets/${s.num}`}>Sujet {s.num}</a><span class="muted"> · « {s.citation.length > 70 ? s.citation.slice(0, 68).trimEnd() + "…" : s.citation} »</span></li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {!autreExercice && <button type="button" class="btn btn-primary btn-block" onClick={rediger}><Icon name="edit" size={20} />Rédiger ce sujet dans l'atelier</button>}
+          <div class="devoir-actions">
+            <button type="button" class="btn btn-secondary" onClick={garder} disabled={garde} aria-pressed={garde}>
+              <Icon name="bookmark" filled={garde} size={20} />{garde ? "Gardé dans Mon espace" : "Garder dans Mon espace"}
+            </button>
+            <button type="button" class="btn btn-secondary" onClick={autreDevoir}><Icon name="add" size={20} />Saisir un autre devoir</button>
+          </div>
+          {gardeLe && (
+            <label class="devoir-date">
+              <span>À rendre le</span>
+              <input type="date" class="input" min={jourLocal()} value={gardeLe.pour ?? ""} onChange={e => fixerDate((e.target as HTMLInputElement).value)} />
+            </label>
+          )}
+        </div>
+      )}
+    </Page>
+  );
+}
+
+/** « de l'écrivain », « du poète », « de la poésie », en gras. */
+function deNom(nom: string) {
+  return nom.startsWith("le ") ? <>du <strong>{nom.slice(3)}</strong>.</> : <>de <strong>{nom}</strong>.</>;
+}
+
+/** Nom de la fonction dans une phrase. */
+const NOM: Record<Fonction, string> = { Engagement: "d'engagement", Sociale: "sociale", Esthétique: "esthétique", Évasion: "d'évasion", Lyrique: "lyrique" };
+
+/** Quand l'énoncé n'est pas une dissertation littéraire. */
+const AUTRE_EXERCICE: Record<string, string> = {
+  commentaire: "Ton sujet demande un commentaire de texte. « J'ai un devoir » aide pour la dissertation littéraire : pour un commentaire, appuie-toi sur le texte lui-même.",
+  resume: "Ton sujet demande un résumé de texte. « J'ai un devoir » aide pour la dissertation littéraire, pas pour le résumé.",
+  generale: "Ton sujet ne parle pas de littérature : c'est sans doute une dissertation sur une question de société. Les fonctions de la littérature ne s'appliquent pas ici, mais les œuvres ci-dessous peuvent te donner des exemples."
+};
+
+/** Les œuvres d'un argument, en une ligne pour l'atelier : « Titre, Auteur : pourquoi ». */
+function enTexte(ex: Exemple[] | undefined) {
+  return (ex ?? []).map(e => e.titre ? `${e.titre}, ${e.auteur}${e.pourquoi ? ` : ${sansEtoiles(e.pourquoi)}` : ""}` : sansEtoiles(e.pourquoi)).join(" ; ");
+}
+
+/** Les arguments conseillés pour une partie du plan, un par ligne, chacun avec une ou deux œuvres pour l'illustrer. */
+function Arguments({ liste, exemples }: { liste: string[]; exemples: Exemple[][] }) {
+  return liste.length ? <ul class="devoir-args">{liste.map((a, i) => <li key={a}>{a}
+    {(exemples[i] ?? []).map((e, k) => e.titre ? (
+      <span key={e.id} class="devoir-ex">{k ? "Ou : " : "Par exemple : "}<a href={`#/oeuvres/${encodeURIComponent(e.id)}`}><cite>{e.titre}</cite></a>, {e.auteur}
+        {e.pourquoi && <span class="devoir-pourquoi"><Texte text={e.pourquoi} /></span>}</span>
+    ) : <span key={e.pourquoi} class="devoir-ex">Par exemple : <Texte text={e.pourquoi} /></span>)}</li>)}</ul> : null;
+}
+
+/** Mon espace : les devoirs gardés, à rouvrir ou à retirer. */
+export function MesDevoirsScreen() {
+  const [devoirs] = useDevoirs();
+  function ouvrir(d: DevoirGarde) {
+    write("devoir-texte", d.texte);
+    write("devoir-auteur", d.auteur);
+    location.hash = "#/devoir";
+  }
+  function retirer(d: DevoirGarde) {
+    retirerDevoir(d.id);
+    toast("Devoir retiré.");
+  }
+  const date = (t: number) => new Date(t).toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+  return (
+    <Page title="Mes devoirs" back="#/carnet">
+      <PageHeader title="Mes devoirs" compact>Les sujets que tu as gardés depuis « J'ai un devoir ».</PageHeader>
+      {devoirs.length ? (
+        <ul class="devoirs-gardes">
+          {devoirs.map(d => (
+            <li key={d.id} class="devoir-garde">
+              <button type="button" class="devoir-garde-ouvrir" onClick={() => ouvrir(d)}>
+                <span class="devoir-garde-texte">{d.texte.length > 140 ? d.texte.slice(0, 138).trimEnd() + "…" : d.texte}</span>
+                <span class="meta">{[d.auteur, d.pour && d.pour >= jourLocal() ? `à rendre le ${date(Date.parse(d.pour + "T12:00:00"))}` : `gardé le ${date(d.garde)}`].filter(Boolean).join(" · ")}</span>
+              </button>
+              <button type="button" class="icon-btn" aria-label="Retirer ce devoir" onClick={() => retirer(d)}><Icon name="delete" size={20} /></button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptyState title="Aucun devoir gardé">Analyse un sujet dans « J'ai un devoir », puis touche « Garder dans Mon espace ».</EmptyState>
+      )}
+      <a class="btn btn-primary btn-block devoirs-nouveau" href="#/devoir" onClick={() => { write("devoir-texte", ""); write("devoir-auteur", ""); }}><Icon name="add" size={20} />Saisir un devoir</a>
+    </Page>
+  );
+}

@@ -1,0 +1,272 @@
+import { useEffect, useRef, useState } from "preact/hooks";
+import { dejaInstallee, navigateurAndroid, navigateurIos, platform, useInstall } from "../lib/install";
+import { write } from "../lib/storage";
+import { Icon } from "./Icon";
+
+let openGuide = () => {};
+
+/** Lance l'installation : fenêtre du navigateur si possible, sinon la marche à suivre. */
+export function useInstallAction() {
+  const install = useInstall();
+  return { ...install, start: async () => { if (!(await install.prompt())) openGuide(); } };
+}
+
+/** Bouton qui copie l'adresse de la page, pour la coller dans Safari ou Chrome. */
+function CopierAdresse() {
+  const [copie, setCopie] = useState(false);
+  const copier = async () => {
+    const url = location.href.split("#")[0];
+    try { await navigator.clipboard.writeText(url); setCopie(true); }
+    catch { window.prompt("Copie cette adresse :", url); }
+  };
+  return (
+    <button type="button" class="btn btn-secondary install-copier" onClick={copier}>
+      <Icon name="content_copy" size={18} />{copie ? "Adresse copiée" : "Copier l'adresse"}
+    </button>
+  );
+}
+
+/** Marche à suivre sur iPhone et iPad : il n'y a pas de bouton d'installation automatique. */
+function StepsIos() {
+  const nav = navigateurIos();
+  if (nav === "integre")
+    return (
+      <>
+        <p class="install-note">Ce navigateur (Facebook, TikTok…) ne sait pas installer : passe d'abord par <strong>Safari</strong>.</p>
+        <ol class="install-steps">
+          <li>Touche <strong>•••</strong> (ou l'icône de partage) en haut ou en bas de l'écran, puis <strong>Ouvrir dans Safari</strong>. Sinon, copie l'adresse et colle-la dans Safari.</li>
+          <li>Dans Safari, touche <strong>Partager</strong> <Icon name="ios_share" size={18} />, puis <strong>Sur l'écran d'accueil</strong> et <strong>Ajouter</strong>.</li>
+        </ol>
+        <CopierAdresse />
+      </>
+    );
+  return (
+    <>
+      <p class="install-note">Sur iPhone, l'installation se fait à la main, en 3 gestes :</p>
+      <ol class="install-steps">
+        {nav === "safari" ? (
+          <li>Touche le bouton <strong>Partager</strong> <Icon name="ios_share" size={18} /> en bas de Safari. Tu ne le vois pas ? Touche d'abord <strong>•••</strong> à droite de l'adresse.</li>
+        ) : (
+          <li>Touche le bouton <strong>Partager</strong> <Icon name="ios_share" size={18} /> à droite de la barre d'adresse.</li>
+        )}
+        <li>Fais défiler vers le bas (ou touche <strong>Plus</strong>) et choisis <strong>Sur l'écran d'accueil</strong>.</li>
+        <li>Touche <strong>Ajouter</strong> en haut à droite. L'icône Litterae apparaît sur ton écran d'accueil, souvent sur la dernière page.</li>
+      </ol>
+      <p class="small muted">« Sur l'écran d'accueil » n'apparaît pas ? Ouvre cette page dans Safari et recommence.</p>
+      {nav === "autre" && <CopierAdresse />}
+    </>
+  );
+}
+
+/** Marche à suivre sur Android, selon le navigateur où l'élève se trouve déjà. */
+function StepsAndroid() {
+  const nav = navigateurAndroid();
+  if (nav === "chrome")
+    return (
+      <>
+        <ol class="install-steps">
+          <li>Touche le menu <Icon name="more_vert" size={18} /> en haut à droite de Chrome.</li>
+          <li>Choisis <strong>Installer l'application</strong> ou <strong>Ajouter à l'écran d'accueil</strong>.</li>
+          <li>Confirme avec <strong>Installer</strong>. L'icône Litterae apparaît sur ton écran d'accueil.</li>
+        </ol>
+        <p class="small muted">Aucune de ces options dans le menu ? Litterae est peut-être déjà installée : cherche son icône dans tes applis.</p>
+      </>
+    );
+  if (nav === "samsung")
+    return (
+      <ol class="install-steps">
+        <li>Touche le menu <strong>≡</strong> en bas à droite.</li>
+        <li>Choisis <strong>Ajouter la page à</strong>, puis <strong>Écran d'accueil</strong>.</li>
+        <li>Confirme avec <strong>Ajouter</strong>. L'icône Litterae apparaît sur ton écran d'accueil.</li>
+      </ol>
+    );
+  return (
+    <>
+      <p class="install-note">{nav === "integre"
+        ? <>Cette fenêtre (Facebook, TikTok…) ne sait pas installer : passe d'abord par <strong>Chrome</strong>.</>
+        : <>Le plus simple pour installer, c'est <strong>Chrome</strong>.</>}</p>
+      <ol class="install-steps">
+        <li>{nav === "integre"
+          ? <>Touche <Icon name="more_vert" size={18} /> en haut à droite, puis <strong>Ouvrir dans Chrome</strong>. Sinon, copie l'adresse et colle-la dans Chrome.</>
+          : <>Copie l'adresse et colle-la dans <strong>Chrome</strong>.</>}</li>
+        <li>Dans Chrome, touche le menu <Icon name="more_vert" size={18} /> en haut à droite.</li>
+        <li>Choisis <strong>Installer l'application</strong> ou <strong>Ajouter à l'écran d'accueil</strong>, puis confirme.</li>
+      </ol>
+      <CopierAdresse />
+    </>
+  );
+}
+
+export function Steps() {
+  const p = platform();
+  if (p === "ios") return <StepsIos />;
+  if (p === "android") return <StepsAndroid />;
+  return (
+    <ol class="install-steps">
+      <li>Ouvre cette page dans <strong>Chrome</strong> ou <strong>Edge</strong>.</li>
+      <li>Clique sur l'icône d'installation <Icon name="install_mobile" size={18} /> à droite de la barre d'adresse, ou dans le menu <Icon name="more_vert" size={18} />, sur <strong>Installer Litterae</strong>.</li>
+    </ol>
+  );
+}
+
+/** Fenêtre « Comment installer », montée une seule fois dans l'application. */
+export function InstallGuide() {
+  const ref = useRef<HTMLDialogElement>(null);
+  openGuide = () => {
+    const d = ref.current;
+    if (!d) return;
+    // Anciens iPhone (avant iOS 15.4) : pas de showModal, on ouvre la fenêtre quand même.
+    if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+  };
+  const fermer = () => { const d = ref.current; if (!d) return; if (typeof d.close === "function") d.close(); else d.removeAttribute("open"); };
+  return (
+    <dialog ref={ref} class="sheet" aria-labelledby="install-title" onClick={e => e.target === ref.current && fermer()}>
+      <div class="sheet-head">
+        <h2 id="install-title" class="section-title">Installer Litterae</h2>
+        <button type="button" class="icon-btn" onClick={fermer} aria-label="Fermer"><Icon name="close" /></button>
+      </div>
+      <div class="sheet-body">
+        {platform() !== "ios" && <p>Une fois installée, Litterae s'ouvre depuis ton écran d'accueil comme une application, en plein écran, et les leçons déjà ouvertes restent lisibles sans connexion.</p>}
+        <Steps />
+        {platform() !== "ios" && <p class="small muted">Litterae ne prend presque pas de place : moins de 1 Mo, sans passer par le Play Store ni l'App Store.</p>}
+      </div>
+      <div class="sheet-foot sheet-foot-single">
+        <button type="button" class="btn btn-primary" onClick={fermer}>J'ai compris</button>
+      </div>
+    </dialog>
+  );
+}
+
+/** Invitation à installer, en tête de l'accueil, tant que l'app n'est pas installée. */
+export function InstallBanner() {
+  const { showBanner, snooze, start } = useInstallAction();
+  const appareil = platform() === "desktop" ? "cet ordinateur" : "ton téléphone";
+  if (!showBanner) return null;
+  return (
+    <aside class="install-banner" aria-label="Installer l'application">
+      <Icon name="install_mobile" size={22} />
+      <p class="install-banner-title">Installe Litterae sur {appareil}, elle marche même hors connexion.</p>
+      <button type="button" class="btn btn-primary" onClick={start}>Installer</button>
+      <button type="button" class="icon-btn" onClick={snooze} aria-label="Plus tard"><Icon name="close" size={20} /></button>
+    </aside>
+  );
+}
+
+/** Bouton discret dans la barre du haut, toujours présent tant que l'app n'est pas installée. */
+export function InstallButton() {
+  const { installed, installation, start } = useInstallAction();
+  if (installed || installation === "faite") return null;
+  return (
+    <button type="button" class="icon-btn install-btn" onClick={start} aria-label="Installer l'application">
+      <Icon name="install_mobile" size={22} /><span class="install-btn-label">Installer</span>
+    </button>
+  );
+}
+
+const PASSE = "litterae.navigateur";
+
+/**
+ * Écran d'installation plein écran sur téléphone, dès la première ouverture dans le navigateur.
+ * Si l'app est déjà installée, il invite à l'ouvrir depuis l'écran d'accueil.
+ * Un lien discret permet de continuer quand même (une fois par visite).
+ */
+export function InstallGate() {
+  const { installed, canPrompt, prompt, installation } = useInstall();
+  const [passe, setPasse] = useState(() => { try { return !!sessionStorage.getItem(PASSE); } catch { return false; } });
+  const [etapes, setEtapes] = useState(false);
+  const [dejaLa, setDejaLa] = useState(false);
+  const [attente, setAttente] = useState(false);
+  useEffect(() => { if (!installed && platform() !== "desktop") dejaInstallee().then(setDejaLa); }, [installed]);
+  if (installed || passe || platform() === "desktop") return null;
+  const ios = platform() === "ios";
+
+  const continuer = () => {
+    try { sessionStorage.setItem(PASSE, "1"); } catch { /* sans stockage, l'écran reviendra au prochain chargement */ }
+    setPasse(true);
+  };
+
+  const logo = <svg class="install-gate-logo" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="12" fill="#FFF3DC"/><path fill="#0F3D2E" d="M18 14h14v3h-4v28h9.5l3-8H44l-1.5 13H18v-3h4V17h-4z"/><circle cx="50" cy="47.5" r="3.5" fill="#C4562B"/></svg>;
+
+  // L'élève vient d'accepter dans la fenêtre de Chrome : on montre que ça travaille, pour qu'il ne retouche pas.
+  if (installation === "en-cours") return (
+    <div class="install-gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+      <div class="install-gate-inner">
+        {logo}
+        <h1 id="gate-title" class="install-gate-title">Installation en cours…</h1>
+        <span class="install-gate-attente" role="progressbar" aria-label="Installation en cours" />
+        <p class="install-gate-texte">Chrome ajoute Litterae à ton écran d'accueil. Ne touche à rien, ça prend quelques secondes.</p>
+      </div>
+    </div>
+  );
+
+  // Installation tout juste terminée : on dit où trouver l'icône.
+  if (installation === "faite") return (
+    <div class="install-gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+      <div class="install-gate-inner">
+        {logo}
+        <h1 id="gate-title" class="install-gate-title">C'est installé !</h1>
+        <p class="install-gate-texte">Ferme le navigateur et touche l'icône <strong>Litterae</strong> sur ton écran d'accueil ou dans tes applis. Si elle n'y est pas encore, attends quelques secondes.</p>
+        <div class="install-gate-liens">
+          <button type="button" class="install-gate-skip" onClick={continuer}>Continuer dans le navigateur</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Déjà installée : on invite à ouvrir l'application depuis l'écran d'accueil.
+  if (dejaLa) return (
+    <div class="install-gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+      <div class="install-gate-inner">
+        <svg class="install-gate-logo" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="12" fill="#FFF3DC"/><path fill="#0F3D2E" d="M18 14h14v3h-4v28h9.5l3-8H44l-1.5 13H18v-3h4V17h-4z"/><circle cx="50" cy="47.5" r="3.5" fill="#C4562B"/></svg>
+        <h1 id="gate-title" class="install-gate-title">Litter<span>ae</span> est déjà sur ton téléphone</h1>
+        <p class="install-gate-texte">{ios
+          ? <>Ferme Safari et touche l'icône <strong>Litterae</strong> sur ton écran d'accueil. Tu y retrouves tout, même sans connexion.</>
+          : <>Ferme le navigateur et touche l'icône <strong>Litterae</strong> sur ton écran d'accueil ou dans tes applis. Tu y retrouves tout, même sans connexion.</>}</p>
+        <div class="install-gate-liens">
+          {/* Sur iPhone, seul l'élève sait si l'icône est encore là. */}
+          {ios && <button type="button" class="install-gate-skip" onClick={() => { write("installee", false); setDejaLa(false); }}>Je ne trouve plus l'icône</button>}
+          <button type="button" class="install-gate-skip" onClick={continuer}>Continuer dans le navigateur</button>
+        </div>
+      </div>
+    </div>
+  );
+  const installer = async () => {
+    setAttente(true);
+    const ok = await prompt();
+    setAttente(false);
+    if (!ok) setEtapes(true);
+  };
+  // Les étapes ne s'affichent que si le navigateur ne propose pas (ou plus) sa fenêtre d'installation.
+  const montrerEtapes = !canPrompt && (etapes || ios);
+
+  return (
+    <div class="install-gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+      <div class="install-gate-inner">
+        <svg class="install-gate-logo" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="12" fill="#FFF3DC"/><path fill="#0F3D2E" d="M18 14h14v3h-4v28h9.5l3-8H44l-1.5 13H18v-3h4V17h-4z"/><circle cx="50" cy="47.5" r="3.5" fill="#C4562B"/></svg>
+        <h1 id="gate-title" class="install-gate-title">Installe Litter<span>ae</span> sur ton téléphone</h1>
+        {/* Quand les étapes s'affichent, on garde l'écran court : elles passent avant les arguments. */}
+        {montrerEtapes ? (
+          <p class="install-gate-texte">Elle s'ouvre d'un geste et marche même sans connexion.</p>
+        ) : (
+          <ul class="install-gate-points">
+            <li><Icon name="check" size={20} />Elle s'ouvre d'un geste, depuis ton écran d'accueil.</li>
+            <li><Icon name="check" size={20} />Le cours et tes fiches restent lisibles sans connexion.</li>
+            <li><Icon name="check" size={20} />Moins de 1 Mo, sans Play Store ni App Store.</li>
+          </ul>
+        )}
+        {montrerEtapes ? (
+          <div class="install-gate-steps"><Steps /></div>
+        ) : (
+          <button type="button" class="btn install-gate-btn" onClick={installer} disabled={attente}>
+            <Icon name="install_mobile" size={24} />{attente ? "Un instant…" : "Installer l'application"}
+          </button>
+        )}
+        {/* L'iPhone ne dit pas au navigateur que l'app est installée : l'élève nous le dit une fois. */}
+        <div class="install-gate-liens">
+          {ios && <button type="button" class="install-gate-skip" onClick={() => { write("installee", true); setDejaLa(true); }}>Je l'ai déjà installée</button>}
+          <button type="button" class="install-gate-skip" onClick={continuer}>Continuer dans le navigateur</button>
+        </div>
+      </div>
+    </div>
+  );
+}

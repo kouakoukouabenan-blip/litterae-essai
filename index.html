@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0F3D2E" />
+    <meta name="description" content="La dissertation littéraire pour les élèves de terminale : méthode, sujets corrigés et résumés d'œuvres." />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Essai" />
+    <title>Litterae (essai)</title>
+    <meta name="robots" content="noindex" />
+    <style>
+      /* Écran d'ouverture : affiché tout de suite, avant le chargement de l'application. */
+      #splash { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: #0F3D2E; color: #FFF3DC; transition: opacity .35s ease; }
+      #splash.fin { opacity: 0; pointer-events: none; }
+      #splash svg { width: 76px; height: 76px; animation: splash-logo .6s cubic-bezier(.2,.8,.3,1.2) both; }
+      #splash .nom { font: 900 34px/1 Georgia, "Times New Roman", serif; letter-spacing: -.01em; animation: splash-texte .5s .15s ease-out both; }
+      #splash .nom span { color: #F2A541; }
+      #splash .frise { width: 168px; height: 10px; border-radius: 2px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10'%3E%3Crect width='40' height='10' fill='%23C4562B'/%3E%3Cpath d='M0 10 5 0h5L5 10zM10 10 15 0h5l-5 10z' fill='%23F2A541'/%3E%3Crect x='23' y='2' width='6' height='6' fill='%230F3D2E'/%3E%3Crect x='33' y='3.5' width='3' height='3' fill='%23FFF3DC'/%3E%3C/svg%3E") repeat-x; animation: splash-texte .5s .25s ease-out both, splash-frise 1.2s linear infinite; }
+      @keyframes splash-logo { from { transform: scale(.6) rotate(-8deg); opacity: 0; } to { transform: none; opacity: 1; } }
+      @keyframes splash-texte { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+      @keyframes splash-frise { to { background-position: 40px 0; } }
+      @media (prefers-reduced-motion: reduce) { #splash * { animation: none !important; } }
+      #splash .bloque { max-width: 22rem; padding: 0 20px; text-align: center; font: 16px/1.5 sans-serif; }
+      #splash .bloque a, #splash .bloque button { display: block; width: 100%; margin-top: 12px; padding: 14px; border: 0; border-radius: 10px; font: 700 16px sans-serif; text-decoration: none; box-sizing: border-box; }
+      #splash .bloque a { background: #F2A541; color: #1B1B1B; }
+      #splash .bloque button { background: none; color: #FFF3DC; text-decoration: underline; font-weight: 400; }
+    </style>
+  </head>
+  <body>
+    <div id="splash" aria-hidden="true">
+      <svg viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#FFF3DC"/><path fill="#0F3D2E" d="M18 14h14v3h-4v28h9.5l3-8H44l-1.5 13H18v-3h4V17h-4z"/><circle cx="50" cy="47.5" r="3.5" fill="#C4562B"/></svg>
+      <p class="nom">Litter<span>ae</span></p>
+      <div class="frise"></div>
+    </div>
+    <div id="app"></div>
+    <script>
+      // Filet de sécurité, écrit à l'ancienne pour marcher partout : si l'appli ne démarre pas
+      // (navigateur trop vieux, connexion très lente), on explique quoi faire au lieu de rester bloqué.
+      (function () {
+        var affiche = false;
+        function bloque() {
+          var s = document.getElementById("splash");
+          if (affiche || !s || s.className.indexOf("fin") >= 0) return;
+          affiche = true;
+          var d = document.createElement("div");
+          d.className = "bloque";
+          d.innerHTML = "<p>Litterae n'arrive pas à s'ouvrir. Le plus souvent, c'est que <strong>Chrome n'est pas à jour</strong> sur ce téléphone.</p>"
+            + "<a href='https://play.google.com/store/apps/details?id=com.android.chrome'>Mettre Chrome à jour</a>"
+            + "<button type='button' onclick='location.reload()'>Réessayer</button>";
+          s.appendChild(d);
+        }
+        window.addEventListener("error", function (e) { if (e && (e.error instanceof SyntaxError || /Syntax|Unexpected/.test(e.message || ""))) setTimeout(bloque, 1500); });
+        setTimeout(bloque, 15000);
+      })();
+    </script>
+    <noscript>Litterae a besoin de JavaScript pour fonctionner.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "6ca0e1e22a3141d3a4349c10644c9bb5"}'></script>
+  </body>
+</html>
