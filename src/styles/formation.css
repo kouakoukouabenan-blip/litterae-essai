@@ -131,3 +131,4 @@ a.formation-etape:hover { background: var(--surface-hover); }
 @media (prefers-reduced-motion: reduce) {
   .reussite-trait, .reussite-coche, .univers-reussite > :not(svg), .formation-retour, .formation-pourquoi { animation: none; }
 }
+.formation-defi-suite { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s3); }

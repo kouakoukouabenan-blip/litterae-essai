@@ -341,11 +341,13 @@ function Defi({ etape, c }: { etape: EtapeFormation; c: ContenuEtape }) {
   const [coche, setCoche] = useState<boolean[]>(d.grille.map(() => false));
   const [f] = useFormation();
   const [gagne, setGagne] = useState(false);
+  const [manque, setManque] = useState(false);
+  const suivante = ETAPES.find(e => e.num === etape.num + 1);
   const fait = !!f.etapes[etape.id]?.defi;
   const pret = texte.trim().length >= 15 && coche.every(Boolean);
   return (
     <div class="formation-defi">
-      <p class="formation-defi-intro">Ici, pas de correction : tu rédiges, puis tu te relis avec la grille.</p>
+      <p class="formation-defi-intro">Ici, pas de correction. 1. Tu écris ta réponse. 2. Tu te relis et tu coches les cases. 3. Tu appuies sur « J'ai terminé ».</p>
       <blockquote class="citation">« <Texte text={s.citation} /> »<span class="formation-auteur">{s.auteur} · {s.consigne}</span></blockquote>
       <button type="button" class="link-strong formation-autre" onClick={() => { setK((k + 1) % sujets.length); setCoche(d.grille.map(() => false)); }}>Un autre sujet ({numero(s.num)})</button>
       <label class="formation-defi-champ">
@@ -361,9 +363,18 @@ function Defi({ etape, c }: { etape: EtapeFormation; c: ContenuEtape }) {
           </label>
         ))}
       </fieldset>
+      {manque && !pret && <p class="formation-retour est-faux" role="status">{texte.trim().length < 15
+        ? "Ta réponse est trop courte. Écris le thème, puis une phrase complète pour expliquer comment tu l'as trouvé."
+        : "Relis ta réponse avec la grille et coche chaque case avant de terminer."}</p>}
       {gagne ? <p class="formation-retour est-bon" role="status">Défi rédigé : +{GAIN_DEFI} points.</p>
         : fait ? <p class="small muted">Tu as déjà gagné les points du défi de cette étape. Tu peux t'entraîner sur d'autres sujets.</p> : null}
-      {!fait && <button type="button" class="btn btn-primary align-start" disabled={!pret} onClick={() => setGagne(validerDefi(etape.id))}>J'ai terminé (+{GAIN_DEFI} points)</button>}
+      {!fait && <button type="button" class="btn btn-primary align-start" onClick={() => pret ? setGagne(validerDefi(etape.id)) : setManque(true)}>J'ai terminé (+{GAIN_DEFI} points)</button>}
+      {fait && <div class="formation-defi-suite">
+        {suivante
+          ? <a class="btn btn-primary align-start" href={href(["formation", suivante.id])}>Passer à l'étape {suivante.num}<Icon name="arrow_forward" size={20} /></a>
+          : <a class="btn btn-primary align-start" href="#/formation">Retour au parcours</a>}
+        <button type="button" class="link-strong formation-autre" onClick={() => { setK((k + 1) % sujets.length); setCoche(d.grille.map(() => false)); window.scrollTo(0, 0); }}>Rédiger sur un autre sujet</button>
+      </div>}
       <a class="link-strong" href={href(["entrainement", s.num])}>Rédiger tout ce sujet dans l'atelier</a>
     </div>
   );
