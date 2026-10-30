@@ -75,9 +75,9 @@ function Entree() {
   return (
     <Page title="Formation" back="#/accueil">
       <div class="univers">
-        <p class="univers-sur">Dissertation littéraire</p>
-        <h1 class="univers-titre">Du sujet à la conclusion, une étape à la fois</h1>
-        <p class="univers-lede">{ETAPES.length} étapes. Chacune travaille un seul geste de la copie, avec des exemples tirés de vrais sujets corrigés.</p>
+        <p class="univers-sur">Nouveau dans Litterae</p>
+        <h1 class="univers-titre">Formation à la dissertation littéraire</h1>
+        <p class="univers-lede">Un cours complet en {ETAPES.length} étapes pour apprendre à faire une dissertation, du sujet jusqu'à la conclusion. Chaque étape t'apprend une seule chose : une leçon, des exemples corrigés, des exercices, puis un sujet à rédiger.</p>
         <ol class="univers-points">
           <li><span class="univers-num">1</span><div><strong>Ton objectif</strong><p>Savoir traiter seul un sujet de bac, sans oublier une étape.</p></div></li>
           <li><span class="univers-num">2</span><div><strong>Les règles</strong><p>Tu pars avec {POINTS_DEPART} points. Une bonne réponse du premier coup rapporte {GAIN_PREMIER} points, {GAIN_SECOND} au deuxième essai. Un défi rédigé rapporte {GAIN_DEFI} points.</p></div></li>
@@ -140,6 +140,12 @@ function Parcours() {
 function Etape({ etape, partie }: { etape: EtapeFormation; partie: Partie }) {
   const [f] = useFormation();
   const { premium } = useAccess();
+  // Passer d'une partie à l'autre (Comprendre → Exemples…) repart du haut de la page.
+  const premiere = useRef(true);
+  useEffect(() => {
+    if (premiere.current) { premiere.current = false; return; }
+    window.scrollTo(0, 0);
+  }, [partie]);
   const tete = (
     <header class="formation-tete formation-tete-etape">
       <p class="formation-sur">Étape {etape.num} sur {ETAPES.length}</p>
