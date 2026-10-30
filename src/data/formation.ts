@@ -1,7 +1,8 @@
 // Formation à la dissertation : un parcours d'étapes, chacune consacrée à un seul geste de la copie.
 // Chaque étape : Comprendre (explication), Exemples (tirés des sujets corrigés), S'entraîner
 // (questions à choix corrigées tout de suite) et Défi (rédaction libre sur un sujet de la banque, sans correction).
-// Les trois premières étapes sont gratuites ; les suivantes s'ouvrent avec la clé d'accès.
+// Les trois premières étapes sont gratuites et dans ce fichier ; le contenu des suivantes arrive du serveur avec la clé
+// d'accès (contenu payant, comme les sujets corrigés).
 
 /** Morceau d'explication. */
 export type BlocFormation =
@@ -39,7 +40,7 @@ export interface EtapeFormation {
   /** Une ligne sous le titre, dans le parcours. */
   court: string;
   gratuite: boolean;
-  /** Contenu écrit : absent tant que l'étape est en préparation. */
+  /** Contenu des étapes gratuites ; celui des étapes payantes arrive du serveur avec la clé d'accès. */
   contenu?: {
     explication: BlocFormation[];
     exemples: ExempleFormation[];
@@ -417,5 +418,8 @@ export const ETAPES: EtapeFormation[] = [
   { id: "conclusion", num: 12, titre: "Rédiger la conclusion", court: "Bilan et ouverture", gratuite: false },
   { id: "epreuve", num: 13, titre: "Épreuve finale", court: "Une copie entière", gratuite: false }
 ];
+
+/** Contenu d'une étape : explication, exemples, questions, défi et bilan. */
+export type ContenuEtape = NonNullable<EtapeFormation["contenu"]>;
 
 export const etapeParId = (id: string) => ETAPES.find(e => e.id === id);

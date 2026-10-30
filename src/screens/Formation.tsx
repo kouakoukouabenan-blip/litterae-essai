@@ -10,7 +10,8 @@ import { href } from "../lib/router";
 import { useStored } from "../lib/storage";
 import { useAccess } from "../lib/access";
 import { BANQUE, numero } from "../lib/entrainement";
-import { ETAPES, etapeParId, type BlocFormation, type EtapeFormation, type QuestionFormation } from "../data/formation";
+import { ETAPES, etapeParId, type BlocFormation, type ContenuEtape, type EtapeFormation, type QuestionFormation } from "../data/formation";
+import { licence, rechargerContenu } from "../lib/licence";
 import {
   COUT_INDICE, GAIN_DEFI, GAIN_PREMIER, GAIN_SECOND, PERTE_ERREUR, POINTS_DEPART, POINTS_REPRISE, SEUIL,
   ajouterPoints, commencerFormation, finirSerie, rang, reprendreAvecPoints, useFormation, validerDefi, type EtatFormation
@@ -36,6 +37,9 @@ function useUnivers() {
     return () => { delete document.documentElement.dataset.univers; };
   }, []);
 }
+
+/** Étapes gratuites : dans le site ; étapes payantes : reçues avec la clé d'accès. */
+const contenuDe = (e: EtapeFormation): ContenuEtape | undefined => e.contenu ?? licence()?.contenu.formation?.etapes[e.id];
 
 const nbReussies = (f: EtatFormation) => ETAPES.filter(e => f.etapes[e.id]?.reussie).length;
 /** Une étape s'ouvre quand la précédente est réussie. */
@@ -116,9 +120,8 @@ function Parcours() {
           const etat = f.etapes[e.id];
           const libre = ouverte(f, e);
           const payante = !e.gratuite && !premium;
-          const pret = !!e.contenu;
-          const ferme = !libre || payante || !pret;
-          const statut = etat?.reussie ? `Réussie · ${etat.maitrise} %` : payante ? "Accès complet" : !pret ? "En préparation" : !libre ? `Réussis d'abord l'étape ${e.num - 1}` : etat ? `En cours · meilleur score ${etat.maitrise} %` : e.court;
+          const ferme = !libre || payante;
+          const statut = etat?.reussie ? `Réussie · ${etat.maitrise} %` : payante ? "Accès complet" : !libre ? `Réussis d'abord l'étape ${e.num - 1}` : etat ? `En cours · meilleur score ${etat.maitrise} %` : e.court;
           const classe = `formation-etape ${etat?.reussie ? "est-reussie" : ""} ${!ferme && !etat?.reussie ? "est-ouverte" : ""} ${ferme ? "est-fermee" : ""}`;
           const corps = <>
             <span class="formation-etape-num">{etat?.reussie ? <Icon name="check" size={18} /> : e.num}</span>
@@ -126,7 +129,7 @@ function Parcours() {
             {ferme ? <Icon name="lock" size={18} /> : <Icon name="chevron_right" size={20} />}
           </>;
           // Une étape payante reste cliquable : elle montre ce qu'elle contient et comment l'ouvrir.
-          return <li key={e.id}>{(!libre || (!pret && !payante)) ? <div class={classe} aria-disabled="true">{corps}</div> : <a class={classe} href={href(["formation", e.id])}>{corps}</a>}</li>;
+          return <li key={e.id}>{!libre ? <div class={classe} aria-disabled="true">{corps}</div> : <a class={classe} href={href(["formation", e.id])}>{corps}</a>}</li>;
         })}
       </ol>
       <a class="link-strong formation-regles" href="#/formation/regles">Revoir les règles du jeu</a>
@@ -148,8 +151,8 @@ function Etape({ etape, partie }: { etape: EtapeFormation; partie: Partie }) {
     return <Page title={etape.titre} back="#/formation">{tete}<LockPanel reason={`L'étape ${etape.num}, « ${etape.titre} », est réservée à l'accès complet.`} contenu={CONTENU_FORMATION} /></Page>;
   if (!ouverte(f, etape))
     return <Page title={etape.titre} back="#/formation">{tete}<p class="quiz-lock"><span><Icon name="lock" size={18} /> Réussis d'abord l'étape {etape.num - 1} avec au moins {SEUIL} % de maîtrise.</span></p></Page>;
-  const c = etape.contenu;
-  if (!c) return <Page title={etape.titre} back="#/formation">{tete}<p class="quiz-lock">Cette étape est en préparation. Elle arrive bientôt.</p></Page>;
+  const c = contenuDe(etape);
+  if (!c) return <Page title={etape.titre} back="#/formation">{tete}<RecevoirFormation /></Page>;
   const reussie = !!f.etapes[etape.id]?.reussie;
   return (
     <Page title={etape.titre} back="#/formation">
@@ -159,10 +162,10 @@ function Etape({ etape, partie }: { etape: EtapeFormation; partie: Partie }) {
         href: href(["formation", etape.id], { partie: p.id }),
         actif: p.id === partie
       }))} />
-      {partie === "comprendre" && <Comprendre etape={etape} />}
-      {partie === "exemples" && <Exemples etape={etape} />}
-      {partie === "entrainer" && <Entrainer key={etape.id} etape={etape} />}
-      {partie === "defi" && (reussie ? <Defi etape={etape} /> : (
+      {partie === "comprendre" && <Comprendre etape={etape} c={c} />}
+      {partie === "exemples" && <Exemples etape={etape} c={c} />}
+      {partie === "entrainer" && <Entrainer key={etape.id} etape={etape} c={c} />}
+      {partie === "defi" && (reussie ? <Defi etape={etape} c={c} /> : (
         <div class="quiz-lock">
           <p><Icon name="lock" size={18} /> Le défi s'ouvre quand tu as réussi l'entraînement de cette étape (au moins {SEUIL} %). Tu pourras alors rédiger toi-même, sur un vrai sujet de bac.</p>
           <a class="btn btn-primary align-start" href={href(["formation", etape.id], { partie: "entrainer" })}>S'entraîner</a>
@@ -182,19 +185,19 @@ function Bloc({ b }: { b: BlocFormation }) {
   return <aside class="formation-piege"><p class="callout-label">Piège à éviter</p><p><Gras text={b.piege} /></p></aside>;
 }
 
-function Comprendre({ etape }: { etape: EtapeFormation }) {
+function Comprendre({ etape, c }: { etape: EtapeFormation; c: ContenuEtape }) {
   return (
     <div class="prose formation-prose">
-      {etape.contenu!.explication.map((b, i) => <Bloc key={i} b={b} />)}
+      {c.explication.map((b, i) => <Bloc key={i} b={b} />)}
       <a class="btn btn-primary align-start" href={href(["formation", etape.id], { partie: "exemples" })}>Voir des exemples<Icon name="arrow_forward" size={20} /></a>
     </div>
   );
 }
 
-function Exemples({ etape }: { etape: EtapeFormation }) {
+function Exemples({ etape, c }: { etape: EtapeFormation; c: ContenuEtape }) {
   return (
     <div class="formation-exemples">
-      {etape.contenu!.exemples.map((x, i) => (
+      {c.exemples.map((x, i) => (
         <article key={i} class="formation-exemple">
           <p class="formation-exemple-num">Exemple {i + 1}</p>
           <blockquote class="citation">« <Texte text={x.sujet} /> »<span class="formation-auteur">{x.auteur}</span></blockquote>
@@ -211,9 +214,9 @@ type Tirage = { q: QuestionFormation; choix: { t: string; bon: boolean }[] };
 const tirer = (qs: QuestionFormation[]): Tirage[] => melanger(qs).map(q => ({ q, choix: melanger(q.choix.map((t, i) => ({ t, bon: i === 0 }))) }));
 
 /** Série de questions à choix, corrigées tout de suite, avec points gagnés et perdus. */
-function Entrainer({ etape }: { etape: EtapeFormation }) {
+function Entrainer({ etape, c }: { etape: EtapeFormation; c: ContenuEtape }) {
   const [f] = useFormation();
-  const [serie, setSerie] = useState(() => tirer(etape.contenu!.questions));
+  const [serie, setSerie] = useState(() => tirer(c.questions));
   const [i, setI] = useState(0);
   const [faux, setFaux] = useState<number[]>([]);
   const [juste, setJuste] = useState<number | null>(null);
@@ -225,17 +228,17 @@ function Entrainer({ etape }: { etape: EtapeFormation }) {
   const zone = useRef<HTMLDivElement>(null);
 
   const recommencer = () => {
-    setSerie(tirer(etape.contenu!.questions)); setI(0); setFaux([]); setJuste(null); setIndice(false); setScores([]); setMessage(null); setFin(null);
+    setSerie(tirer(c.questions)); setI(0); setFaux([]); setJuste(null); setIndice(false); setScores([]); setMessage(null); setFin(null);
     debut.current = Math.max(f.points, POINTS_REPRISE);
   };
 
-  const { q, choix } = serie[i];
+  const { q, choix: propositions } = serie[i];
   const termine = juste !== null || faux.length >= 2;
 
   function choisir(k: number) {
     if (termine || faux.includes(k)) return;
     const essai = faux.length;
-    if (choix[k].bon) {
+    if (propositions[k].bon) {
       const gain = essai === 0 ? GAIN_PREMIER : GAIN_SECOND;
       ajouterPoints(gain);
       setJuste(k);
@@ -300,11 +303,11 @@ function Entrainer({ etape }: { etape: EtapeFormation }) {
       {q.sujet && <blockquote class="citation">{q.auteur ? <>« <Texte text={q.sujet} /> »<span class="formation-auteur">{q.auteur}</span></> : <Texte text={q.sujet} />}</blockquote>}
       <h2 class="formation-question">{q.q}</h2>
       <div class="formation-choix" role="group" aria-label="Réponses possibles">
-        {choix.map((c, k) => {
-          const etat = (termine && c.bon) || juste === k ? "bon" : faux.includes(k) ? "faux" : "";
+        {propositions.map((p, k) => {
+          const etat = (termine && p.bon) || juste === k ? "bon" : faux.includes(k) ? "faux" : "";
           return (
             <button key={k} type="button" class={`formation-choix-btn ${etat ? `est-${etat}` : ""}`} disabled={termine || faux.includes(k)} onClick={() => choisir(k)}>
-              <Texte text={c.t} />
+              <Texte text={p.t} />
               {etat === "bon" && <Icon name="check" size={20} />}
               {etat === "faux" && <Icon name="close" size={20} />}
             </button>
@@ -323,8 +326,8 @@ function Entrainer({ etape }: { etape: EtapeFormation }) {
 }
 
 /** Défi : rédaction libre sur un sujet de la banque, sans correction, avec une grille pour se relire. */
-function Defi({ etape }: { etape: EtapeFormation }) {
-  const d = etape.contenu!.defi;
+function Defi({ etape, c }: { etape: EtapeFormation; c: ContenuEtape }) {
+  const d = c.defi;
   const sujets = useMemo(() => d.sujets.map(n => BANQUE.find(s => s.num === n)).filter(Boolean) as typeof BANQUE, [etape.id]);
   const [k, setK] = useStored<number>(`formation-defi-sujet:${etape.id}`, 0);
   const s = sujets[k % sujets.length];
@@ -367,7 +370,7 @@ function Reussite({ etape, params }: { etape: EtapeFormation; params: URLSearchP
   const maitrise = Math.min(100, Math.max(0, Number(params.get("m")) || f.etapes[etape.id]?.maitrise || 0));
   const gain = Number(params.get("g")) || 0;
   const suivante = ETAPES[etape.num];
-  const c = etape.contenu;
+  const c = contenuDe(etape);
   // L'anneau se dessine jusqu'au pourcentage de maîtrise (circonférence 302 pour un rayon de 48).
   const reste = 302 - (302 * maitrise) / 100;
   return (
@@ -379,7 +382,7 @@ function Reussite({ etape, params }: { etape: EtapeFormation; params: URLSearchP
           <path class="reussite-coche" d="M40 57l11 11 22-24" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <p class="univers-sur">Étape {etape.num} réussie</p>
-        <h1 class="univers-titre univers-titre-centre">Tu sais {etape.titre.charAt(0).toLowerCase() + etape.titre.slice(1)}</h1>
+        <h1 class="univers-titre univers-titre-centre">{etape.id === "epreuve" ? "Tu as réussi l'épreuve finale" : `Tu sais ${etape.titre.charAt(0).toLowerCase() + etape.titre.slice(1)}`}</h1>
         <p class="reussite-badges">
           {gain > 0 && <span>+{gain} points</span>}
           <span>Maîtrise {maitrise} %</span>
@@ -397,5 +400,21 @@ function Reussite({ etape, params }: { etape: EtapeFormation; params: URLSearchP
         </div>
       </div>
     </Page>
+  );
+}
+
+/** Clé activée avant l'arrivée des étapes payantes, ou appareil resté hors ligne : on les fait venir. */
+function RecevoirFormation() {
+  const [etat, setEtat] = useState<"" | "envoi" | "echec">("");
+  async function recevoir() {
+    setEtat("envoi");
+    if (await rechargerContenu() && licence()?.contenu.formation) location.reload(); else setEtat("echec");
+  }
+  return (
+    <div class="quiz-lock">
+      <p>Ta clé ouvre toutes les étapes de la formation. Connecte-toi à Internet pour les recevoir sur ce téléphone.</p>
+      <button type="button" class="btn btn-primary align-start" disabled={etat === "envoi"} onClick={recevoir}>{etat === "envoi" ? "Réception…" : "Recevoir les étapes"}</button>
+      {etat === "echec" && <p class="field-error" role="alert"><Icon name="error" size={18} />Les étapes n'ont pas pu être reçues. Vérifie ta connexion et réessaie.</p>}
+    </div>
   );
 }
