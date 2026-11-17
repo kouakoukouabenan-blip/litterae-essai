@@ -156,7 +156,7 @@ ${chapeau}
 ${corps}
 </main>
 <footer>
-  <p><b>Litterae</b>, la dissertation littéraire facile : le cours pas à pas, des sujets corrigés et plus de ${Math.floor(oeuvres.length / 50) * 50} fiches d’œuvres.</p>
+  <p><b>Litterae</b>, la dissertation littéraire facile : le cours pas à pas, des sujets corrigés et plus de ${Math.floor(oeuvres.length / 10) * 10} fiches d’œuvres.</p>
   <a class="bouton" href="${r}">Ouvrir Litterae</a>
   <p class="petit"><a href="${r}oeuvres/">Toutes les œuvres</a> · <a href="${r}themes/">Tous les thèmes</a> · <a href="${r}programme/">Œuvres au programme</a></p>
 </footer>
