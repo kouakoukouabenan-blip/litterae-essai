@@ -22,3 +22,10 @@ export function lienAide(sujet: string) {
     ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(texte)}`
     : `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Litterae : " + sujet)}&body=${encodeURIComponent(texte)}`;
 }
+
+/**
+ * Nouvelle adresse du site (avec la barre finale). Sur l'ancienne adresse (github.io), l'appli y emmène l'élève
+ * avec sa clé et sa progression, dès que la nouvelle adresse répond. Vide : pas de passage.
+ * Site d'essai : vide, sauf pour un essai (VITE_PASSAGE_VERS).
+ */
+export const PASSAGE_VERS: string = import.meta.env.VITE_PASSAGE_VERS ?? "";
