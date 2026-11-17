@@ -29,3 +29,8 @@ export function lienAide(sujet: string) {
  * Site d'essai : vide, sauf pour un essai (VITE_PASSAGE_VERS).
  */
 export const PASSAGE_VERS: string = import.meta.env.VITE_PASSAGE_VERS ?? "";
+
+/** WhatsApp pour l'aide au changement d'adresse (numéro donné par Atikan le 17/11/2026). */
+export const WHATSAPP_PASSAGE = "2250101280717";
+export const lienAidePassage = () =>
+  `https://wa.me/${WHATSAPP_PASSAGE}?text=${encodeURIComponent("Bonjour, j'ai besoin d'aide pour passer Litterae à la nouvelle adresse litterae.app.")}`;
