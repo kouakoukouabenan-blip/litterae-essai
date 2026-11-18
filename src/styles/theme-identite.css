@@ -263,3 +263,44 @@
 /* Lignes de Mon espace : icônes à l'encre, la flèche discrète (le terracotta reste pour l'essentiel). */
 :root.identite-nouvelle .access-row > .icon { color: var(--ink); }
 :root.identite-nouvelle .access-row > .icon:last-child { color: var(--muted); }
+
+/* ---------- Animations (discrètes, coupées si le téléphone demande moins d'animations : base.css) ---------- */
+/* Changement de méthode : un voile papier, l'icône qui se pose, le carré qui apparaît, le nom. Présent dans les deux identités. */
+.transition-methode { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; background: var(--paper); animation: tm-voile 1s ease both; pointer-events: none; }
+.transition-methode-contenu { display: flex; flex-direction: column; align-items: center; gap: var(--s3); }
+.transition-methode-icone { width: 72px; height: 72px; color: var(--ink); animation: tm-icone .5s cubic-bezier(.2,.8,.3,1.2) both; }
+.transition-methode-icone path:last-child { transform-origin: center; transform-box: fill-box; animation: tm-carre .3s .3s cubic-bezier(.3,1.6,.5,1) both; }
+.transition-methode-point { width: 28px; height: 28px; border-radius: 50%; animation: tm-icone .5s cubic-bezier(.2,.8,.3,1.2) both; }
+:root.identite-nouvelle .transition-methode-point { border-radius: 0; }
+.transition-methode-nom { font: 700 1.375rem/1.2 var(--font-head, var(--font-text)); color: var(--ink-strong); animation: tm-nom .4s .2s ease-out both; }
+@keyframes tm-voile { 0% { opacity: 0; } 15% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes tm-icone { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+@keyframes tm-carre { from { transform: scale(0); } to { transform: none; } }
+@keyframes tm-nom { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Le reste : seulement dans la nouvelle identité (l'ancienne reste telle qu'elle était). */
+/* Chaque écran arrive en douceur. */
+:root.identite-nouvelle main.page { animation: id-arrive .25s ease-out backwards; }
+@keyframes id-arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+/* Les tuiles de l'accueil et les lignes de listes arrivent l'une après l'autre (une seule fois, à l'ouverture de l'écran). */
+:root.identite-nouvelle .choix > * { animation: id-arrive .3s ease-out backwards; }
+:root.identite-nouvelle .choix > :nth-child(2) { animation-delay: .05s; }
+:root.identite-nouvelle .choix > :nth-child(3) { animation-delay: .1s; }
+:root.identite-nouvelle .choix > :nth-child(4) { animation-delay: .15s; }
+/* Boutons, cartes et lignes : un léger enfoncement sous le doigt. */
+:root.identite-nouvelle :is(.btn, .chip, .choix-carte, .work, .link-panel, .access-row, .quiz-option, .methode-ligne, .bottom-nav-item) { transition: transform .12s ease, background-color .16s, border-color .16s, color .16s; }
+:root.identite-nouvelle :is(.btn, .chip, .quiz-option, .methode-ligne):active { transform: scale(.97); }
+:root.identite-nouvelle :is(.choix-carte, .work, .link-panel, .access-row):active { transform: scale(.99); }
+/* Barre du bas : le carré terracotta de l'onglet actif se déploie. */
+:root.identite-nouvelle .bottom-nav-item[aria-current="page"]::before { animation: id-onglet .25s ease-out both; }
+@keyframes id-onglet { from { transform: scaleX(0); } to { transform: none; } }
+/* Feuilles du bas (choix de la méthode…) : elles montent. */
+:root.identite-nouvelle .sheet[open] { animation: id-feuille .25s cubic-bezier(.2,.8,.3,1) both; }
+@keyframes id-feuille { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+/* Quiz : la bonne réponse se valide d'une petite pulsation, la mauvaise d'un léger refus. */
+:root.identite-nouvelle .quiz-option.ok { animation: id-juste .35s ease-out; }
+:root.identite-nouvelle .quiz-option.faux { animation: id-faux .3s ease-in-out; }
+@keyframes id-juste { 50% { transform: scale(1.02); } }
+@keyframes id-faux { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+/* Barres de progression : elles se remplissent. */
+:root.identite-nouvelle .progress-bar span { transition: width .6s cubic-bezier(.4,0,.2,1); }

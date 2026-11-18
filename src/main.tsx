@@ -56,11 +56,10 @@ else {
   if ((surAncienneAdresse() && rappelDu()) || (demoPassage() && location.hash.includes("rappel"))) nouvelleAdressePrete().then(ok => { if (ok || demoPassage()) afficherRappel(); });
 }
 
-// Retire l'écran d'ouverture : il reste au moins le temps de son animation, jamais plus (environ 2 s).
+// Retire l'écran d'ouverture : il reste au moins 3 secondes (le temps de son animation, demande d'Atikan), jamais plus.
 const splash = document.getElementById("splash");
 if (splash) {
-  const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const reste = calme ? 0 : Math.max(0, 1900 - performance.now());
+  const reste = Math.max(0, 3000 - performance.now());
   setTimeout(() => {
     splash.classList.add("fin");
     setTimeout(() => splash.remove(), 400);
