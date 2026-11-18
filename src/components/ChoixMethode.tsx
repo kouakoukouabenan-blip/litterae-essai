@@ -2,6 +2,7 @@ import { useRef, useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { METHODES, useMethode } from "../lib/methodes";
 import { useAccess } from "../lib/access";
+import { IconeMethode } from "./Marque";
 
 /** Bouton de la barre du haut : la méthode en cours, et la liste des autres méthodes. */
 export function ChoixMethode() {
@@ -39,7 +40,8 @@ export function ChoixMethode() {
                   <button type="button" class={`methode-ligne ${active ? "is-active" : ""} ${m.prete ? "" : "is-bientot"}`}
                     aria-current={active ? "true" : undefined}
                     onClick={() => { if (!m.prete) return setBientot(m.id); choisir(m.id); fermer(); if (location.hash !== "#/accueil") location.hash = "#/accueil"; }}>
-                    <span class="methode-point" style={m.prete ? { background: m.couleur } : { borderColor: m.couleur }} aria-hidden="true" />
+                    <span class="methode-point seulement-ancienne" style={m.prete ? { background: m.couleur } : { borderColor: m.couleur }} aria-hidden="true" />
+                    <IconeMethode id={m.id} class="methode-icone seulement-nouvelle" />
                     <span class="methode-texte">
                       <strong>{m.nom}</strong>
                       <span>{!m.prete ? "Bientôt" : premium ? "Ouverte avec ta clé" : m.id === "dissertation" ? "Début gratuit" : "Avec l'accès complet"}</span>
