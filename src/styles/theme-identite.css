@@ -8,6 +8,11 @@
  * Angles francs : 4 px (boutons, champs, étiquettes), 8 px au plus (cartes). Pas d'ombre lourde, pas de frise.
  */
 
+/* Le carré de la synthèse et le fond des tuiles suivent la palette active. */
+:root.identite-nouvelle .carre-synthese { fill: var(--orange); }
+:root.identite-nouvelle .encre-synthese { fill: var(--green); }
+:root.identite-nouvelle .papier-synthese { fill: var(--paper); }
+
 /* Les éléments propres à une seule identité (logos, icônes de méthode). */
 .seulement-nouvelle { display: none !important; }
 :root.identite-nouvelle .seulement-ancienne { display: none !important; }
@@ -62,11 +67,16 @@
   --radius-sm: 4px;
   --band-h: 0px;
   --shadow: none;
-  --focus: 0 0 0 2px var(--paper), 0 0 0 4px #B24A22;
+  --focus: 0 0 0 2px var(--paper), 0 0 0 4px var(--orange-text);
+  /* Nuances propres à l'identité (remplacées par la variante « couleurs d'Afrique » plus bas) */
+  --marque-survol: #3A3D86;
+  --accent-sur-sombre: #F2B79F;
+  --accent-presse: #C4552D;
+  --texte-sur-sombre-doux: #C9CAE0;
 }
 
 :root.identite-nouvelle body { background: var(--paper); color: var(--ink); font-family: var(--font-text); }
-:root.identite-nouvelle :focus-visible { outline: 2px solid #B24A22; outline-offset: 2px; }
+:root.identite-nouvelle :focus-visible { outline: 2px solid var(--orange-text); outline-offset: 2px; }
 
 /* ---------- Barre du haut : papier, logo horizontal, pas de frise ---------- */
 :root.identite-nouvelle .topbar { background: var(--paper); color: var(--ink); box-shadow: 0 1px 0 var(--line); }
@@ -124,7 +134,7 @@
 /* ---------- Boutons, champs, puces ---------- */
 :root.identite-nouvelle .btn { font-family: var(--font-text); font-weight: 600; }
 :root.identite-nouvelle .btn-primary { background: var(--ink); color: #fff; }
-:root.identite-nouvelle .btn-primary:hover { background: #3A3D86; }
+:root.identite-nouvelle .btn-primary:hover { background: var(--marque-survol); }
 :root.identite-nouvelle .btn-secondary { background: var(--surface); color: var(--ink); border: 1.5px solid var(--line-strong); }
 :root.identite-nouvelle .btn-secondary:hover { border-color: var(--ink); background: var(--surface); }
 :root.identite-nouvelle .chip { background: var(--surface); border: 1.5px solid var(--line-strong); color: var(--ink); }
@@ -142,7 +152,7 @@
 }
 :root.identite-nouvelle :is(.work, .link-panel):hover { box-shadow: none; border-color: var(--line-strong) !important; }
 :root.identite-nouvelle .resume-card, :root.identite-nouvelle .prochaine { background: var(--ink); color: #fff; }
-:root.identite-nouvelle .resume-card .eyebrow { color: #F2B79F; }
+:root.identite-nouvelle .resume-card .eyebrow { color: var(--accent-sur-sombre); }
 :root.identite-nouvelle .resume-card .btn-primary { background: var(--orange); color: #fff; }
 :root.identite-nouvelle .resume-card .progress-bar span { background: var(--orange); }
 :root.identite-nouvelle .arg.argument-trouve { background: var(--orange-pale); box-shadow: inset 3px 0 0 var(--orange) !important; }
@@ -154,15 +164,15 @@
 :root.identite-nouvelle :is(.choix-methode, .choix-entrainer, .choix-corriges, .choix-outils) { background: var(--surface); border: 1px solid var(--line) !important; }
 :root.identite-nouvelle :is(.choix-methode, .choix-entrainer, .choix-corriges, .choix-outils) .icon { color: var(--ink); }
 :root.identite-nouvelle .choix-oeuvres { background: var(--ink); border-color: var(--ink); }
-:root.identite-nouvelle .choix-oeuvres .icon { color: #F2B79F; }
+:root.identite-nouvelle .choix-oeuvres .icon { color: var(--accent-sur-sombre); }
 
 /* ---------- Écran d'installation et de passage : aplat indigo ---------- */
 :root.identite-nouvelle .install-gate { background: var(--ink); color: #fff; }
 :root.identite-nouvelle .install-gate::before { display: none; }
 :root.identite-nouvelle .install-gate-title { font-weight: 700; letter-spacing: -0.02em; color: #fff; }
-:root.identite-nouvelle .install-gate-points .icon { color: #F2B79F; }
+:root.identite-nouvelle .install-gate-points .icon { color: var(--accent-sur-sombre); }
 :root.identite-nouvelle .install-gate-btn { background: var(--orange); color: #fff; }
-:root.identite-nouvelle .install-gate-btn:hover { background: #C4552D; }
+:root.identite-nouvelle .install-gate-btn:hover { background: var(--accent-presse); }
 :root.identite-nouvelle .install-gate-attente { border-color: rgba(255, 255, 255, .25); border-top-color: var(--orange); }
 :root.identite-nouvelle .install-gate-skip { color: var(--on-dark-muted); }
 :root.identite-nouvelle .passage-adresse { background: rgba(255, 255, 255, .1); color: #fff; }
@@ -304,3 +314,51 @@
 @keyframes id-faux { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 /* Barres de progression : elles se remplissent. */
 :root.identite-nouvelle .progress-bar span { transition: width .6s cubic-bezier(.4,0,.2,1); }
+
+/* ---------- Variante « La Synthèse, couleurs d'Afrique » ----------
+ * Même identité (logo, polices, angles, animations) avec les couleurs de l'ancien design :
+ * vert profond à la place de l'indigo, terre cuite en accent, ocre en mise en avant, fond crème. */
+:root.identite-nouvelle.couleurs-afrique {
+  --paper: #FFF8EC;
+  --surface: #FFFFFF;
+  --surface-hover: #FFF3DE;
+  --soft: #F7EEDD;
+  --line: #F0DFC2;
+  --line-strong: #E2C9A0;
+  --ink: #0F3D2E;
+  --ink-strong: #0A2B20;
+  --muted: #6B6152;
+  --on-dark: #FFF3DC;
+  --on-dark-muted: #BFD6C9;
+
+  --green: #0F3D2E;
+  --green-press: #0A2B20;
+  --green-pale: #CFE3D6;
+  --green-tint: #E7F0EA;
+
+  --orange: #C4562B;
+  --orange-text: #A2431C;
+  --orange-pale: #FBE3D3;
+
+  --ochre: #F2A541;
+  --ochre-pale: #FDEBC8;
+  --ochre-text: #7A3514;
+
+  --fn-engagement: #C4562B;
+  --fn-esthetique: #2E5E8C;
+  --fn-evasion: #B07A12;
+  --fn-lyrique: #8E3B5F;
+  --fn-sociale: #2F6E5B;
+
+  --highlight: #FCE3A6;
+  --marque-survol: #1A5240;
+  --accent-sur-sombre: #F2A541;
+  --accent-presse: #A9481F;
+  --texte-sur-sombre-doux: #BFD6C9;
+}
+/* Sur le vert, la mise en avant reprend l'ocre de l'ancien design. */
+:root.identite-nouvelle.couleurs-afrique .resume-card .btn-primary,
+:root.identite-nouvelle.couleurs-afrique .install-gate-btn { background: var(--ochre); color: var(--ink-strong); }
+:root.identite-nouvelle.couleurs-afrique .install-gate-btn:hover { background: #F5B55F; }
+:root.identite-nouvelle.couleurs-afrique .resume-card .progress-bar span { background: var(--ochre); }
+:root.identite-nouvelle.couleurs-afrique .bandeau-essai { background: var(--ochre); color: var(--ink-strong); }

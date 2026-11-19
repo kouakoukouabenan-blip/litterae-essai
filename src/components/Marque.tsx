@@ -10,7 +10,7 @@ const MOT = "M9.7 0V-98H26.5V-15.3H72.5V0Z M83.3 0V-69.2H99.3V0ZM91.3 -78Q86.8 -
 export function LogoHorizontal({ class: c = "" }: { class?: string }) {
   return (
     <svg class={c} viewBox="0 0 777 256" aria-hidden="true" focusable="false">
-      <g transform="translate(0,24) scale(0.8)"><path d={L} fill="currentColor" /><path d={CARRE} fill="#D9653B" /></g>
+      <g transform="translate(0,24) scale(0.8)"><path d={L} fill="currentColor" /><path class="carre-synthese" d={CARRE} fill="#D9653B" /></g>
       <g transform="translate(236,176)"><path d={MOT} fill="currentColor" /></g>
     </svg>
   );
@@ -21,7 +21,7 @@ export function TuileAppli({ class: c = "" }: { class?: string }) {
   return (
     <>
       <svg class={`${c} seulement-ancienne`} viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="12" fill="#FFF3DC"/><path fill="#0F3D2E" d="M18 14h14v3h-4v28h9.5l3-8H44l-1.5 13H18v-3h4V17h-4z"/><circle cx="50" cy="47.5" r="3.5" fill="#C4562B"/></svg>
-      <svg class={`${c} seulement-nouvelle`} viewBox="0 0 256 256" aria-hidden="true"><rect width="256" height="256" rx="56" fill="#FAF7F0"/><path d="M56,56 H84 V172 H156 V200 H56 Z M200,200 H172 V84 H100 V56 H200 Z" fill="#26285E"/><path d="M114,114 H142 V142 H114 Z" fill="#D9653B"/></svg>
+      <svg class={`${c} seulement-nouvelle`} viewBox="0 0 256 256" aria-hidden="true"><rect class="papier-synthese" width="256" height="256" rx="56" fill="#FAF7F0"/><path class="encre-synthese" d="M56,56 H84 V172 H156 V200 H56 Z M200,200 H172 V84 H100 V56 H200 Z" fill="#26285E"/><path class="carre-synthese" d="M114,114 H142 V142 H114 Z" fill="#D9653B"/></svg>
     </>
   );
 }
@@ -41,7 +41,7 @@ export function IconeMethode({ id, class: c = "" }: { id: string; class?: string
   if (!d) return null;
   return (
     <svg class={c} viewBox="0 0 256 256" aria-hidden="true" focusable="false">
-      <path d={d[0]} fill="currentColor" fill-rule="evenodd" /><path d={d[1]} fill="#D9653B" />
+      <path d={d[0]} fill="currentColor" fill-rule="evenodd" /><path class="carre-synthese" d={d[1]} fill="#D9653B" />
     </svg>
   );
 }

@@ -12,9 +12,11 @@
         try {
           var ici = JSON.parse(localStorage.getItem("litterae.identite") || "null");
           var tdb = (JSON.parse(localStorage.getItem("litterae.contenu-libre") || "null") || {}).identite;
-          id = ici === "nouvelle" || ici === "ancienne" ? ici : tdb === "nouvelle" || tdb === "ancienne" ? tdb : id;
+          var ok = function (x) { return x === "nouvelle" || x === "nouvelle-afrique" || x === "ancienne"; };
+          id = ok(ici) ? ici : ok(tdb) ? tdb : id;
         } catch (e) {}
-        if (id === "nouvelle") document.documentElement.className += " identite-nouvelle";
+        if (id !== "ancienne") document.documentElement.className += " identite-nouvelle";
+        if (id === "nouvelle-afrique") document.documentElement.className += " couleurs-afrique";
       })();
     </script>
     <meta name="description" content="Apprends la dissertation littéraire pas à pas : cours simples, sujets corrigés du bac et plus de 400 fiches d'œuvres africaines et classiques. Pour les élèves de Côte d'Ivoire et d'Afrique de l'Ouest." />
@@ -70,6 +72,12 @@
       @keyframes splash-carre { from { transform: scale(0); } to { transform: none; } }
       .identite-nouvelle #splash .bloque a { background: #D9653B; color: #FFFFFF; border-radius: 4px; }
       .identite-nouvelle #splash .bloque button { color: #FFFFFF; }
+      /* Variante couleurs d'Afrique : vert profond, carré terre cuite, chargement ocre. */
+      .couleurs-afrique #splash { background: #0F3D2E; color: #FFF3DC; }
+      .couleurs-afrique #splash .neuf path.l1, .couleurs-afrique #splash .neuf path.l2 { fill: #FFF3DC; }
+      .couleurs-afrique #splash .neuf path.carre { fill: #C4562B; }
+      .couleurs-afrique #splash p.neuf.promesse { color: #BFD6C9; }
+      .couleurs-afrique #splash .chargement i { background: #F2A541; }
       #splash .bloque { max-width: 22rem; padding: 0 20px; text-align: center; font: 16px/1.5 sans-serif; }
       #splash .bloque a, #splash .bloque button { display: block; width: 100%; margin-top: 12px; padding: 14px; border: 0; border-radius: 10px; font: 700 16px sans-serif; text-decoration: none; box-sizing: border-box; }
       #splash .bloque a { background: #F2A541; color: #1B1B1B; }

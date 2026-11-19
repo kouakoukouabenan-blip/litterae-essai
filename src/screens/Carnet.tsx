@@ -27,8 +27,9 @@ function ChoixApparence() {
     <section class="apparence" aria-labelledby="apparence-titre">
       <h2 id="apparence-titre" class="sub-title">Apparence (site d'essai)</h2>
       <div class="chips" role="group" aria-label="Identité visuelle">
-        <button type="button" class="chip" aria-pressed={actuelle === "nouvelle"} onClick={() => choisir("nouvelle")}>Nouvelle identité</button>
-        <button type="button" class="chip" aria-pressed={actuelle === "ancienne"} onClick={() => choisir("ancienne")}>Ancienne (Couleurs d'Afrique)</button>
+        <button type="button" class="chip" aria-pressed={actuelle === "nouvelle-afrique"} onClick={() => choisir("nouvelle-afrique")}>Synthèse, couleurs d'Afrique</button>
+        <button type="button" class="chip" aria-pressed={actuelle === "nouvelle"} onClick={() => choisir("nouvelle")}>Synthèse, indigo</button>
+        <button type="button" class="chip" aria-pressed={actuelle === "ancienne"} onClick={() => choisir("ancienne")}>Ancien design</button>
       </div>
       {identiteChoisieIci() && <button type="button" class="link-btn" onClick={() => { choisirIdentite(null); setActuelle(identiteActive()); }}>Revenir au réglage général</button>}
     </section>

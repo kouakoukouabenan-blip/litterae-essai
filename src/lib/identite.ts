@@ -1,8 +1,9 @@
 import { contenuLibre } from "./libre";
 import { read, write } from "./storage";
-import { IDENTITE_PAR_DEFAUT } from "./identite-defaut";
+import { IDENTITES, IDENTITE_PAR_DEFAUT, type Identite } from "./identite-defaut";
 
-export type Identite = "nouvelle" | "ancienne";
+export type { Identite };
+const valide = (x: unknown): x is Identite => IDENTITES.includes(x as Identite);
 
 /**
  * Identité visuelle en vigueur, par ordre de priorité :
@@ -13,20 +14,22 @@ export type Identite = "nouvelle" | "ancienne";
  */
 export function identiteActive(): Identite {
   const ici = read<Identite | null>("identite", null);
-  if (ici === "nouvelle" || ici === "ancienne") return ici;
+  if (valide(ici)) return ici;
   const tdb = (contenuLibre() as { identite?: string } | null)?.identite;
-  if (tdb === "nouvelle" || tdb === "ancienne") return tdb;
+  if (valide(tdb)) return tdb;
   return IDENTITE_PAR_DEFAUT;
 }
 
-const COULEUR_BARRE: Record<Identite, string> = { nouvelle: "#26285E", ancienne: "#0F3D2E" };
+const COULEUR_BARRE: Record<Identite, string> = { nouvelle: "#26285E", "nouvelle-afrique": "#0F3D2E", ancienne: "#0F3D2E" };
+const FAVICON: Record<Identite, string> = { nouvelle: "./identite/favicon.svg", "nouvelle-afrique": "./identite-afrique/favicon.svg", ancienne: "./favicon.svg" };
 
 /** Pose la classe sur <html> (toute la nouvelle identité est rangée sous `.identite-nouvelle`), la couleur de barre et l'icône d'onglet. */
 export function appliquerIdentite(id: Identite = identiteActive()) {
   const html = document.documentElement;
-  html.classList.toggle("identite-nouvelle", id === "nouvelle");
+  html.classList.toggle("identite-nouvelle", id !== "ancienne");
+  html.classList.toggle("couleurs-afrique", id === "nouvelle-afrique");
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", COULEUR_BARRE[id]);
-  document.querySelector('link[rel="icon"][type="image/svg+xml"]')?.setAttribute("href", id === "nouvelle" ? "./identite/favicon.svg" : "./favicon.svg");
+  document.querySelector('link[rel="icon"][type="image/svg+xml"]')?.setAttribute("href", FAVICON[id]);
 }
 
 /** Choix fait sur ce téléphone (null : suivre le réglage général). */
