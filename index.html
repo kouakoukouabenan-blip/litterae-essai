@@ -15,6 +15,12 @@
           var ok = function (x) { return x === "nouvelle" || x === "nouvelle-afrique" || x === "ancienne"; };
           id = ok(ici) ? ici : ok(tdb) ? tdb : id;
         } catch (e) {}
+        // Ouverture : l'animation complète (3 s) à la première ouverture de la journée, une version courte (1 s) ensuite.
+        try {
+          var d = new Date(), jour = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+          if (localStorage.getItem("litterae.ouverture-jour") === jour) document.documentElement.className += " ouverture-rapide";
+          else localStorage.setItem("litterae.ouverture-jour", jour);
+        } catch (e) {}
         if (id !== "ancienne") document.documentElement.className += " identite-nouvelle";
         if (id === "nouvelle-afrique") document.documentElement.className += " couleurs-afrique";
       })();
@@ -67,6 +73,14 @@
       @keyframes splash-ecrit { to { clip-path: inset(0 0 0 0); } }
       @keyframes splash-charge { from { transform: scaleX(0); } to { transform: scaleX(1); } }
       @media (prefers-reduced-motion: reduce) { #splash p.neuf { clip-path: none; } }
+      /* Ouverture courte (déjà ouverte aujourd'hui) : la même animation en accéléré, sans la promesse. */
+      .ouverture-rapide #splash .neuf .l1 { animation-duration: .4s; }
+      .ouverture-rapide #splash .neuf .l2 { animation-duration: .4s; }
+      .ouverture-rapide #splash .neuf .carre { animation-duration: .25s; animation-delay: .3s; }
+      .ouverture-rapide #splash p.neuf { animation-duration: .35s; animation-delay: .4s; }
+      .ouverture-rapide #splash p.neuf.promesse { display: none; }
+      .ouverture-rapide #splash .chargement i { animation-duration: .85s; animation-delay: 0s; }
+      .ouverture-rapide #splash .chargement { animation-delay: 0s; }
       @keyframes splash-l1 { from { transform: translate(-36px, 36px); opacity: 0; } to { transform: none; opacity: 1; } }
       @keyframes splash-l2 { from { transform: translate(36px, -36px); opacity: 0; } to { transform: none; opacity: 1; } }
       @keyframes splash-carre { from { transform: scale(0); } to { transform: none; } }
