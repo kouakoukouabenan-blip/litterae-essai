@@ -178,93 +178,93 @@
 :root.identite-nouvelle .passage-adresse { background: rgba(255, 255, 255, .1); color: #fff; }
 
 /* ---------- Choix de la méthode : les icônes de la charte ---------- */
-:root.identite-nouvelle .methode-bouton { border-radius: 4px; font-family: var(--font-head); }
+:root.identite-nouvelle:not(.couleurs-afrique) .methode-bouton { border-radius: 4px; } :root.identite-nouvelle .methode-bouton { font-family: var(--font-head); }
 :root.identite-nouvelle .methode-icone { width: 28px; height: 28px; flex-shrink: 0; color: var(--ink); }
 :root.identite-nouvelle .methode-ligne.is-bientot .methode-icone { color: var(--muted); opacity: .7; }
 
 /* ---------- Pied de page ---------- */
 :root.identite-nouvelle .site-footer a { color: var(--muted); }
 
-/* ---------- Angles (généré depuis les autres feuilles) : 4 px pour les contrôles, 8 px pour les cartes, carrés pour les points ---------- */
-:root.identite-nouvelle .accueil-recherche .field,
-:root.identite-nouvelle .bottom-nav-item[aria-current="page"] .bottom-nav-icone,
-:root.identite-nouvelle .bottom-nav-item[aria-current="page"] .icon,
-:root.identite-nouvelle .btn,
-:root.identite-nouvelle .chip,
-:root.identite-nouvelle .defi-chrono,
-:root.identite-nouvelle .dico-search .field,
-:root.identite-nouvelle .fil-nouveau,
-:root.identite-nouvelle .fn-chip,
-:root.identite-nouvelle .fn-mini,
-:root.identite-nouvelle .fn-tile,
-:root.identite-nouvelle .formule-partie,
-:root.identite-nouvelle .install-btn,
-:root.identite-nouvelle .nav-tab[aria-current="page"],
-:root.identite-nouvelle .passage-adresse,
-:root.identite-nouvelle .pays-liste li,
-:root.identite-nouvelle .search-bar .field,
-:root.identite-nouvelle .search-bar .filter-btn,
-:root.identite-nouvelle .segment,
-:root.identite-nouvelle .segments,
-:root.identite-nouvelle .segments-curseur,
-:root.identite-nouvelle .serie-badge,
-:root.identite-nouvelle .tag,
-:root.identite-nouvelle .video-aide-bouton,
-:root.identite-nouvelle .work-libre { border-radius: var(--radius-sm) !important; }
-:root.identite-nouvelle .annot-num,
-:root.identite-nouvelle .arg,
-:root.identite-nouvelle .auteur-carte,
-:root.identite-nouvelle .auteur-initiale,
-:root.identite-nouvelle .badge-carte,
-:root.identite-nouvelle .bulle,
-:root.identite-nouvelle .choix .choix-carte,
-:root.identite-nouvelle .choix-carte,
-:root.identite-nouvelle .defi-bravo,
-:root.identite-nouvelle .demo-tel,
-:root.identite-nouvelle .devoir-avertissement,
-:root.identite-nouvelle .devoir-compris,
-:root.identite-nouvelle .devoir-compris-carte,
-:root.identite-nouvelle .devoir-conseil,
-:root.identite-nouvelle .devoir-corriger,
-:root.identite-nouvelle .devoir-etapes,
-:root.identite-nouvelle .devoir-exemple,
-:root.identite-nouvelle .devoir-garde,
-:root.identite-nouvelle .devoir-menu-choix,
-:root.identite-nouvelle .devoir-note,
-:root.identite-nouvelle .devoir-piste,
-:root.identite-nouvelle .devoir-plan,
-:root.identite-nouvelle .fil-argument,
-:root.identite-nouvelle .fil-carte,
-:root.identite-nouvelle .formation-choix-btn,
-:root.identite-nouvelle .formation-etape,
-:root.identite-nouvelle .formation-etape-num,
-:root.identite-nouvelle .formation-indice,
-:root.identite-nouvelle .formation-reponse,
-:root.identite-nouvelle .formation-retour,
-:root.identite-nouvelle .formation-tableau > div,
-:root.identite-nouvelle .formation-tete,
-:root.identite-nouvelle .formation-tuile,
-:root.identite-nouvelle .invitation-notifs,
-:root.identite-nouvelle .methode-bouton,
-:root.identite-nouvelle .outil-icone,
-:root.identite-nouvelle .pour-toi-ligne,
-:root.identite-nouvelle .prochaine,
-:root.identite-nouvelle .prochaine-message,
-:root.identite-nouvelle .progres-action,
-:root.identite-nouvelle .progres-haut,
-:root.identite-nouvelle .resume-card,
-:root.identite-nouvelle .reussite-cartes section,
-:root.identite-nouvelle .step-num,
-:root.identite-nouvelle .sujet-tape { border-radius: var(--radius) !important; }
-:root.identite-nouvelle .annonce-urgent::before,
-:root.identite-nouvelle .atelier-pastille,
-:root.identite-nouvelle .devoir-lecture-points i,
-:root.identite-nouvelle .fn-chip::before,
-:root.identite-nouvelle .message-nouveau .message-haut::before,
-:root.identite-nouvelle .methode-point,
-:root.identite-nouvelle .objectif-points span,
-:root.identite-nouvelle .prochaine-signal,
-:root.identite-nouvelle .work-fn::before { border-radius: 0 !important; }
+/* ---------- Angles francs, sauf dans la variante couleurs d'Afrique qui garde les arrondis de l'ancien (généré depuis les autres feuilles) : 4 px pour les contrôles, 8 px pour les cartes, carrés pour les points ---------- */
+:root.identite-nouvelle:not(.couleurs-afrique) .accueil-recherche .field,
+:root.identite-nouvelle:not(.couleurs-afrique) .bottom-nav-item[aria-current="page"] .bottom-nav-icone,
+:root.identite-nouvelle:not(.couleurs-afrique) .bottom-nav-item[aria-current="page"] .icon,
+:root.identite-nouvelle:not(.couleurs-afrique) .btn,
+:root.identite-nouvelle:not(.couleurs-afrique) .chip,
+:root.identite-nouvelle:not(.couleurs-afrique) .defi-chrono,
+:root.identite-nouvelle:not(.couleurs-afrique) .dico-search .field,
+:root.identite-nouvelle:not(.couleurs-afrique) .fil-nouveau,
+:root.identite-nouvelle:not(.couleurs-afrique) .fn-chip,
+:root.identite-nouvelle:not(.couleurs-afrique) .fn-mini,
+:root.identite-nouvelle:not(.couleurs-afrique) .fn-tile,
+:root.identite-nouvelle:not(.couleurs-afrique) .formule-partie,
+:root.identite-nouvelle:not(.couleurs-afrique) .install-btn,
+:root.identite-nouvelle:not(.couleurs-afrique) .nav-tab[aria-current="page"],
+:root.identite-nouvelle:not(.couleurs-afrique) .passage-adresse,
+:root.identite-nouvelle:not(.couleurs-afrique) .pays-liste li,
+:root.identite-nouvelle:not(.couleurs-afrique) .search-bar .field,
+:root.identite-nouvelle:not(.couleurs-afrique) .search-bar .filter-btn,
+:root.identite-nouvelle:not(.couleurs-afrique) .segment,
+:root.identite-nouvelle:not(.couleurs-afrique) .segments,
+:root.identite-nouvelle:not(.couleurs-afrique) .segments-curseur,
+:root.identite-nouvelle:not(.couleurs-afrique) .serie-badge,
+:root.identite-nouvelle:not(.couleurs-afrique) .tag,
+:root.identite-nouvelle:not(.couleurs-afrique) .video-aide-bouton,
+:root.identite-nouvelle:not(.couleurs-afrique) .work-libre { border-radius: var(--radius-sm) !important; }
+:root.identite-nouvelle:not(.couleurs-afrique) .annot-num,
+:root.identite-nouvelle:not(.couleurs-afrique) .arg,
+:root.identite-nouvelle:not(.couleurs-afrique) .auteur-carte,
+:root.identite-nouvelle:not(.couleurs-afrique) .auteur-initiale,
+:root.identite-nouvelle:not(.couleurs-afrique) .badge-carte,
+:root.identite-nouvelle:not(.couleurs-afrique) .bulle,
+:root.identite-nouvelle:not(.couleurs-afrique) .choix .choix-carte,
+:root.identite-nouvelle:not(.couleurs-afrique) .choix-carte,
+:root.identite-nouvelle:not(.couleurs-afrique) .defi-bravo,
+:root.identite-nouvelle:not(.couleurs-afrique) .demo-tel,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-avertissement,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-compris,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-compris-carte,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-conseil,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-corriger,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-etapes,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-exemple,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-garde,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-menu-choix,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-note,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-piste,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-plan,
+:root.identite-nouvelle:not(.couleurs-afrique) .fil-argument,
+:root.identite-nouvelle:not(.couleurs-afrique) .fil-carte,
+:root.identite-nouvelle:not(.couleurs-afrique) .formation-choix-btn,
+:root.identite-nouvelle:not(.couleurs-afrique) .formation-etape,
+:root.identite-nouvelle:not(.couleurs-afrique) .formation-etape-num,
+:root.identite-nouvelle:not(.couleurs-afrique) .formation-indice,
+:root.identite-nouvelle:not(.couleurs-afrique) .formation-reponse,
+:root.identite-nouvelle:not(.couleurs-afrique) .formation-retour,
+:root.identite-nouvelle:not(.couleurs-afrique) .formation-tableau > div,
+:root.identite-nouvelle:not(.couleurs-afrique) .formation-tete,
+:root.identite-nouvelle:not(.couleurs-afrique) .formation-tuile,
+:root.identite-nouvelle:not(.couleurs-afrique) .invitation-notifs,
+:root.identite-nouvelle:not(.couleurs-afrique) .methode-bouton,
+:root.identite-nouvelle:not(.couleurs-afrique) .outil-icone,
+:root.identite-nouvelle:not(.couleurs-afrique) .pour-toi-ligne,
+:root.identite-nouvelle:not(.couleurs-afrique) .prochaine,
+:root.identite-nouvelle:not(.couleurs-afrique) .prochaine-message,
+:root.identite-nouvelle:not(.couleurs-afrique) .progres-action,
+:root.identite-nouvelle:not(.couleurs-afrique) .progres-haut,
+:root.identite-nouvelle:not(.couleurs-afrique) .resume-card,
+:root.identite-nouvelle:not(.couleurs-afrique) .reussite-cartes section,
+:root.identite-nouvelle:not(.couleurs-afrique) .step-num,
+:root.identite-nouvelle:not(.couleurs-afrique) .sujet-tape { border-radius: var(--radius) !important; }
+:root.identite-nouvelle:not(.couleurs-afrique) .annonce-urgent::before,
+:root.identite-nouvelle:not(.couleurs-afrique) .atelier-pastille,
+:root.identite-nouvelle:not(.couleurs-afrique) .devoir-lecture-points i,
+:root.identite-nouvelle:not(.couleurs-afrique) .fn-chip::before,
+:root.identite-nouvelle:not(.couleurs-afrique) .message-nouveau .message-haut::before,
+:root.identite-nouvelle:not(.couleurs-afrique) .methode-point,
+:root.identite-nouvelle:not(.couleurs-afrique) .objectif-points span,
+:root.identite-nouvelle:not(.couleurs-afrique) .prochaine-signal,
+:root.identite-nouvelle:not(.couleurs-afrique) .work-fn::before { border-radius: 0 !important; }
 
 /* Mon espace (site d'essai) : choix de l'apparence. Présent dans les deux identités. */
 .apparence { margin-top: var(--s6); }
@@ -281,7 +281,7 @@
 .transition-methode-icone { width: 72px; height: 72px; color: var(--ink); animation: tm-icone .5s cubic-bezier(.2,.8,.3,1.2) both; }
 .transition-methode-icone path:last-child { transform-origin: center; transform-box: fill-box; animation: tm-carre .3s .3s cubic-bezier(.3,1.6,.5,1) both; }
 .transition-methode-point { width: 28px; height: 28px; border-radius: 50%; animation: tm-icone .5s cubic-bezier(.2,.8,.3,1.2) both; }
-:root.identite-nouvelle .transition-methode-point { border-radius: 0; }
+:root.identite-nouvelle:not(.couleurs-afrique) .transition-methode-point { border-radius: 0; }
 .transition-methode-nom { font: 700 1.375rem/1.2 var(--font-head, var(--font-text)); color: var(--ink-strong); animation: tm-nom .4s .2s ease-out both; }
 @keyframes tm-voile { 0% { opacity: 0; } 15% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes tm-icone { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
@@ -319,6 +319,9 @@
  * Même identité (logo, polices, angles, animations) avec les couleurs de l'ancien design :
  * vert profond à la place de l'indigo, terre cuite en accent, ocre en mise en avant, fond crème. */
 :root.identite-nouvelle.couleurs-afrique {
+  /* Les arrondis de l'ancien design (demande d'Atikan, 19/11/2026). */
+  --radius: 20px;
+  --radius-sm: 14px;
   --paper: #FFF8EC;
   --surface: #FFFFFF;
   --surface-hover: #FFF3DE;
