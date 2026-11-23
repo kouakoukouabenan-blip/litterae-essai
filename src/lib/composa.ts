@@ -62,14 +62,63 @@ export function devoirsOuverts(memo: Memo | null, maintenant = Date.now()): Devo
 export const useDevoirsComposa = () => devoirsOuverts(useStored<Memo | null>(CLE, null)[0]);
 export const aDejaOuvertComposa = () => read<Memo | null>(CLE, null) !== null;
 
-/** Adresse à ouvrir dans le cadre : un devoir précis, sinon la liste des devoirs. */
-export function adresseComposa(salle?: string | null) {
-  const chemin = salle && /^[0-9a-f-]{36}$/.test(salle) ? `/eleve/salles/${salle}` : "/eleve";
+/** Adresse à ouvrir dans le cadre : rejoindre avec un code, un devoir précis, sinon la liste des devoirs. */
+export function adresseComposa(salle?: string | null, code?: string | null) {
+  const chemin = code && CODE.test(code) ? `/eleve/rejoindre/${code}`
+    : salle && /^[0-9a-f-]{36}$/.test(salle) ? `/eleve/salles/${salle}` : "/eleve";
   const q = new URLSearchParams({ dans: "litterae" });
   const prenom = titulaire()?.prenom;
   if (prenom) q.set("prenom", prenom);
   return `${COMPOSA_URL}${chemin}?${q}`;
 }
+
+// ---------------------------------------------------------------------------
+// Devoirs dont le professeur affiche le code sur l'accueil (lecture publique de COMPOSA).
+// ---------------------------------------------------------------------------
+/** Base de COMPOSA : adresse et clé publique (déjà visibles dans COMPOSA, elles ne donnent que ce que la base permet). */
+const BASE_URL = "https://msipoithftgdijfliyjk.supabase.co";
+const CLE_PUBLIQUE = "sb_publishable_WtBNqqmNPwU--y7E9zC9BA_YgV76tAj";
+const CODE = /^[A-HJKMNP-Z2-9]{6}$/;
+
+export interface DevoirAffiche { id: string; titre: string; code: string; ouverture_at: string; fermeture_at: string }
+interface MemoPublic { devoirs: DevoirAffiche[]; maj: number }
+const CLE_PUBLIC = "composa-codes";
+const RAFRAICHIR = 5 * 60e3;
+
+function lireAffiches(donnees: unknown): DevoirAffiche[] {
+  if (!Array.isArray(donnees)) return [];
+  return donnees.slice(0, 5).flatMap((d): DevoirAffiche[] => {
+    const o = (d ?? {}) as Record<string, unknown>;
+    const id = texte(o.id, 40), code = texte(o.code, 6);
+    if (!/^[0-9a-f-]{36}$/.test(id) || !CODE.test(code) || !date(o.ouverture_at) || !date(o.fermeture_at)) return [];
+    return [{ id, titre: texte(o.titre, 120) || "Devoir", code, ouverture_at: date(o.ouverture_at), fermeture_at: date(o.fermeture_at) }];
+  });
+}
+
+let enCours = false;
+/** Va chercher les codes affichés (au plus toutes les 5 minutes ; hors connexion, garde les derniers). */
+export async function actualiserCodes(force = false) {
+  const memo = read<MemoPublic | null>(CLE_PUBLIC, null);
+  if (enCours || (!force && memo && Date.now() - memo.maj < RAFRAICHIR)) return;
+  enCours = true;
+  try {
+    const r = await fetch(`${BASE_URL}/rest/v1/rpc/devoirs_litterae`, {
+      method: "POST", headers: { apikey: CLE_PUBLIQUE, "Content-Type": "application/json" }, body: "{}",
+    });
+    // Base pas encore prête (migration non appliquée) : rien à afficher.
+    write<MemoPublic>(CLE_PUBLIC, { devoirs: r.ok ? lireAffiches(await r.json()) : [], maj: Date.now() });
+  } catch { /* hors connexion */ } finally { enCours = false; }
+}
+
+/** Codes à afficher sur l'accueil, encore valables. */
+export function useCodesAffiches(): DevoirAffiche[] {
+  const [memo] = useStored<MemoPublic | null>(CLE_PUBLIC, null);
+  useEffect(() => { actualiserCodes(); }, []);
+  return (memo?.devoirs ?? []).filter(d => Date.parse(d.fermeture_at) > Date.now());
+}
+
+/** « K7M-4QX » : le code tel que le professeur l'écrit. */
+export const codeLisible = (c: string) => `${c.slice(0, 3)}-${c.slice(3)}`;
 
 const heure = (d: Date) => d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }).replace(":", " h ");
 function jour(d: Date, maintenant: Date) {
@@ -80,9 +129,10 @@ function jour(d: Date, maintenant: Date) {
   return d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
 }
 
-/** « Se termine aujourd'hui à 18 h 00 », « Commence demain à 08 h 00 ». */
-export function quand(d: DevoirComposa, maintenant = new Date()) {
-  const debut = d.etat === "a_venir";
+/** « fin à 18 h 00 » (aujourd'hui), « début demain à 08 h 00 ». */
+export function quand(d: Pick<DevoirComposa, "ouverture_at" | "fermeture_at">, maintenant = new Date()) {
+  const debut = Date.parse(d.ouverture_at) > maintenant.getTime();
   const t = new Date(debut ? d.ouverture_at : d.fermeture_at);
-  return `${debut ? "Commence" : "Se termine"} ${jour(t, maintenant)} à ${heure(t)}`;
+  const j = jour(t, maintenant);
+  return `${debut ? "début" : "fin"} ${j === "aujourd'hui" ? "" : j + " "}à ${heure(t)}`;
 }

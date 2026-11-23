@@ -14,7 +14,7 @@ import { useMethode } from "../lib/methodes";
 import { AccueilCommentaire } from "./Commentaire";
 import { useFormation, SEUIL } from "../lib/formation";
 import { ETAPES } from "../data/formation";
-import { TuileDevoirs } from "../components/TuileDevoirs";
+import { LienDevoirs, TuileDevoirs } from "../components/TuileDevoirs";
 
 /** Détail d'une case : version courte sur téléphone, où les cases sont étroites. */
 const Detail = ({ long, court }: { long: string; court: string }) => (
@@ -89,6 +89,7 @@ function AccueilDissertation() {
         </a>
       </nav>
 
+      <LienDevoirs />
       <InvitationNotifs />
       <Suggestions />
       <ReponseAlerte />

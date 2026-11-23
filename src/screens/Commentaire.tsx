@@ -1,4 +1,4 @@
-import { TuileDevoirs } from "../components/TuileDevoirs";
+import { LienDevoirs, TuileDevoirs } from "../components/TuileDevoirs";
 import { Fragment } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { Page } from "../components/Page";
@@ -126,6 +126,7 @@ export function AccueilCommentaire() {
           <span class="choix-detail">Formules pour ta copie</span>
         </a>
       </nav>
+      <LienDevoirs />
       <Annonces />
       {premium && <PourToiCC />}
       <InstallBanner />

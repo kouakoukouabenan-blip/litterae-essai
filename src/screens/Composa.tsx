@@ -7,9 +7,8 @@ import { adresseComposa } from "../lib/composa";
  * L'élève y entre le code donné par son professeur, compose et retrouve ses notes.
  */
 export function ComposaScreen({ params }: { params: URLSearchParams }) {
-  const salle = params.get("salle");
   // L'adresse est fixée à l'ouverture : changer d'écran dans COMPOSA ne recharge pas le cadre.
-  const [src] = useState(() => adresseComposa(salle));
+  const [src] = useState(() => adresseComposa(params.get("salle"), params.get("code")));
   const [charge, setCharge] = useState(false);
   useEffect(() => {
     document.documentElement.dataset.univers = "composa";

@@ -1031,14 +1031,17 @@ html[data-univers="composa"] .bandeau-essai { display: none; }
 .composa-cadre { position: fixed; left: 0; right: 0; bottom: 0; top: calc(var(--topbar-h) + var(--band-h)); width: 100%; height: calc(100dvh - var(--topbar-h) - var(--band-h)); border: 0; background: var(--paper); }
 .composa-attente { margin: var(--s6) 0; text-align: center; color: var(--muted); }
 
-/* Accueil : tuile des devoirs du professeur */
-.devoirs-tuile { display: flex; align-items: center; gap: var(--s3); padding: var(--s3) var(--s4); margin-bottom: var(--s4); border: 1px solid var(--orange); border-left-width: 4px; border-radius: var(--radius); background: var(--surface); color: var(--ink); text-decoration: none; }
-.devoirs-tuile > .icon { flex: none; color: var(--orange); }
-.devoirs-tuile-texte { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.devoirs-tuile-sur { font-size: var(--text-xs); font-weight: 700; color: var(--orange-text); text-transform: uppercase; letter-spacing: .04em; }
-.devoirs-tuile-titre { font-weight: 700; color: var(--ink-strong); overflow-wrap: anywhere; }
-.devoirs-tuile-detail { font-size: var(--text-sm); color: var(--muted); }
-.devoirs-tuile-action { flex: none; padding: var(--s2) var(--s3); border-radius: var(--radius-sm); background: var(--orange); color: #fff; font-weight: 700; font-size: var(--text-sm); }
-.devoirs-tuile-calme { border-color: var(--line); border-left-width: 1px; }
-.devoirs-tuile-calme > .icon { color: var(--green); }
-.devoirs-tuile-calme > .icon:last-child { color: var(--muted); }
+/* Accueil : ligne compacte du devoir en cours (seulement quand il y en a un) */
+.devoir-ligne { display: flex; align-items: center; gap: var(--s3); padding: var(--s2) var(--s2) var(--s2) var(--s3); margin-bottom: var(--s3); border: 1px solid var(--orange); border-left-width: 4px; border-radius: var(--radius); background: var(--surface); color: var(--ink); text-decoration: none; }
+.devoir-ligne-texte { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.devoir-ligne-sur { font-size: var(--text-xs); font-weight: 700; color: var(--orange-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.devoir-ligne-titre { font-weight: 700; color: var(--ink-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.devoir-ligne-action { flex: none; min-height: 40px; display: flex; align-items: center; padding: 0 var(--s3); border-radius: var(--radius-sm); background: var(--orange); color: #fff; font-weight: 700; font-size: var(--text-sm); }
+.devoir-ligne-code { flex: none; display: flex; flex-direction: column; align-items: center; padding: 2px var(--s3); border-radius: var(--radius-sm); background: var(--orange-pale); color: var(--ink-strong); font: 700 1.0625rem/1.25 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .04em; }
+.devoir-ligne-code-mot { font: 700 10px/1.2 var(--font-text); letter-spacing: .06em; text-transform: uppercase; color: var(--orange-text); }
+
+/* Accueil : entrée discrète vers l'espace Devoirs */
+.devoirs-lien { display: flex; align-items: center; gap: var(--s2); min-height: 44px; margin-top: var(--s4); padding: 0 var(--s3); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); font-weight: 600; text-decoration: none; }
+.devoirs-lien > span { flex: 1; }
+.devoirs-lien > .icon:first-child { color: var(--green); }
+.devoirs-lien > .icon:last-child { color: var(--muted); }
