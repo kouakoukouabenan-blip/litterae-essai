@@ -26,9 +26,7 @@ export interface Methode {
 export interface Matiere { id: string; nom: string; prete: boolean }
 export const MATIERES: Matiere[] = [
   { id: "francais", nom: "Français", prete: true },
-  { id: "philosophie", nom: "Philosophie", prete: false },
-  { id: "anglais", nom: "Anglais", prete: false },
-  { id: "histoire-geo", nom: "Histoire-Géographie", prete: false }
+  { id: "philosophie", nom: "Philosophie", prete: false }
 ];
 export const matiereDe = (m: Methode) => MATIERES.find(x => x.id === m.matiere) ?? MATIERES[0];
 
