@@ -8,7 +8,7 @@ import { adresseComposa } from "../lib/composa";
  */
 export function ComposaScreen({ params }: { params: URLSearchParams }) {
   // L'adresse est fixée à l'ouverture : changer d'écran dans COMPOSA ne recharge pas le cadre.
-  const [src] = useState(() => adresseComposa(params.get("salle"), params.get("code")));
+  const [src] = useState(() => adresseComposa(params.get("salle"), params.get("code"), params.get("vue")));
   const [charge, setCharge] = useState(false);
   useEffect(() => {
     document.documentElement.dataset.univers = "composa";

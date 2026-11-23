@@ -4,10 +4,11 @@
 import { useEffect } from "preact/hooks";
 import { read, useStored, write } from "./storage";
 import { titulaire } from "./licence";
+import { ESSAI } from "./site";
 
 /** Adresse de COMPOSA, sans barre finale. */
 export const COMPOSA_URL: string = import.meta.env.VITE_COMPOSA_URL
-  ?? "https://composa-eyb.pages.dev";
+  ?? (ESSAI ? "https://notes-litterae.composa-eyb.pages.dev" : "https://composa-eyb.pages.dev");
 const ORIGINE = new URL(COMPOSA_URL).origin;
 
 export interface DevoirComposa {
@@ -39,6 +40,51 @@ export function lireDevoirs(donnees: unknown): DevoirComposa[] | null {
   });
 }
 
+// ---------------------------------------------------------------------------
+// Notes publiées par le professeur
+// ---------------------------------------------------------------------------
+export interface NoteComposa { id: string; titre: string; note: number; sur: number; publiee_at: string }
+const CLE_NOTES = "composa-notes";
+const CLE_VUES = "composa-notes-vues";
+/** Une note reste sur l'accueil 7 jours, ou jusqu'à ce que l'élève l'ouvre. */
+const DUREE_NOTE = 7 * 864e5;
+
+export function lireNotes(donnees: unknown): NoteComposa[] | null {
+  const liste = donnees && typeof donnees === "object" ? (donnees as { notes?: unknown }).notes : undefined;
+  if (!Array.isArray(liste)) return null;
+  return liste.slice(0, 3).flatMap((d): NoteComposa[] => {
+    const o = (d ?? {}) as Record<string, unknown>;
+    const id = texte(o.id, 40);
+    const note = Number(o.note), sur = Number(o.sur);
+    if (!/^[0-9a-f-]{36}$/.test(id) || !Number.isFinite(note) || !Number.isFinite(sur) || sur < 0 || !date(o.publiee_at)) return [];
+    return [{ id, titre: texte(o.titre, 120) || "Devoir", note, sur, publiee_at: date(o.publiee_at) }];
+  });
+}
+
+/** Dernière note pas encore ouverte, publiée il y a moins de 7 jours. */
+export function useNoteAVoir(): NoteComposa | null {
+  const [notes] = useStored<NoteComposa[]>(CLE_NOTES, []);
+  const [vues] = useStored<string[]>(CLE_VUES, []);
+  return notes.find(n => !vues.includes(n.id) && Date.now() - Date.parse(n.publiee_at) < DUREE_NOTE) ?? null;
+}
+export const marquerNoteVue = (id: string) => write(CLE_VUES, [id, ...read<string[]>(CLE_VUES, []).filter(x => x !== id)].slice(0, 30));
+
+/** « 14,5/20 » */
+export const noteLisible = (n: NoteComposa) =>
+  `${n.note.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}/${n.sur.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}`;
+
+// ---------------------------------------------------------------------------
+// Sonde : de temps en temps, l'accueil demande à COMPOSA (dans un cadre invisible) les devoirs et les notes.
+// Seulement pour l'élève qui a déjà ouvert l'espace Devoirs sur ce téléphone.
+// ---------------------------------------------------------------------------
+const CLE_SONDE = "composa-sonde";
+const SONDE_TOUS_LES = 15 * 60e3;
+export const adresseSonde = () => `${COMPOSA_URL}/litterae/sonde?dans=litterae`;
+export function sondeAFaire() {
+  return aDejaOuvertComposa() && Date.now() - read<number>(CLE_SONDE, 0) > SONDE_TOUS_LES;
+}
+export const noterSonde = () => write(CLE_SONDE, Date.now());
+
 /** Écoute les nouvelles de COMPOSA (seulement de son adresse). */
 export function useEcouteComposa() {
   useEffect(() => {
@@ -46,6 +92,9 @@ export function useEcouteComposa() {
       if (e.origin !== ORIGINE) return;
       const devoirs = lireDevoirs(e.data);
       if (devoirs) write<Memo>(CLE, { devoirs, maj: Date.now() });
+      const notes = lireNotes(e.data);
+      if (notes) write(CLE_NOTES, notes);
+      if (devoirs) window.dispatchEvent(new Event("composa-recu"));
     };
     window.addEventListener("message", recevoir);
     return () => window.removeEventListener("message", recevoir);
@@ -62,9 +111,9 @@ export const useDevoirsComposa = () => devoirsOuverts(useStored<Memo | null>(CLE
 export const aDejaOuvertComposa = () => read<Memo | null>(CLE, null) !== null;
 
 /** Adresse à ouvrir dans le cadre : rejoindre avec un code, un devoir précis, sinon la liste des devoirs. */
-export function adresseComposa(salle?: string | null, code?: string | null) {
+export function adresseComposa(salle?: string | null, code?: string | null, vue?: string | null) {
   const chemin = code && CODE.test(code) ? `/eleve/rejoindre/${code}`
-    : salle && /^[0-9a-f-]{36}$/.test(salle) ? `/eleve/salles/${salle}` : "/eleve";
+    : salle && /^[0-9a-f-]{36}$/.test(salle) ? `/eleve/salles/${salle}${vue === "resultat" ? "/resultat" : ""}` : "/eleve";
   const q = new URLSearchParams({ dans: "litterae" });
   const prenom = titulaire()?.prenom;
   if (prenom) q.set("prenom", prenom);

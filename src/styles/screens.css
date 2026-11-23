@@ -1040,6 +1040,11 @@ html[data-univers="composa"] .bandeau-essai { display: none; }
 .devoir-ligne-code { flex: none; display: flex; flex-direction: column; align-items: center; padding: 2px var(--s3); border-radius: var(--radius-sm); background: var(--orange-pale); color: var(--ink-strong); font: 700 1.0625rem/1.25 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .04em; }
 .devoir-ligne-code-mot { font: 700 10px/1.2 var(--font-text); letter-spacing: .06em; text-transform: uppercase; color: var(--orange-text); }
 
+.devoir-ligne-note { border-color: var(--green); }
+.devoir-ligne-note .devoir-ligne-sur { color: var(--green); }
+.devoir-ligne-note-valeur { flex: none; padding: var(--s1) var(--s3); border-radius: var(--radius-sm); background: var(--green); color: var(--on-dark); font: 700 1.0625rem/1.3 var(--font-text); }
+.composa-sonde { position: absolute; width: 1px; height: 1px; border: 0; opacity: 0; pointer-events: none; left: -9999px; }
+
 /* Accueil : entrée discrète vers l'espace Devoirs */
 .devoirs-lien { display: flex; align-items: center; gap: var(--s2); min-height: 44px; margin-top: var(--s4); padding: 0 var(--s3); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); font-weight: 600; text-decoration: none; }
 .devoirs-lien > span { flex: 1; }
