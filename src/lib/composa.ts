@@ -192,10 +192,10 @@ export function quand(d: Pick<DevoirComposa, "ouverture_at" | "fermeture_at">, m
 // ---------------------------------------------------------------------------
 const CLE_FAITS = "composa-faits";
 const UUID = /^[0-9a-f-]{36}$/;
-/** Nombre de devoirs gratuits sans clé : réglé dans le tableau de bord, 2 par défaut. */
+/** Nombre de devoirs gratuits sans clé : réglé dans le tableau de bord, 5 par défaut. */
 export const devoirsGratuits = () => {
   const n = Number(contenuLibre()?.devoirsGratuits);
-  return Number.isInteger(n) && n >= 0 && n <= 100 ? n : 2;
+  return Number.isInteger(n) && n >= 0 && n <= 100 ? n : 5;
 };
 function lireInscrits(donnees: unknown): string[] {
   const l = donnees && typeof donnees === "object" ? (donnees as { inscrits?: unknown }).inscrits : undefined;
