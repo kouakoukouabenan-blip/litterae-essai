@@ -5,11 +5,10 @@ import { useEffect } from "preact/hooks";
 import { read, useStored, write } from "./storage";
 import { licence, titulaire } from "./licence";
 import { contenuLibre } from "./libre";
-import { ESSAI } from "./site";
 
 /** Adresse de COMPOSA, sans barre finale. */
 export const COMPOSA_URL: string = import.meta.env.VITE_COMPOSA_URL
-  ?? (ESSAI ? "https://devoirs-inscrits.composa-eyb.pages.dev" : "https://composa-eyb.pages.dev");
+  ?? "https://composa-eyb.pages.dev";
 const ORIGINE = new URL(COMPOSA_URL).origin;
 
 export interface DevoirComposa {
