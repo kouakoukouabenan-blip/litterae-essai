@@ -1,4 +1,3 @@
-import { ESSAI } from "./site";
 // COMPOSA (devoirs en ligne du professeur) ouvert dans Litterae, espace « Devoirs ».
 // COMPOSA reste un site à part (sa base, l'espace professeur) : Litterae l'affiche dans un cadre
 // et retient les devoirs en cours qu'il lui envoie, pour la case de l'accueil.
@@ -8,9 +7,8 @@ import { licence, titulaire } from "./licence";
 import { contenuLibre } from "./libre";
 
 /** Adresse de COMPOSA, sans barre finale. */
-// Site d'essai : la version de COMPOSA en préparation (bouton retour du téléphone → Litterae).
 export const COMPOSA_URL: string = import.meta.env.VITE_COMPOSA_URL
-  ?? (ESSAI ? "https://retour-litterae.composa-eyb.pages.dev" : "https://composa-eyb.pages.dev");
+  ?? "https://composa-eyb.pages.dev";
 const ORIGINE = new URL(COMPOSA_URL).origin;
 
 export interface DevoirComposa {
