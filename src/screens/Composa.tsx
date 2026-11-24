@@ -41,9 +41,8 @@ export function ComposaScreen({ params }: { params: URLSearchParams }) {
 }
 
 /**
- * Entrée dans la salle de devoir, avec le logo : les deux L s'écartent comme une porte,
- * le carré passe l'ouverture et grandit jusqu'à devenir la page de COMPOSA.
- * Au moins 1,8 s pour qu'on la voie, et jamais plus de 6 s même si COMPOSA tarde.
+ * Entrée dans la salle de devoir : la porte s'ouvre sur une table et une copie, le temps que COMPOSA s'ouvre.
+ * Dessin plat, sans effet : au moins 1,6 s pour qu'on la voie, jamais plus de 6 s même si COMPOSA tarde.
  */
 function EntreeSalle({ pret }: { pret: boolean }) {
   const calme = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -51,22 +50,23 @@ function EntreeSalle({ pret }: { pret: boolean }) {
   const [fin, setFin] = useState(false);
   const [parti, setParti] = useState(false);
   useEffect(() => {
-    const a = setTimeout(() => setVue(true), calme ? 500 : 1800);
+    const a = setTimeout(() => setVue(true), calme ? 500 : 1600);
     const b = setTimeout(() => setFin(true), 6000);
     return () => { clearTimeout(a); clearTimeout(b); };
   }, []);
   const sortir = fin || (vue && pret);
-  useEffect(() => { if (sortir) { const t = setTimeout(() => setParti(true), 350); return () => clearTimeout(t); } }, [sortir]);
+  useEffect(() => { if (sortir) { const t = setTimeout(() => setParti(true), 250); return () => clearTimeout(t); } }, [sortir]);
   if (parti) return null;
   return (
     <div class={`salle-entree${sortir ? " salle-sortie" : ""}`} role="status" aria-label="Tu entres dans la salle de devoir">
-      <svg class="salle-logo" viewBox="0 0 256 256" aria-hidden="true" focusable="false">
-        <path class="salle-l salle-l1" d="M56,56 H84 V172 H156 V200 H56 Z" />
-        <path class="salle-l salle-l2" d="M200,200 H172 V84 H100 V56 H200 Z" />
-        <rect class="salle-carre" x="114" y="114" width="28" height="28" />
-      </svg>
+      <div class="salle-porte-cadre" aria-hidden="true">
+        <div class="salle-dedans">
+          <span class="salle-table" />
+          <span class="salle-copie"><i /><i /><i /></span>
+        </div>
+        <div class="salle-porte"><span class="salle-poignee" /></div>
+      </div>
       <p class="salle-titre">Salle de devoir</p>
-      {vue && !pret && <p class="salle-attente">Ouverture de tes devoirs…</p>}
     </div>
   );
 }

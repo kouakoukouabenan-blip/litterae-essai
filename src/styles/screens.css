@@ -1054,21 +1054,21 @@ html[data-univers="composa"] .bandeau-essai { display: none; }
 .devoirs-lien > .icon:first-child { color: var(--green); }
 .devoirs-lien > .icon:last-child { color: var(--muted); }
 
-/* Entrée dans la salle de devoir (espace Devoirs) : le logo s'ouvre comme une porte, le carré la franchit
- * et grandit jusqu'à devenir la page claire de COMPOSA. */
-.salle-entree { position: fixed; inset: 0; z-index: 60; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s4); background: var(--green); }
-.salle-entree.salle-sortie { animation: salle-part .35s ease-in both; }
-.salle-logo { width: 120px; height: 120px; overflow: visible; animation: salle-apparait .4s ease-out both; }
-.salle-l { fill: var(--on-dark); }
-.salle-l1 { animation: salle-gauche .6s .55s cubic-bezier(.6,0,.2,1) both; }
-.salle-l2 { animation: salle-droite .6s .55s cubic-bezier(.6,0,.2,1) both; }
-.salle-carre { fill: var(--orange); transform-box: fill-box; transform-origin: center; animation: salle-franchit .75s 1.05s cubic-bezier(.7,0,.3,1) both; }
-.salle-titre { margin: 0; font: 600 var(--text-sm)/1 var(--font-text); letter-spacing: .14em; text-transform: uppercase; color: var(--on-dark-muted); animation: salle-titre 1.2s .2s ease-out both; }
-.salle-attente { position: absolute; bottom: 30%; margin: 0; font-size: var(--text-sm); color: var(--muted); animation: salle-apparait .3s ease-out both; }
-@keyframes salle-apparait { from { opacity: 0; transform: scale(.92); } }
-@keyframes salle-gauche { to { transform: translateX(-56px); opacity: .5; } }
-@keyframes salle-droite { to { transform: translateX(56px); opacity: .5; } }
-@keyframes salle-franchit { 60% { fill: var(--orange); } to { transform: scale(90); fill: var(--paper); } }
-@keyframes salle-titre { 0% { opacity: 0; } 25%, 70% { opacity: 1; } to { opacity: 0; } }
+/* Entrée dans la salle de devoir (espace Devoirs) : dessin plat, la porte verte s'ouvre sur une table et une copie. */
+.salle-entree { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s5); background: var(--green); color: var(--on-dark); }
+.salle-entree.salle-sortie { animation: salle-part .25s linear both; }
+.salle-porte-cadre { position: relative; width: 104px; height: 156px; border: 5px solid var(--on-dark); border-bottom: 0; perspective: 600px; }
+.salle-porte-cadre::after { content: ""; position: absolute; left: -24px; right: -24px; bottom: -5px; height: 5px; background: var(--on-dark); }
+.salle-dedans { position: absolute; inset: 0; overflow: hidden; background: var(--paper); }
+.salle-table { position: absolute; left: 14px; right: 14px; bottom: 28px; height: 7px; background: var(--orange); }
+.salle-table::before, .salle-table::after { content: ""; position: absolute; top: 7px; width: 6px; height: 28px; background: var(--orange); }
+.salle-table::before { left: 6px; } .salle-table::after { right: 6px; }
+.salle-copie { position: absolute; left: 30px; bottom: 35px; width: 40px; height: 26px; padding: 6px 6px 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; background: var(--surface); border: 1px solid var(--line-strong); }
+.salle-copie i { display: block; height: 2px; background: var(--line-strong); }
+.salle-copie i:last-child { width: 60%; }
+.salle-porte { position: absolute; inset: 0; background: var(--green-press); border: 2px solid var(--on-dark); box-sizing: border-box; transform-origin: left center; animation: salle-ouvre .9s .3s ease-in-out both; }
+.salle-poignee { position: absolute; right: 10px; top: 52%; width: 7px; height: 7px; border-radius: 50%; background: var(--on-dark); }
+.salle-titre { margin: 0; font: 700 1.25rem/1.2 var(--font-title); color: var(--on-dark); }
+@keyframes salle-ouvre { to { transform: rotateY(-75deg); } }
 @keyframes salle-part { to { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .salle-entree, .salle-entree * { animation-duration: .01s !important; animation-delay: 0s !important; } }
+@media (prefers-reduced-motion: reduce) { .salle-porte { animation: none; transform: rotateY(-75deg); } }
