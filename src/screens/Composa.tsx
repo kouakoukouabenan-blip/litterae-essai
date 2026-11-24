@@ -33,8 +33,43 @@ export function ComposaScreen({ params }: { params: URLSearchParams }) {
     <Page title="Devoirs" back="#/accueil">
       <h1 class="sr-only">Devoirs de ton professeur</h1>
       {!charge && <p class="composa-attente" role="status">Ouverture de tes devoirs…</p>}
+      <EntreeSalle pret={charge} />
       <iframe class="composa-cadre" src={src} title="Devoirs de ton professeur (COMPOSA)"
         allow="fullscreen; clipboard-write" referrerpolicy="strict-origin" onLoad={() => setCharge(true)} />
     </Page>
+  );
+}
+
+/**
+ * Entrée dans la salle de devoir : une porte s'ouvre sur une table et une copie, le temps que COMPOSA s'ouvre.
+ * Au moins 1,8 s pour qu'on la voie, et jamais plus de 6 s même si COMPOSA tarde.
+ */
+function EntreeSalle({ pret }: { pret: boolean }) {
+  const calme = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const [vue, setVue] = useState(false);
+  const [fin, setFin] = useState(false);
+  const [parti, setParti] = useState(false);
+  useEffect(() => {
+    const a = setTimeout(() => setVue(true), calme ? 500 : 1800);
+    const b = setTimeout(() => setFin(true), 6000);
+    return () => { clearTimeout(a); clearTimeout(b); };
+  }, []);
+  const sortir = fin || (vue && pret);
+  useEffect(() => { if (sortir) { const t = setTimeout(() => setParti(true), 450); return () => clearTimeout(t); } }, [sortir]);
+  if (parti) return null;
+  return (
+    <div class={`salle-entree${sortir ? " salle-sortie" : ""}`} role="status" aria-label="Tu entres dans la salle de devoir">
+      <div class="salle-porte-cadre" aria-hidden="true">
+        <div class="salle-dedans">
+          <span class="salle-lumiere" />
+          <span class="salle-table" />
+          <span class="salle-copie"><i /><i /><i /></span>
+        </div>
+        <div class="salle-porte"><span class="salle-poignee" /><span class="salle-plaque">Devoir</span></div>
+      </div>
+      <p class="salle-titre">Salle de devoir</p>
+      <p class="salle-sous-titre">Installe-toi, ton devoir t'attend.</p>
+      <span class="salle-chargement" aria-hidden="true"><span /></span>
+    </div>
   );
 }
