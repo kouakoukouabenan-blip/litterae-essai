@@ -1054,20 +1054,15 @@ html[data-univers="composa"] .bandeau-essai { display: none; }
 .devoirs-lien > .icon:first-child { color: var(--green); }
 .devoirs-lien > .icon:last-child { color: var(--muted); }
 
-/* Entrée dans la salle de devoir (espace Devoirs) : dessin plat, la porte verte s'ouvre sur une table et une copie. */
+/* Entrée dans la salle de devoir (espace Devoirs) : dessin plat, la porte « Devoir » s'ouvre sur la salle. */
 .salle-entree { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s5); background: var(--green); color: var(--on-dark); }
 .salle-entree.salle-sortie { animation: salle-part .25s linear both; }
 .salle-porte-cadre { position: relative; width: 104px; height: 156px; border: 5px solid var(--on-dark); border-bottom: 0; perspective: 600px; }
-.salle-porte-cadre::after { content: ""; position: absolute; left: -24px; right: -24px; bottom: -5px; height: 5px; background: var(--on-dark); }
+.salle-porte-cadre::after { content: ""; position: absolute; z-index: 0; left: -24px; right: -24px; bottom: -5px; height: 5px; background: var(--on-dark); }
 .salle-dedans { position: absolute; inset: 0; overflow: hidden; background: var(--paper); }
-.salle-table { position: absolute; left: 14px; right: 14px; bottom: 28px; height: 7px; background: var(--orange); }
-.salle-table::before, .salle-table::after { content: ""; position: absolute; top: 7px; width: 6px; height: 28px; background: var(--orange); }
-.salle-table::before { left: 6px; } .salle-table::after { right: 6px; }
-.salle-copie { position: absolute; left: 30px; bottom: 35px; width: 40px; height: 26px; padding: 6px 6px 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; background: var(--surface); border: 1px solid var(--line-strong); }
-.salle-copie i { display: block; height: 2px; background: var(--line-strong); }
-.salle-copie i:last-child { width: 60%; }
-.salle-porte { position: absolute; inset: 0; background: var(--green-press); border: 2px solid var(--on-dark); box-sizing: border-box; transform-origin: left center; animation: salle-ouvre .9s .3s ease-in-out both; }
+.salle-porte { position: absolute; inset: 0; z-index: 1; background: var(--green-press); border: 2px solid var(--on-dark); box-sizing: border-box; transform-origin: left center; animation: salle-ouvre .9s .3s ease-in-out both; }
 .salle-poignee { position: absolute; right: 10px; top: 52%; width: 7px; height: 7px; border-radius: 50%; background: var(--on-dark); }
+.salle-plaque { position: absolute; left: 50%; top: 22px; transform: translateX(-50%); padding: 2px 7px; background: var(--on-dark); color: var(--green); font: 700 10px/1.4 var(--font-text); letter-spacing: .08em; text-transform: uppercase; }
 .salle-titre { margin: 0; font: 700 1.25rem/1.2 var(--font-title); color: var(--on-dark); }
 @keyframes salle-ouvre { to { transform: rotateY(-75deg); } }
 @keyframes salle-part { to { opacity: 0; } }

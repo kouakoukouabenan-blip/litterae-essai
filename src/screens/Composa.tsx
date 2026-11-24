@@ -41,7 +41,7 @@ export function ComposaScreen({ params }: { params: URLSearchParams }) {
 }
 
 /**
- * Entrée dans la salle de devoir : la porte s'ouvre sur une table et une copie, le temps que COMPOSA s'ouvre.
+ * Entrée dans la salle de devoir : la porte « Devoir » s'ouvre sur la salle, le temps que COMPOSA s'ouvre.
  * Dessin plat, sans effet : au moins 1,6 s pour qu'on la voie, jamais plus de 6 s même si COMPOSA tarde.
  */
 function EntreeSalle({ pret }: { pret: boolean }) {
@@ -60,11 +60,8 @@ function EntreeSalle({ pret }: { pret: boolean }) {
   return (
     <div class={`salle-entree${sortir ? " salle-sortie" : ""}`} role="status" aria-label="Tu entres dans la salle de devoir">
       <div class="salle-porte-cadre" aria-hidden="true">
-        <div class="salle-dedans">
-          <span class="salle-table" />
-          <span class="salle-copie"><i /><i /><i /></span>
-        </div>
-        <div class="salle-porte"><span class="salle-poignee" /></div>
+        <div class="salle-dedans" />
+        <div class="salle-porte"><span class="salle-plaque">Devoir</span><span class="salle-poignee" /></div>
       </div>
       <p class="salle-titre">Salle de devoir</p>
     </div>
