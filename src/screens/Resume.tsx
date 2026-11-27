@@ -99,12 +99,22 @@ const nbMots = (t: TexteEtudie) => Number(/(\d+) mots/.exec(t.consigne)?.[1]) ||
 /** Dans une leçon : le texte support se lit sur sa propre page, avec le crayon. */
 function CarteTexte({ t }: { t: TexteEtudie }) {
   const [traits] = useStored<unknown[]>(`crayon:${t.id}`, []);
+  const [ouvert, setOuvert] = useState(false);
+  // Le texte s'ouvre dans la leçon : sous le texte, la suite de la leçon continue.
   return (
-    <aside class="rs-carte-texte">
+    <aside class={`rs-carte-texte ${ouvert ? "is-ouvert" : ""}`}>
       <p class="callout-label">Texte support</p>
       <p class="rs-carte-titre"><Texte text={`« ${t.titre} »`} /></p>
-      <p class="meta">{t.auteur} · {nbMots(t)} mots{traits.length ? " · annoté" : ""}</p>
-      <a class="btn btn-primary align-start" href={`#/rs/texte/${t.id}`}><Icon name="menu_book" size={20} />Ouvrir le texte support</a>
+      <p class="meta">{t.auteur}, <Texte text={t.source} /> · {nbMots(t)} mots{traits.length ? " · annoté" : ""}</p>
+      {ouvert && <TexteCrayon id={t.id} texte={t.texte} note={t.note} />}
+      <button type="button" class={`btn ${ouvert ? "btn-secondary" : "btn-primary"} align-start`} aria-expanded={ouvert}
+        onClick={e => {
+          const carte = (e.currentTarget as HTMLElement).closest(".rs-carte-texte");
+          setOuvert(!ouvert);
+          if (ouvert) setTimeout(() => carte?.scrollIntoView({ block: "start" }));
+        }}>
+        <Icon name={ouvert ? "expand_less" : "menu_book"} size={20} />{ouvert ? "Refermer le texte" : "Ouvrir le texte support"}
+      </button>
     </aside>
   );
 }

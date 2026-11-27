@@ -132,31 +132,35 @@ export function TexteCrayon({ id, texte, note }: { id: string; texte: string; no
 
   return (
     <div class={`crayon ${actif ? "is-actif" : ""}`}>
-      <div class="crayon-barre">
-        <button type="button" class={`crayon-bouton ${actif ? "is-on" : ""}`} aria-pressed={actif} onClick={() => { setActif(!actif); setDebut(null); }}>
-          <Icon name="edit" size={20} />{actif ? "Ranger le crayon" : "Prendre le crayon"}
+      {!actif ? (
+        <button type="button" class="crayon-prendre" onClick={() => setActif(true)}>
+          <Icon name="edit" size={18} />Crayon
         </button>
-        {actif && <>
-          <div class="crayon-outils" role="group" aria-label="Outil">
+      ) : (
+        <div class="crayon-barre">
+          <div class="crayon-ligne" role="toolbar" aria-label="Crayon">
             {OUTILS.map(o => (
-              <button key={o.id} type="button" class="crayon-outil" aria-pressed={outil === o.id} title={o.label} onClick={() => { setOutil(o.id); setDebut(null); }}>
-                <Dessin outil={o.id} /><span>{o.label}</span>
+              <button key={o.id} type="button" class="crayon-outil" aria-pressed={outil === o.id} title={o.label} aria-label={o.label}
+                onClick={() => { setOutil(o.id); setDebut(null); }}>
+                <Dessin outil={o.id} />
               </button>
             ))}
-          </div>
-          <div class="crayon-ligne">
-            <div class="crayon-couleurs" role="group" aria-label="Couleur">
-              {COULEURS.map((c, k) => (
-                <button key={c} type="button" class={`crayon-couleur encre-${c}`} aria-pressed={couleur === k} aria-label={NOMS_COULEURS[k]} onClick={() => setCouleur(k)} />
-              ))}
-            </div>
-            <button type="button" class="crayon-petit" disabled={!traits.length} onClick={() => setTraits(traits.filter(t => t.id !== prochainId() - 1))}>Annuler</button>
-            <button type="button" class="crayon-petit" disabled={!traits.length} onClick={() => setEffacerTout(true)}>Tout effacer</button>
+            <span class="crayon-sep" aria-hidden="true" />
+            <button type="button" class={`crayon-couleur encre-${COULEURS[couleur]}`} title="Changer de couleur"
+              aria-label={`Couleur : ${NOMS_COULEURS[couleur]}. Toucher pour changer`} onClick={() => setCouleur((couleur + 1) % COULEURS.length)} />
+            <button type="button" class="crayon-outil" title="Annuler le dernier trait" aria-label="Annuler le dernier trait" disabled={!traits.length}
+              onClick={() => setTraits(traits.filter(t => t.id !== prochainId() - 1))}>
+              <svg class="crayon-dessin" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H5v-4M5.5 7A8 8 0 1 1 4 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <button type="button" class="crayon-outil" title="Ranger le crayon" aria-label="Ranger le crayon" onClick={() => { setActif(false); setDebut(null); setEffacerTout(false); }}>
+              <Icon name="close" size={20} />
+            </button>
           </div>
           <p class="crayon-aide" role="status">
-            {outil === "gomme" ? "Touche un mot pour effacer ce qui est dessus."
-              : debut != null ? "Touche maintenant le dernier mot (ou le même mot)."
-              : "Touche le premier mot, puis le dernier."}
+            {OUTILS.find(o => o.id === outil)!.label} · {outil === "gomme" ? "touche un mot pour effacer ce qui est dessus."
+              : debut != null ? "touche le dernier mot (ou le même)."
+              : "touche le premier mot, puis le dernier."}
+            {traits.length > 0 && !effacerTout && <button type="button" class="crayon-lien" onClick={() => setEffacerTout(true)}>Tout effacer</button>}
           </p>
           {effacerTout && (
             <div class="crayon-confirmer" role="alert">
@@ -165,8 +169,8 @@ export function TexteCrayon({ id, texte, note }: { id: string; texte: string; no
               <button type="button" class="crayon-petit" onClick={() => setEffacerTout(false)}>Non</button>
             </div>
           )}
-        </>}
-      </div>
+        </div>
+      )}
 
       <div class="crayon-texte" onClick={e => {
         const i = (e.target as HTMLElement).dataset?.i;
