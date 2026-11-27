@@ -13,7 +13,12 @@ import { NotFound } from "./NotFound";
 import { Bloc } from "./Lecon";
 import { Segments } from "../components/SujetsOnglets";
 import { TexteCrayon } from "../components/Crayon";
-import { LECONS_RS, PARTIES_RS, QUIZ_RS, type BlocRS } from "../data/resume";
+import { PARTIES_RS, type BlocRS } from "../data/resume-types";
+import { LECONS_RS, QUIZ_RS, RS_COMPLET } from "../data/resume-donnees";
+import { LockPanel } from "../components/LockPanel";
+import { AchatLien } from "../components/Achat";
+import { Cadenas } from "./Commentaire";
+import { licence, rechargerContenu } from "../lib/licence";
 import type { TexteEtudie } from "../data/cc-types";
 import { compterMots } from "../lib/mots";
 import { AtelierRS, CorrigeRS, SujetsRS } from "./ResumeExercices";
@@ -25,9 +30,33 @@ function DefListe({ lignes }: { lignes: [string, string][] }) {
 import type { QuestionQuiz } from "../data/types";
 
 // Résumé de texte argumentatif (contraction de texte) : cours, puis exercices.
-// Adresses : #/rs/cours[/id], #/rs/sujets, #/rs/corrige/<id>, #/rs/atelier/<id>, #/rs/outils. Brouillon du site d'essai : tout est ouvert pour la relecture.
+// Adresses : #/rs/cours[/id], #/rs/sujets, #/rs/entrainement, #/rs/corrige/<id>, #/rs/atelier/<id>, #/rs/outils, #/rs/aide.
+// Les leçons, les exercices et l'atelier s'ouvrent avec la clé d'accès ; le calculateur de mots et l'aide-mémoire restent ouverts à tous.
 
 const pretes = () => LECONS_RS.filter(l => l.blocs.length);
+
+const CONTENU_RS = "Avec ta clé d'accès, tout le Résumé de texte s'ouvre : les cours en quatre parties et leurs quiz, les textes corrigés pas à pas, les textes d'entraînement et l'atelier qui te guide de la lecture jusqu'à ta copie. Une seule clé ouvre aussi la Dissertation littéraire et le Commentaire composé.";
+/** À la place d'une leçon, d'un exercice ou de l'atelier, sans le contenu complet. */
+export function VerrouRS() {
+  if (licence()) return <MiseAJourRS />;
+  return <LockPanel reason="Le Résumé de texte est réservé à l'accès complet." contenu={CONTENU_RS} />;
+}
+
+/** Clé activée avant l'arrivée du résumé de texte, et appareil resté hors ligne : on le fait venir. */
+function MiseAJourRS() {
+  const [etat, setEtat] = useState<"" | "envoi" | "echec">("");
+  async function maj() {
+    setEtat("envoi");
+    if (await rechargerContenu()) location.reload(); else setEtat("echec");
+  }
+  return (
+    <div class="quiz-lock">
+      <p>Ta clé ouvre le Résumé de texte. Connecte-toi à Internet pour le recevoir sur ce téléphone.</p>
+      <button type="button" class="btn btn-primary align-start" disabled={etat === "envoi"} onClick={maj}>{etat === "envoi" ? "Réception…" : "Recevoir le Résumé de texte"}</button>
+      {etat === "echec" && <p class="field-error" role="alert"><Icon name="error" size={18} />Impossible de joindre le serveur. Vérifie ta connexion et réessaie.</p>}
+    </div>
+  );
+}
 
 /** Accueil quand l'élève a choisi le résumé de texte. */
 export function AccueilResume() {
@@ -75,6 +104,7 @@ function CoursRS() {
         <h1 class="page-title">Le résumé de texte</h1>
         <p class="lede">Aussi appelé contraction de texte.</p>
       </header>
+      {!RS_COMPLET && !licence() && <p class="quota cc-quota"><span class="muted quota-texte">Réservé à l'accès complet</span><AchatLien label="Débloquer" /></p>}
       {PARTIES_RS.map((partie, k) => {
         const lecons = LECONS_RS.filter(l => l.partie === partie.id);
         return (
@@ -82,13 +112,13 @@ function CoursRS() {
             <h2 class="rs-partie-titre"><span class="rs-partie-num">{k + 1}</span>{partie.titre}</h2>
             <ol class="list" aria-label={partie.titre}>
               {lecons.map(l => {
-                const i = LECONS_RS.indexOf(l), lue = lues.includes(l.id), vide = !l.blocs.length;
+                const i = LECONS_RS.indexOf(l), lue = lues.includes(l.id), vide = RS_COMPLET && !l.blocs.length;
                 return (
                   <li key={l.id}>
                     <a class="row" href={`#/rs/cours/${l.id}`}>
                       <span class={`step-num ${lue ? "done" : ""}`} aria-hidden="true">{lue ? <Icon name="check" size={18} /> : i + 1}</span>
                       <span class="row-body"><span class="row-title">{l.titre}</span><span class="meta">{vide ? "Bientôt" : `${l.duree}${lue ? " · lue" : ""}`}</span></span>
-                      <Icon name="chevron_right" />
+                      {RS_COMPLET ? <Icon name="chevron_right" /> : <Cadenas />}
                     </a>
                   </li>
                 );
@@ -133,7 +163,7 @@ export function CarteTexte({ t }: { t: TexteEtudie }) {
 /** Le texte support en pleine page, avec le crayon pour souligner, entourer, encadrer et annoter. */
 function TexteSupportRS({ id }: { id: string }) {
   const t = TEXTES_RS.get(id);
-  if (!t) return <NotFound what="Ce texte n'existe pas." back="#/rs/cours" />;
+  if (!t) return RS_COMPLET ? <NotFound what="Ce texte n'existe pas." back="#/rs/cours" /> : <Page title="Texte support" back="#/rs/cours"><VerrouRS /></Page>;
   return (
     <Page title="Texte support" back="#/rs/cours">
       <article class="reading">
@@ -229,7 +259,7 @@ function LeconRS({ id }: { id: string }) {
           <p class="eyebrow">{PARTIES_RS.find(x => x.id === l.partie)?.titre} · Leçon {i + 1}{l.duree ? ` · ${l.duree}` : ""}</p>
           <h1 class="page-title"><Texte text={l.titre} /></h1>
         </header>
-        {l.blocs.length
+        {!RS_COMPLET ? <VerrouRS /> : l.blocs.length
           ? <div class="prose">{l.blocs.map((b, k) => <BlocLeconRS key={k} b={b} />)}</div>
           : <p class="lede">Cette leçon arrive bientôt.</p>}
         {QUIZ_RS[l.id] && <QuizRS id={l.id} questions={QUIZ_RS[l.id]} />}

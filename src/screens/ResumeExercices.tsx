@@ -7,10 +7,14 @@ import { TexteCrayon } from "../components/Crayon";
 import { NotFound } from "./NotFound";
 import { useStored, read } from "../lib/storage";
 import { compterMots } from "../lib/mots";
-import { EXERCICES_RS, NOMS_VERBES, exerciceRS, phrasesEssentielles, type ExerciceRS } from "../data/resume-exercices";
+import { NOMS_VERBES, phrasesEssentielles, type ExerciceRS } from "../data/resume-types";
+import { EXERCICES_RS, RS_COMPLET, exerciceRS } from "../data/resume-donnees";
+import { Cadenas } from "./Commentaire";
+import { AchatLien } from "../components/Achat";
+import { licence } from "../lib/licence";
 import { BILANS_PE, CONNECTEURS_ATELIER, DEBUTS_REPONSES, INTRO_PE, JUGEMENT_PE, PHRASES_INTRO_PE, TECHNIQUES_RS, TRANSITION_PE } from "../data/resume-outils";
 import type { TexteEtudie } from "../data/cc-types";
-import { CarteTexte } from "./Resume";
+import { CarteTexte, VerrouRS } from "./Resume";
 import { Segments } from "../components/SujetsOnglets";
 
 // Exercices du résumé de texte : textes corrigés pas à pas, et atelier où l'élève fait tout le sujet, de A à Z.
@@ -118,7 +122,7 @@ export function progressionAtelier(e: ExerciceRS) {
 export function SujetsRS({ vue }: { vue?: string }) {
   const corriges = EXERCICES_RS.filter(e => e.corrige), entrainement = EXERCICES_RS.filter(e => !e.corrige);
   const ligne = (e: ExerciceRS, href: string) => {
-    const p = progressionAtelier(e);
+    const p = RS_COMPLET ? progressionAtelier(e) : 0;
     return (
       <li key={e.id}>
         <a class="row" href={href}>
@@ -126,7 +130,7 @@ export function SujetsRS({ vue }: { vue?: string }) {
             <span class="row-title">{e.titre}</span>
             <span class="meta">{[e.auteur, NOMS_VERBES[e.pe.verbe], `${e.mots} mots`].filter(Boolean).join(" · ")}{p ? ` · atelier ${p} %` : ""}</span>
           </span>
-          <Icon name="chevron_right" />
+          {RS_COMPLET ? <Icon name="chevron_right" /> : <Cadenas />}
         </a>
       </li>
     );
@@ -144,6 +148,7 @@ export function SujetsRS({ vue }: { vue?: string }) {
           ? "Tout le sujet pas à pas, de la lecture à la production écrite. Puis refais-le dans l'atelier."
           : "L'atelier te guide étape par étape, et te montre ce que tu as oublié."}</p>
       </header>
+      {!RS_COMPLET && !licence() && <p class="quota cc-quota"><span class="muted quota-texte">Réservé à l'accès complet</span><AchatLien label="Débloquer" /></p>}
       <ol class="list">{corrige ? corriges.map(e => ligne(e, `#/rs/corrige/${e.id}`)) : entrainement.map(e => ligne(e, `#/rs/atelier/${e.id}`))}</ol>
     </Page>
   );
@@ -186,9 +191,26 @@ function ProductionRedigee({ e }: { e: ExerciceRS }) {
   </>;
 }
 
+/** Sans le contenu complet : le titre de l'exercice, puis le cadenas. */
+function ExerciceVerrouille({ e, titre }: { e: ExerciceRS; titre: string }) {
+  return (
+    <Page title={titre} back="#/rs/sujets">
+      <article class="reading">
+        <header class="page-header">
+          <p class="eyebrow">{titre} · {NOMS_VERBES[e.pe.verbe]}</p>
+          <h1 class="page-title"><Texte text={e.titre} /></h1>
+          {e.auteur && <p class="lede">{e.auteur}, <Texte text={e.source} /></p>}
+        </header>
+        <VerrouRS />
+      </article>
+    </Page>
+  );
+}
+
 function CorrigeRS({ id }: { id: string }) {
   const e = exerciceRS(id);
   if (!e || !e.corrige) return <NotFound what="Ce corrigé n'existe pas." back="#/rs/sujets" />;
+  if (!RS_COMPLET) return <ExerciceVerrouille e={e} titre="Corrigé" />;
   const { phrases } = phrasesEssentielles(e);
   const f = fourchette(e);
   return (
@@ -297,6 +319,7 @@ function AtelierRSScreen({ id }: { id: string }) {
   const [effacer, setEffacer] = useState(false);
   const [copie, setCopie] = useState(false);
   if (!e) return <NotFound what="Ce texte n'existe pas." back="#/rs/sujets" />;
+  if (!RS_COMPLET) return <ExerciceVerrouille e={e} titre="Atelier" />;
   const a: AtelierRS = { ...VIDE, ...brut };
   const maj = (p: Partial<AtelierRS>) => setA({ ...a, ...p });
   const aller = (k: number) => { setEtape(k); setCopie(false); scrollTo({ top: 0 }); };

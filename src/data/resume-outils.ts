@@ -1,6 +1,6 @@
 // Aides du résumé de texte, partagées par la page Outils et l'atelier.
 
-import type { Verbe } from "./resume-exercices";
+import type { Verbe } from "./resume-types";
 
 export const CONNECTEURS_RS: [string, string[]][] = [
   ["Ajouter une idée", ["de plus", "en outre", "par ailleurs", "également", "d'abord", "ensuite", "enfin"]],
