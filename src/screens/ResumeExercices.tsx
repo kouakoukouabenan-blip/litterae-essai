@@ -199,7 +199,7 @@ function ExerciceVerrouille({ e, titre }: { e: ExerciceRS; titre: string }) {
         <header class="page-header">
           <p class="eyebrow">{titre} · {NOMS_VERBES[e.pe.verbe]}</p>
           <h1 class="page-title"><Texte text={e.titre} /></h1>
-          {e.auteur && <p class="lede">{e.auteur}, <Texte text={e.source} /></p>}
+          <p class="lede">{e.auteur ? `${e.auteur}, ` : ""}<Texte text={e.source} /></p>
         </header>
         <VerrouRS />
       </article>
@@ -219,7 +219,7 @@ function CorrigeRS({ id }: { id: string }) {
         <header class="page-header">
           <p class="eyebrow">Corrigé · {NOMS_VERBES[e.pe.verbe]}</p>
           <h1 class="page-title"><Texte text={e.titre} /></h1>
-          <p class="lede">{e.auteur}, <Texte text={e.source} /></p>
+          <p class="lede">{e.auteur ? `${e.auteur}, ` : ""}<Texte text={e.source} /></p>
         </header>
         <CarteTexte t={texteEtudie(e)} />
         <aside class="callout">
