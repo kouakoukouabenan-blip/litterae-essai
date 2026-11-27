@@ -40,6 +40,10 @@ function useDerniersOnglets() {
     const adresseCC = `cc/${path[1]}`;
     if (read(`onglet-cc-${partieCC}`, "") !== adresseCC) write(`onglet-cc-${partieCC}`, adresseCC);
   }
+  if (path[0] === "rs" && path.length === 2 && read("onglet-rs-cours", "") !== `rs/${path[1]}`) write("onglet-rs-cours", `rs/${path[1]}`);
+  // Résumé de texte : Cours et Sujets mènent à ses leçons et à ses exercices.
+  if (methode.id === "resume") return (i: (typeof ITEMS)[number]) =>
+    i.section === "cours" ? "#/rs/cours" : i.section === "sujets" ? "#/rs/sujets" : `#/${read(`onglet-${i.section}`, "lien" in i ? i.lien : i.section)}`;
   // Commentaire composé : la barre du bas mène à ses propres leçons et sujets.
   if (methode.id === "commentaire") return (i: (typeof ITEMS)[number]) =>
     i.section === "cours" ? `#/${read("onglet-cc-cours", "cc/cours")}` : i.section === "sujets" ? `#/${read("onglet-cc-sujets", "cc/corriges")}` : i.section === "oeuvres" ? `#/${read("onglet-cc-genres", "cc/genres")}` : `#/${read(`onglet-${i.section}`, i.section)}`;
@@ -55,6 +59,7 @@ function useLibelle() {
 function useSection() {
   const [premier, second] = useRoute().path;
   // Commentaire composé : les leçons et outils vont avec Cours, les corrigés et l'entraînement avec Sujets.
+  if (premier === "rs") return second === "cours" ? "cours" : second === "sujets" ? "sujets" : "accueil";
   if (premier === "cc") return second === "cours" || second === "outils" || second === "figures" ? "cours" : second === "corriges" || second === "entrainement" || second === "atelier" ? "sujets" : second === "genres" || second === "tonalites" ? "oeuvres" : "accueil";
   const section = premier ?? "accueil";
   // Les sujets d'entraînement et « J'ai un devoir » sont des onglets de Sujets ; la boîte à outils se range avec le cours.

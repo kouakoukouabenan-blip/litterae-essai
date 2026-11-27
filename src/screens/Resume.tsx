@@ -1,0 +1,210 @@
+import { useEffect, useState } from "preact/hooks";
+import { Page } from "../components/Page";
+import { Icon } from "../components/Icon";
+import { Texte } from "../components/Texte";
+import { Segments } from "../components/SujetsOnglets";
+import { InstallBanner } from "../components/Install";
+import { Annonces } from "../components/Annonces";
+import { LienDevoirs, TuileDevoirs } from "../components/TuileDevoirs";
+import { MessageALaUne } from "../components/Suggestions";
+import { useStored } from "../lib/storage";
+import { useMethode } from "../lib/methodes";
+import { marquer } from "../lib/progres";
+import { NotFound } from "./NotFound";
+import { Bloc } from "./Lecon";
+import { TexteEtudieBloc } from "./Commentaire";
+import { LECONS_RS, QUIZ_RS, type BlocRS } from "../data/resume";
+import type { QuestionQuiz } from "../data/types";
+
+// Résumé de texte argumentatif (contraction de texte) : cours, puis exercices.
+// Adresses : #/rs/cours[/id], #/rs/sujets. Brouillon du site d'essai : tout est ouvert pour la relecture.
+
+const pretes = () => LECONS_RS.filter(l => l.blocs.length);
+
+function CoursOngletsRS({ actif }: { actif: "lecons" | "sujets" }) {
+  return <Segments groupe="rs-cours" label="Résumé" items={[
+    { label: "Leçons", href: "#/rs/cours", actif: actif === "lecons" },
+    { label: "Exercices", href: "#/rs/sujets", actif: actif === "sujets" }
+  ]} />;
+}
+
+/** Accueil quand l'élève a choisi le résumé de texte. */
+export function AccueilResume() {
+  const [lues] = useStored<string[]>("rs-lecons-lues", []);
+  const suivante = pretes().find(l => !lues.includes(l.id));
+  const nbLues = LECONS_RS.filter(l => lues.includes(l.id)).length;
+  return (
+    <Page>
+      <header class="home-header">
+        <p class="eyebrow">Résumé ou contraction de texte</p>
+        <h1 class="home-title">Que veux-tu faire ?</h1>
+      </header>
+      <TuileDevoirs />
+      <MessageALaUne />
+      <nav class="choix" aria-label="Que veux-tu faire ?">
+        <a class="choix-carte choix-methode" href={suivante && nbLues > 0 ? `#/rs/cours/${suivante.id}` : "#/rs/cours"}>
+          <Icon name="menu_book" size={24} />
+          <span class="choix-titre">{nbLues === 0 ? "Les cours" : suivante ? "Continuer les cours" : "Revoir les cours"}</span>
+          <span class="choix-detail">Questions, résumé, production écrite</span>
+          {nbLues > 0 && <span class="progress-bar" aria-hidden="true"><span style={{ width: `${(nbLues / LECONS_RS.length) * 100}%` }} /></span>}
+        </a>
+        <a class="choix-carte choix-corriges" href="#/rs/sujets">
+          <Icon name="history_edu" size={24} />
+          <span class="choix-titre">Exercices</span>
+          <span class="choix-detail">Textes corrigés et entraînement</span>
+        </a>
+      </nav>
+      <LienDevoirs />
+      <Annonces />
+      <InstallBanner />
+    </Page>
+  );
+}
+
+function CoursRS() {
+  const [lues] = useStored<string[]>("rs-lecons-lues", []);
+  return (
+    <Page>
+      <CoursOngletsRS actif="lecons" />
+      <header class="page-header">
+        <h1 class="page-title">Le résumé de texte</h1>
+        <p class="lede">Aussi appelé contraction de texte.</p>
+      </header>
+      <ol class="list" aria-label="Leçons">
+        {LECONS_RS.map((l, i) => {
+          const lue = lues.includes(l.id), vide = !l.blocs.length;
+          return (
+            <li key={l.id}>
+              <a class="row" href={`#/rs/cours/${l.id}`}>
+                <span class={`step-num ${lue ? "done" : ""}`} aria-hidden="true">{lue ? <Icon name="check" size={18} /> : i + 1}</span>
+                <span class="row-body"><span class="row-title">{l.titre}</span><span class="meta">{vide ? "Bientôt" : `${l.duree}${lue ? " · lue" : ""}`}</span></span>
+                <Icon name="chevron_right" />
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </Page>
+  );
+}
+
+function BlocLeconRS({ b }: { b: BlocRS }) {
+  if ("texte" in b) return <TexteEtudieBloc t={b.texte} />;
+  if ("plie" in b)
+    return (
+      <details class="cc-plie">
+        <summary>{b.plie.titre}</summary>
+        <ul class="bullets">{b.plie.liste.map(x => <li key={x}><Texte text={x} /></li>)}</ul>
+      </details>
+    );
+  return <Bloc b={b} />;
+}
+
+function QuizRS({ id, questions }: { id: string; questions: QuestionQuiz[] }) {
+  const [n, setN] = useState(0);
+  const [choix, setChoix] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const [meilleurs, setMeilleurs] = useStored<Record<string, number>>("rs-quiz-meilleurs", {});
+  const q = questions[n];
+  function repondre(i: number) {
+    if (choix !== null) return;
+    setChoix(i);
+    if (i === q.bonne) setScore(score + 1);
+    marquer(`quiz:rs:${id}`);
+  }
+  function suivante() {
+    if (n + 1 >= questions.length && score > (meilleurs[id] ?? -1)) setMeilleurs({ ...meilleurs, [id]: score });
+    setN(n + 1); setChoix(null);
+  }
+  return (
+    <section class="quiz" aria-labelledby="quiz-rs-titre">
+      <p class="eyebrow">Quiz · {questions.length} questions</p>
+      <h2 id="quiz-rs-titre" class="section-title">Vérifie ce que tu as retenu</h2>
+      {n >= questions.length ? (
+        <div class="quiz-card quiz-fin" role="status">
+          <p class="quiz-score">{score} / {questions.length}</p>
+          <p>{score === questions.length ? "Parfait, tu maîtrises cette leçon." : score >= questions.length / 2 ? "Bien. Relis les points manqués, puis refais le quiz." : "Relis la leçon, puis refais le quiz."}</p>
+          <button type="button" class="btn btn-secondary align-start" onClick={() => { setN(0); setChoix(null); setScore(0); }}>Recommencer</button>
+        </div>
+      ) : (
+        <div class="quiz-card">
+          <p class="small muted">Question {n + 1} sur {questions.length}</p>
+          <p class="quiz-q"><Texte text={q.q} /></p>
+          <ul class="quiz-choix">
+            {q.choix.map((c, i) => {
+              const etat = choix === null ? "" : i === q.bonne ? "ok" : i === choix ? "faux" : "";
+              return (
+                <li key={c}>
+                  <button type="button" class={`quiz-option ${etat}`} disabled={choix !== null} aria-pressed={choix === i} onClick={() => repondre(i)}>
+                    <span>{c}</span>
+                    {etat === "ok" && <Icon name="check" size={20} />}
+                    {etat === "faux" && <Icon name="close" size={20} />}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          {choix !== null && (
+            <div class="quiz-correction" role="status">
+              <p><strong>{choix === q.bonne ? "Bonne réponse." : "Pas tout à fait."}</strong> <Texte text={q.pourquoi} /></p>
+              <button type="button" class="btn btn-primary align-start" onClick={suivante}>{n + 1 < questions.length ? "Question suivante" : "Voir mon score"}</button>
+            </div>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function LeconRS({ id }: { id: string }) {
+  const i = LECONS_RS.findIndex(l => l.id === id);
+  const [lues, setLues] = useStored<string[]>("rs-lecons-lues", []);
+  if (i < 0) return <NotFound what="Cette leçon n'existe pas." back="#/rs/cours" />;
+  const l = LECONS_RS[i], prev = LECONS_RS[i - 1], next = LECONS_RS[i + 1];
+  if (l.blocs.length && !lues.includes(id)) setTimeout(() => setLues([...lues, id]));
+  return (
+    <Page title={`Leçon ${i + 1}`} back="#/rs/cours">
+      <article class="reading">
+        <header class="page-header">
+          <p class="eyebrow">Résumé de texte · Leçon {i + 1} sur {LECONS_RS.length}{l.duree ? ` · ${l.duree}` : ""}</p>
+          <h1 class="page-title"><Texte text={l.titre} /></h1>
+        </header>
+        {l.blocs.length
+          ? <div class="prose">{l.blocs.map((b, k) => <BlocLeconRS key={k} b={b} />)}</div>
+          : <p class="lede">Cette leçon arrive bientôt.</p>}
+        {QUIZ_RS[l.id] && <QuizRS id={l.id} questions={QUIZ_RS[l.id]} />}
+        <nav class="pager" aria-label="Leçons">
+          {prev ? <a class="pager-link" href={`#/rs/cours/${prev.id}`}><span class="meta">Précédente</span>{prev.titre}</a> : <span />}
+          {next ? <a class="pager-link pager-next" href={`#/rs/cours/${next.id}`}><span class="meta">Suivante</span>{next.titre}</a> : <span />}
+        </nav>
+      </article>
+    </Page>
+  );
+}
+
+function SujetsRS() {
+  return (
+    <Page>
+      <CoursOngletsRS actif="sujets" />
+      <header class="page-header">
+        <h1 class="page-title">Exercices</h1>
+        <p class="lede">Bientôt : des textes corrigés pas à pas, et des textes pour t'entraîner.</p>
+      </header>
+    </Page>
+  );
+}
+
+/** Toutes les pages du résumé de texte, selon l'adresse #/rs/… */
+export function ResumeScreen({ path }: { path: string[] }) {
+  const [, partie, id] = path;
+  const [methode, choisir] = useMethode();
+  useEffect(() => {
+    // Une page du résumé ouverte depuis un lien : l'appli passe en résumé de texte.
+    if (partie && methode.id !== "resume") choisir("resume");
+  }, [partie]);
+  switch (partie) {
+    case "cours": return id ? <LeconRS id={id} /> : <CoursRS />;
+    case "sujets": return <SujetsRS />;
+    default: return <AccueilResume />;
+  }
+}

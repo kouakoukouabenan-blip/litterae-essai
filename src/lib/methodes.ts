@@ -1,6 +1,7 @@
 import { read, useStored, write } from "./storage";
 import { noter } from "./stats";
 import { jourLocal } from "./progres";
+import { ESSAI } from "./site";
 
 /**
  * Les méthodologies de Litterae. Une seule clé Chariow les ouvre toutes ;
@@ -33,7 +34,7 @@ export const matiereDe = (m: Methode) => MATIERES.find(x => x.id === m.matiere) 
 export const METHODES: Methode[] = [
   { id: "dissertation", nom: "Dissertation littéraire", court: "Dissertation", couleur: "var(--green)", encre: "var(--green)", fond: "var(--green-tint)", prete: true, matiere: "francais" },
   { id: "commentaire", nom: "Commentaire composé", court: "Commentaire", couleur: "var(--orange)", encre: "var(--orange-text)", fond: "var(--orange-pale)", prete: true, matiere: "francais" },
-  { id: "resume", nom: "Résumé de texte argumentatif", court: "Résumé", couleur: "var(--ochre)", encre: "var(--ochre-text)", fond: "var(--ochre-pale)", prete: false, matiere: "francais" }
+  { id: "resume", nom: "Résumé de texte argumentatif", court: "Résumé", couleur: "var(--ochre)", encre: "var(--ochre-text)", fond: "var(--ochre-pale)", prete: ESSAI, matiere: "francais" }
 ];
 
 /** La méthode choisie par l'élève, retenue sur l'appareil. */
