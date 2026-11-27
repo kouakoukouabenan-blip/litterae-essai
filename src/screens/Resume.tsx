@@ -15,10 +15,16 @@ import { TexteCrayon } from "../components/Crayon";
 import { LECONS_RS, PARTIES_RS, QUIZ_RS, type BlocRS } from "../data/resume";
 import type { TexteEtudie } from "../data/cc-types";
 import { compterMots } from "../lib/mots";
+import { AtelierRS, CorrigeRS, SujetsRS } from "./ResumeExercices";
+import { BILANS_PE, CONNECTEURS_RS, DEBUTS_REPONSES, INTRO_PE, JUGEMENT_PE, PHRASES_INTRO_PE, TECHNIQUES_RS, TRANSITION_PE } from "../data/resume-outils";
+
+function DefListe({ lignes }: { lignes: [string, string][] }) {
+  return <dl class="def">{lignes.map(([t, d]) => [<dt key={t}>{t}</dt>, <dd key={t + "d"}>{d}</dd>])}</dl>;
+}
 import type { QuestionQuiz } from "../data/types";
 
 // Résumé de texte argumentatif (contraction de texte) : cours, puis exercices.
-// Adresses : #/rs/cours[/id], #/rs/sujets. Brouillon du site d'essai : tout est ouvert pour la relecture.
+// Adresses : #/rs/cours[/id], #/rs/sujets, #/rs/corrige/<id>, #/rs/atelier/<id>, #/rs/outils. Brouillon du site d'essai : tout est ouvert pour la relecture.
 
 const pretes = () => LECONS_RS.filter(l => l.blocs.length);
 
@@ -101,7 +107,7 @@ LECONS_RS.forEach(l => l.blocs.forEach(b => { if ("texte" in b) TEXTES_RS.set(b.
 const nbMots = (t: TexteEtudie) => Number(/(\d+) mots/.exec(t.consigne)?.[1]) || compterMots(t.texte);
 
 /** Dans une leçon : le texte support se lit sur sa propre page, avec le crayon. */
-function CarteTexte({ t }: { t: TexteEtudie }) {
+export function CarteTexte({ t }: { t: TexteEtudie }) {
   const [traits] = useStored<unknown[]>(`crayon:${t.id}`, []);
   const [ouvert, setOuvert] = useState(false);
   // Le texte s'ouvre dans la leçon : sous le texte, la suite de la leçon continue.
@@ -235,17 +241,6 @@ function LeconRS({ id }: { id: string }) {
   );
 }
 
-function SujetsRS() {
-  return (
-    <Page>
-      <header class="page-header">
-        <h1 class="page-title">Exercices</h1>
-        <p class="lede">Bientôt : des textes corrigés pas à pas, et des textes pour t'entraîner.</p>
-      </header>
-    </Page>
-  );
-}
-
 const FRACTIONS = [{ d: 4, nom: "au quart" }, { d: 3, nom: "au tiers" }];
 
 /** Calculateur de mots : la fourchette à respecter, puis le compte du résumé de l'élève (règle du bac). */
@@ -262,9 +257,10 @@ function OutilsRS() {
   return (
     <Page>
       <header class="page-header">
-        <h1 class="page-title">Calculateur de mots</h1>
-        <p class="lede">Combien de mots doit faire ton résumé, et combien il en fait.</p>
+        <h1 class="page-title">Outils</h1>
+        <p class="lede">Le calculateur de mots, et tout ce qu'il faut garder sous la main pour la copie.</p>
       </header>
+      <h2 class="section-title">Calculateur de mots</h2>
       <section class="rs-calcul">
         <label class="rs-calcul-champ">
           <span>Nombre de mots du texte</span>
@@ -302,6 +298,36 @@ function OutilsRS() {
         </div>
         <p class="meta">Compté comme au bac : « l'école » = 2 mots, « c'est-à-dire » = 4 mots, un nombre en chiffres ou un sigle = 1 mot.</p>
       </section>
+      <h2 class="section-title">Pour la copie</h2>
+      <details class="cc-plie rs-outil">
+        <summary>Ce qu'on enlève dans un résumé</summary>
+        <ul class="bullets">{["Les exemples et les illustrations", "Les explications et les répétitions", "Les données chiffrées", "Les reformulations de l'auteur (« en d'autres termes », « c'est-à-dire »)", "Les questions : on les transforme en affirmations"].map(x => <li key={x}>{x}</li>)}</ul>
+      </details>
+      <details class="cc-plie rs-outil">
+        <summary>Les techniques pour reformuler</summary>
+        <DefListe lignes={TECHNIQUES_RS} />
+      </details>
+      <details class="cc-plie rs-outil">
+        <summary>Les connecteurs logiques</summary>
+        <DefListe lignes={CONNECTEURS_RS.map(([t, m]) => [t, m.join(", ")])} />
+      </details>
+      <details class="cc-plie rs-outil">
+        <summary>Les débuts de réponses aux questions</summary>
+        <DefListe lignes={DEBUTS_REPONSES} />
+      </details>
+      <details class="cc-plie rs-outil">
+        <summary>Les formules de la production écrite</summary>
+        <DefListe lignes={[
+          ["Introduction", INTRO_PE],
+          ["Pour étayer", PHRASES_INTRO_PE["étayer"].join(" ; ")],
+          ["Pour réfuter", PHRASES_INTRO_PE["réfuter"].join(" ; ")],
+          ["Pour discuter", `${PHRASES_INTRO_PE["discuter"].join(" ; ")} Puis : « ${TRANSITION_PE} »`],
+          ["Chaque argument", "L'argument, son explication, un exemple."],
+          ["Bilan", `${BILANS_PE["étayer"]} (ou : « ne résiste pas à l'examen », « n'est vraie qu'en partie »)`],
+          ["Jugement personnel", JUGEMENT_PE],
+          ["Ouverture", "Une question sur un problème voisin."]
+        ]} />
+      </details>
     </Page>
   );
 }
@@ -317,6 +343,8 @@ export function ResumeScreen({ path }: { path: string[] }) {
   switch (partie) {
     case "cours": return id ? <LeconRS id={id} /> : <CoursRS />;
     case "sujets": return <SujetsRS />;
+    case "corrige": return id ? <CorrigeRS id={id} /> : <SujetsRS />;
+    case "atelier": return id ? <AtelierRS id={id} /> : <SujetsRS />;
     case "outils": return <OutilsRS />;
     case "texte": return id ? <TexteSupportRS id={id} /> : <CoursRS />;
     default: return <AccueilResume />;
