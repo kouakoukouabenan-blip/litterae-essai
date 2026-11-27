@@ -300,7 +300,207 @@ export const LECONS_RS: LeconRS[] = [
       { p: "Relis tes réponses en te posant trois questions. Ma réponse est-elle une phrase complète ? Répond-elle exactement à la question, sans plus ? Parle-t-elle bien du texte ? Si oui, tu peux passer au résumé. Et tu remarqueras que ces réponses t'ont fait comprendre le texte encore mieux : c'est exactement ce dont tu as besoin pour le résumer." }
     ]
   },
-  { id: "resume", partie: "resume", titre: "Rédiger le résumé (contraction de texte)", duree: "", blocs: [] },
+  {
+    id: "idees-essentielles", partie: "resume", titre: "Repérer les idées essentielles", duree: "8 min", blocs: [
+      { p: "Le résumé, ou contraction de texte, se fait en plusieurs étapes. Les élèves qui échouent sont souvent ceux qui commencent à écrire tout de suite. Toi, tu vas suivre quatre étapes, dans l'ordre :" },
+      { etapes: [
+        ["Repérer les idées essentielles", "Trouver, dans le texte, les phrases qui apportent une information nouvelle."],
+        ["Reformuler ces idées", "Les redire avec tes propres mots. C'est le cœur de l'exercice."],
+        ["Enchaîner les idées", "Les relier par des connecteurs logiques pour qu'elles forment un raisonnement."],
+        ["Rédiger le résumé", "Écrire le tout en un seul paragraphe, en respectant le nombre de mots."]
+      ] },
+      { p: "Cette leçon s'occupe de la première étape." },
+
+      { h: "Une idée essentielle, c'est une information nouvelle" },
+      { p: "Une idée essentielle est une idée importante du texte. Pour la reconnaître, retiens cette définition simple : une idée essentielle, c'est une nouvelle information. C'est une phrase qui fait avancer le texte, qui ajoute quelque chose à ce que l'auteur a déjà dit." },
+      { p: "Pense à quelqu'un qui te raconte un match. « On a gagné 2 à 1. » Information nouvelle. « Le premier but est venu d'un corner, à la 20e minute, Koffi a sauté plus haut que tout le monde… » Ce sont des détails qui racontent le premier but. « Mais on a joué à dix pendant toute la seconde mi-temps. » Information nouvelle. Si tu dois répéter l'essentiel à quelqu'un, tu gardes : « On a gagné 2 à 1, alors qu'on a joué à dix toute la seconde mi-temps. »" },
+      { p: "Devant chaque phrase du texte, pose-toi donc la question : « Est-ce que cette phrase m'apprend quelque chose de nouveau, ou est-ce qu'elle développe ce que je sais déjà ? »" },
+
+      { h: "Ce qu'il faut bannir" },
+      { p: "Autour des idées essentielles, l'auteur ajoute beaucoup de choses pour convaincre son lecteur. Elles sont utiles dans son texte, mais pas dans ton résumé. Voici ce que tu enlèves :" },
+      { def: [
+        ["Les exemples et les illustrations", "« Par exemple », « ainsi », « comme », des noms de personnes, de pays, d'événements. Ils servent à montrer l'idée, ils ne sont pas l'idée."],
+        ["Les explications", "Quand l'auteur redit son idée plus longuement pour qu'on la comprenne bien (« c'est-à-dire », « en effet »)."],
+        ["Les répétitions et les reformulations", "Quand l'auteur dit la même chose une deuxième fois avec d'autres mots (« en d'autres termes », « autrement dit »)."],
+        ["Les données chiffrées", "Les dates, les pourcentages, les sommes d'argent. Garde l'idée qu'ils prouvent, pas les chiffres."],
+        ["Les citations", "Les paroles d'un autre auteur que le texte rapporte pour appuyer son idée."]
+      ] },
+      { p: "Et les questions ? Une question n'est pas une information. Mais très souvent, l'auteur pose une question dont il connaît la réponse, pour faire réfléchir son lecteur. Si cette question porte une vraie idée, tu la gardes, mais tu la transformes en phrase affirmative." },
+      { def: [
+        ["Dans le texte", "« Si l'homme était né muet, […] y aurait-il jamais eu d'écriture ? »"],
+        ["L'idée essentielle", "Sans la parole, l'écriture n'aurait jamais existé."]
+      ] },
+      { astuce: "Attention à un cas particulier : quand un exemple est la seule preuve d'une idée, c'est lui qui porte l'idée. On ne le supprime pas, on le garde en quelques mots. Chez Bebey, l'Égypte antique prouve que la tradition orale ne freine pas le progrès : elle reste dans le résumé." },
+      { p: "Quand un exemple est une liste de plusieurs éléments, remplace-la par un seul mot qui les regroupe. « Le cacao, le café, l'arachide, le coton » deviennent « les cultures d'exportation ». « Un ballon de plage, un drap de bain, une paire de lunettes » deviennent « les objets du touriste »." },
+
+      { h: "Application : le texte de Bebey, paragraphe par paragraphe" },
+      { p: "Ouvre le texte, prends le crayon, et souligne dans chaque paragraphe ce qui te paraît être une information nouvelle. Puis compare." },
+      { texte: BEBEY },
+      { def: [
+        ["Paragraphe 1", "Tous les peuples ont une tradition orale, qui est à la base de toute société. On enlève la précision « plus ou moins vivante selon le degré d'empiètement de l'écrit », qui nuance sans ajouter d'idée forte."],
+        ["Paragraphe 2", "Même là où l'on écrit beaucoup, la tradition orale garde l'originalité de chaque peuple. On enlève « que d'aucuns appellent populaire » : c'est un détail sur ce que pensent les autres."],
+        ["Paragraphe 3", "Trois idées : elle rend la vie plus riche en gardant les différences ; elle permet aux petits groupes de résister à l'uniformisation ; elle peut créer des conflits ; mais elle ne freine pas le progrès. On enlève les exemples du breton, du provençal, du bambara, du lingala, et la remarque sur l'Europe."],
+        ["Paragraphe 4", "La preuve : elle a porté la civilisation égyptienne. Puis la concession : certes, l'écrit est un progrès. On enlève l'anecdote du pharaon et du papyrus."],
+        ["Paragraphe 5", "L'écrit a permis le progrès des sciences et nous rapproche de la vraie connaissance. On enlève l'algèbre, la géométrie, Archimède, Einstein, la relativité : ce sont des exemples."],
+        ["Paragraphe 6", "Mais l'écrit est né de l'oral. On transforme la question finale en affirmation, et on enlève « en d'autres termes », qui annonce une reformulation."]
+      ] },
+      { p: "Regarde ce qui reste : une douzaine d'idées courtes. Tout le reste du texte servait à les expliquer, les illustrer ou les prouver. C'est avec ces idées seulement que tu vas construire ton résumé." }
+    ]
+  },
+  {
+    id: "reformuler", partie: "resume", titre: "Reformuler les idées essentielles", duree: "10 min", blocs: [
+      { p: "Reformuler, c'est dire dans un autre langage ce que l'auteur a dit. C'est le cœur de l'exercice : c'est là que le correcteur voit si tu as vraiment compris le texte, et c'est là que se gagnent ou se perdent la plupart des points." },
+      { p: "Beaucoup d'élèves pensent que reformuler, c'est remplacer chaque mot de la phrase par un synonyme. Ce n'est pas le cas. On obtient alors une phrase bizarre, qui garde exactement la construction de l'auteur. Reformuler, c'est changer la façon de dire, pas seulement les mots. Pour cela, tu as tout un ensemble de techniques. En voici dix, de la plus simple à la plus fine." },
+
+      { h: "1. Utiliser un synonyme qui convient au contexte" },
+      { p: "C'est la technique la plus connue, mais choisis un synonyme qui a le même sens dans cette phrase. « Arrêter le voleur » devient « appréhender le voleur » ; « arrêter une date » devient « fixer une date »." },
+      { p: "Une exception importante : les mots clés qui portent le thème ne se remplacent pas. Chez Bebey, « tradition orale » et « écriture » restent tels quels. Les remplacer par de mauvais équivalents changerait le sens." },
+
+      { h: "2. Transformer un verbe en nom" },
+      { p: "On appelle cela la nominalisation. Elle raccourcit beaucoup les phrases." },
+      { def: [
+        ["Avant", "Les prix ont augmenté, et cela inquiète les familles."],
+        ["Après", "La hausse des prix inquiète les familles."]
+      ] },
+
+      { h: "3. Remplacer un complément du nom par un adjectif, ou l'inverse" },
+      { def: [
+        ["Avant", "La vie de la ville est chère. Les problèmes de l'économie s'aggravent."],
+        ["Après", "La vie urbaine est chère. Les problèmes économiques s'aggravent."]
+      ] },
+      { p: "L'inverse marche aussi : « une décision gouvernementale » peut devenir « une décision du gouvernement »." },
+
+      { h: "4. Remplacer une proposition relative par un adjectif ou un groupe nominal" },
+      { def: [
+        ["Avant", "Un élève qui ne se fatigue jamais. L'informatique, qui est un outil aux possibilités immenses, envahit tous les domaines."],
+        ["Après", "Un élève infatigable. L'informatique, outil aux possibilités immenses, envahit tous les domaines."]
+      ] },
+
+      { h: "5. Remplacer un long groupe de mots par un seul mot" },
+      { def: [
+        ["Avant", "Les gens qui habitent la ville. Ceux qui ne savent ni lire ni écrire. Rendre une plante plus forte."],
+        ["Après", "Les citadins. Les analphabètes. Fortifier une plante."]
+      ] },
+
+      { h: "6. Remplacer une liste par un mot qui la regroupe" },
+      { def: [
+        ["Avant", "Le breton, le provençal, le bambara ou le lingala restent des réalités vivantes."],
+        ["Après", "Les langues locales restent vivantes."]
+      ] },
+
+      { h: "7. Transformer une phrase complexe en une ou deux phrases simples" },
+      { p: "Quand une phrase de l'auteur est longue, avec plusieurs subordonnées, découpe-la. Ta phrase sera plus claire et tu t'éloigneras de la construction de l'auteur." },
+      { def: [
+        ["Avant", "Force perpétuellement en mouvement, force dynamique donc, grâce à laquelle les langues locales restent des réalités vivantes, la tradition orale peut s'avérer être, également, dans certains cas, une source de discorde profonde entre les citoyens d'un même pays."],
+        ["Après", "La tradition orale garde les langues vivantes. Mais elle peut aussi diviser les citoyens d'un même pays."]
+      ] },
+
+      { h: "8. Réunir deux phrases en une seule" },
+      { p: "C'est l'inverse : deux phrases qui disent des choses proches peuvent devenir une seule phrase, avec un connecteur." },
+      { def: [
+        ["Avant", "Tous les peuples de la terre ont une tradition orale. Elle reste l'un des éléments de base de l'organisation des communautés humaines."],
+        ["Après", "Universelle, la tradition orale est le socle de toute société humaine."]
+      ] },
+
+      { h: "9. Passer de la négation à l'affirmation, et inversement" },
+      { def: [
+        ["Avant", "Ce n'est pas facile. Il n'a pas réussi."],
+        ["Après", "C'est difficile. Il a échoué."]
+      ] },
+      { p: "Vérifie toujours que le sens reste exactement le même. « La tradition orale n'est pas un frein au progrès » ne veut pas dire « La tradition orale crée le progrès ». Mieux vaut : « La tradition orale n'empêche pas le progrès »." },
+
+      { h: "10. Transformer une question ou une citation en affirmation" },
+      { def: [
+        ["Une question", "« Si l'homme était né muet, y aurait-il jamais eu d'écriture ? » devient « Sans la parole, l'écriture n'aurait jamais existé. »"],
+        ["Une citation", "« « Un fait social total », a dit de lui le grand essayiste Norbert Elias. » devient « Le football touche à tous les aspects de la société. »"]
+      ] },
+
+      { h: "Les deux erreurs à éviter" },
+      { def: [
+        ["Le collage", "Souligner les phrases importantes du texte et les recopier l'une après l'autre. Ce n'est pas un résumé, c'est un découpage."],
+        ["Le décalque", "Garder la phrase de l'auteur en changeant seulement un mot par-ci, un verbe par-là. La construction reste celle de l'auteur : le correcteur le voit tout de suite."]
+      ] },
+      { p: "Ces deux erreurs ont le même nom : la paraphrase. Elle est sévèrement sanctionnée, car elle montre que l'élève n'a pas fait l'effort de reformuler." },
+      { astuce: "Un bon test : cache le texte, et redis l'idée avec tes mots, comme si tu l'expliquais à un ami. Puis vérifie que tu n'as pas changé le sens. Si tu y arrives sans regarder, tu as vraiment reformulé." },
+
+      { h: "Application : quelques idées de Bebey reformulées" },
+      { def: [
+        ["Texte", "« Souvent, c'est cette tradition orale […] qui maintient avec force le caractère de diversité et de spécificité des peuples. »"],
+        ["Reformulation", "C'est elle qui garantit l'originalité de chaque culture."],
+        ["Texte", "« Elle oppose à la civilisation uniforme ou homogène des nations la force réfractaire du milieu ethnique… »"],
+        ["Reformulation", "Grâce à elle, les petits groupes résistent à l'uniformisation que le monde extérieur veut leur imposer."],
+        ["Texte", "« Elle fut pendant très longtemps à la base de la civilisation de l'Égypte antique. »"],
+        ["Reformulation", "La preuve : son rôle déterminant dans l'essor de la culture égyptienne antique."]
+      ] }
+    ]
+  },
+  {
+    id: "enchainer", partie: "resume", titre: "Enchaîner les idées avec des connecteurs", duree: "6 min", blocs: [
+      { p: "Tu as maintenant une liste d'idées reformulées. Mais une liste n'est pas un résumé. Si tu les écris l'une après l'autre, sans lien, le lecteur ne comprend plus le raisonnement de l'auteur : on ne sait plus ce qui est une cause, une conséquence, une objection. Il faut donc rétablir la cohérence entre les idées. C'est le rôle des connecteurs logiques." },
+
+      { h: "Retrouver la logique de l'auteur" },
+      { p: "Pendant la lecture active, tu as entouré les connecteurs du texte et trouvé sa structure logique. Ils te disent comment les idées sont reliées. Ton résumé doit garder les mêmes liens, même s'il n'emploie pas les mêmes mots. Si l'auteur fait une concession (« certes… mais… »), ton résumé fait aussi une concession." },
+      { p: "Voici les principales relations, et des connecteurs pour les exprimer :" },
+      { def: [
+        ["Ajouter une idée", "de plus, en outre, par ailleurs, également, d'abord, ensuite, enfin"],
+        ["Opposer", "mais, pourtant, cependant, toutefois, en revanche"],
+        ["Concéder", "certes… mais, il est vrai que… mais, bien que, malgré"],
+        ["Donner une cause", "car, en effet, parce que, puisque, grâce à"],
+        ["Tirer une conséquence", "donc, ainsi, c'est pourquoi, par conséquent, aussi (en début de phrase)"],
+        ["Prouver", "la preuve, en témoigne, comme le montre"],
+        ["Conclure", "en somme, finalement, en définitive"]
+      ] },
+      { astuce: "Varie tes connecteurs, et n'en mets pas partout. Un « de plus » à chaque phrase rend le texte lourd. Mets un connecteur là où le raisonnement change de direction." },
+
+      { h: "Application : les idées de Bebey reliées" },
+      { p: "Voici le plan du résumé, avec les connecteurs qui relient les idées. Chaque ligne correspond à une étape de la structure logique trouvée dans la première partie." },
+      { plan: [
+        "La tradition orale est universelle : elle est le socle de toute société.",
+        "C'est elle qui garantit l'originalité de chaque culture.",
+        "Ainsi, elle embellit la vie et permet aux petits groupes de résister à l'uniformisation.",
+        "Toutefois, elle peut créer des conflits.",
+        "Pour autant, elle ne freine pas le progrès : la preuve, l'Égypte antique.",
+        "Certes, le développement passe par l'écriture, comme le montrent les sciences.",
+        "Mais l'écriture n'aurait jamais existé sans l'oralité."
+      ] },
+      { p: "Remarque « toutefois », « pour autant », « certes », « mais » : ils reproduisent fidèlement les mouvements du texte. Avec eux, le lecteur suit le raisonnement de Bebey sans avoir lu son texte." }
+    ]
+  },
+  {
+    id: "rediger", partie: "resume", titre: "Rédiger le résumé", duree: "8 min", blocs: [
+      { p: "Tu as tes idées reformulées et reliées. Il ne reste plus qu'à les écrire au propre. Voici les règles de la rédaction." },
+
+      { h: "Un seul paragraphe" },
+      { p: "Le résumé se rédige en un seul bloc, sans retour à la ligne, avec un alinéa au début (un petit retrait de la première ligne). Il n'a pas de titre, pas d'introduction ni de conclusion à toi : il commence par la première idée de l'auteur et finit par sa dernière." },
+
+      { h: "Un texte cohérent" },
+      { p: "Ton résumé doit se lire comme un vrai texte, pas comme une liste. Un lecteur qui n'a jamais vu le texte de départ doit le comprendre sans effort. Relis-toi : chaque phrase s'enchaîne-t-elle bien avec la précédente ? Les connecteurs sont-ils à leur place ?" },
+      { p: "Évite le style télégraphique, les parenthèses, « etc. » et les points de suspension. Soigne l'orthographe et les accords : un résumé plein de fautes perd des points, même si les idées sont justes." },
+
+      { h: "La voix de l'auteur" },
+      { p: "Tu écris à la place de l'auteur, comme s'il avait lui-même raccourci son texte. Tu n'écris donc jamais « l'auteur dit que… », « selon le texte… ». Si l'auteur dit « nous », ton résumé dit « nous ». Tu ne donnes pas ton avis et tu n'ajoutes aucune idée." },
+      { def: [
+        ["À ne pas écrire", "Francis Bebey pense que la tradition orale est universelle."],
+        ["À écrire", "La tradition orale est universelle."]
+      ] },
+
+      { h: "Le nombre de mots" },
+      { p: "Le sujet donne le nombre de mots du texte et te demande de le réduire, en général au quart, parfois au tiers. Une marge de 10 % en plus ou en moins est acceptée. Pour un texte de 610 mots réduit au quart : 610 ÷ 4 = environ 153 mots. 10 % de 153, c'est environ 15. Ton résumé doit donc faire entre 138 et 168 mots." },
+      { p: "Pour compter, une règle simple : est compté comme un mot tout ce qui est séparé par un blanc, une apostrophe ou un trait d'union. « L'école » compte 2 mots ; « c'est-à-dire » en compte 4 ; un nombre en chiffres ou un sigle comme « ONU » compte 1 mot." },
+      { p: "À la fin de ton résumé, tu indiques le nombre de mots, par exemple : « Nombre de mots : 143 »." },
+      { def: [
+        ["Si ton résumé est trop long", "Tu as sans doute gardé un exemple ou une explication. Cherche aussi les phrases que tu peux raccourcir avec les techniques de reformulation."],
+        ["Si ton résumé est trop court", "Tu as peut-être oublié une idée essentielle, ou trop serré une idée. Relis ta liste d'idées."]
+      ] },
+      { astuce: "Ne perds pas tout ton temps à compter. Compte une première fois au brouillon, rapidement, pour savoir où tu en es, puis une fois au propre. Dans Outils, le calculateur de mots te donne la fourchette à respecter et compte les mots de ton résumé." },
+
+      { h: "Le résumé du texte de Bebey" },
+      { p: "Voici le résultat des quatre étapes. Compare-le avec le texte : toutes les idées essentielles sont là, dans l'ordre, reliées par les mêmes mouvements, et rien n'est recopié." },
+      { modele: "La tradition orale est universelle. Elle est le socle de toute société humaine. C'est elle qui garantit l'originalité de chaque culture, y compris dans les civilisations de l'écriture. En assurant ainsi la vitalité des diversités culturelles, elle embellit la vie. C'est grâce à elle que les groupes restreints peuvent résister à l'uniformisation que tente de leur imposer le monde extérieur. Toutefois, malgré cette force, les différences identitaires peuvent quelquefois générer des conflits intracommunautaires. Pour autant, l'histoire en témoigne, la tradition orale ne saurait entraver le progrès. À preuve, son rôle déterminant dans l'expansion de la culture égyptienne antique. Le développement, reconnaissons-le, passe par l'écriture. L'exemple de l'évolution scientifique, qui nous conduit manifestement vers la connaissance authentique, l'atteste. Mais l'écriture n'aurait jamais existé si l'oralité ne l'avait fécondée. (Nombre de mots : 143)" },
+      { p: "Le texte faisait 610 mots ; la fourchette était de 138 à 168 mots. Avec 143 mots, le résumé est dans les règles." },
+      { lien: { texte: "Ouvrir le calculateur de mots", href: "#/rs/outils" } }
+    ]
+  },
   { id: "production", partie: "production", titre: "La production écrite (essai ou discussion)", duree: "", blocs: [] }
 ];
 
@@ -342,5 +542,28 @@ export const QUIZ_RS: Record<string, QuestionQuiz[]> = {
     { q: "On te demande : « Relevez une phrase qui montre les avantages de la démocratie. » Que fais-tu ?", choix: ["J'en relève une seule, la plus juste", "J'en relève trois pour être sûr", "Je résume tout le paragraphe"], bonne: 0, pourquoi: "On ne donne pas plus que demandé : si l'une de tes phrases est fausse, tu peux perdre tous les points." },
     { q: "Une réponse précise, c'est une réponse…", choix: ["très longue", "qui va droit à l'idée demandée", "écrite en style télégraphique"], bonne: 1, pourquoi: "Précise ne veut pas dire longue : le correcteur cherche une idée claire." },
     { q: "Pourquoi commencer une explication par « Dans ce texte, … » ?", choix: ["Pour rester dans le contexte du texte", "Pour faire plus de mots", "C'est obligatoire au bac"], bonne: 0, pourquoi: "Cela t'oblige à expliquer le sens du mot dans ce texte-là, pas en général." }
+  ],
+  "idees-essentielles": [
+    { q: "Une idée essentielle, c'est…", choix: ["une phrase longue", "une information nouvelle qui fait avancer le texte", "un exemple frappant"], bonne: 1, pourquoi: "Une idée essentielle apporte une information nouvelle : elle fait progresser le texte." },
+    { q: "Lequel de ces éléments garde-t-on dans le résumé ?", choix: ["Une donnée chiffrée", "Une explication introduite par « c'est-à-dire »", "Une idée nouvelle introduite par « mais »"], bonne: 2, pourquoi: "Chiffres, explications, exemples et répétitions disparaissent ; les idées nouvelles restent." },
+    { q: "L'auteur écrit : « Y aurait-il eu d'écriture sans la parole ? » Que fais-tu ?", choix: ["Je supprime la question", "Je la transforme en affirmation : « Sans la parole, l'écriture n'aurait pas existé. »", "Je la recopie"], bonne: 1, pourquoi: "Une question qui porte une vraie idée se garde sous forme affirmative." },
+    { q: "« Le cacao, le café, l'arachide et le coton » deviennent dans le résumé…", choix: ["rien du tout", "« les cultures d'exportation »", "« le cacao, etc. »"], bonne: 1, pourquoi: "Une énumération se remplace par un mot qui la regroupe." }
+  ],
+  reformuler: [
+    { q: "Reformuler, c'est…", choix: ["remplacer chaque mot par un synonyme", "dire autrement ce que l'auteur a dit", "recopier les phrases importantes"], bonne: 1, pourquoi: "On change la façon de dire, pas seulement les mots." },
+    { q: "« Les prix ont augmenté, ce qui inquiète les familles » devient, par nominalisation…", choix: ["« La hausse des prix inquiète les familles. »", "« Les prix ont monté, ce qui inquiète les familles. »", "« Les familles sont inquiètes. »"], bonne: 0, pourquoi: "Le verbe « augmenter » devient le nom « hausse » : la phrase est plus courte et le sens reste le même." },
+    { q: "« Un élève qui ne se fatigue jamais » devient…", choix: ["« un élève infatigable »", "« un élève fatigué »", "« un élève qui n'est jamais las »"], bonne: 0, pourquoi: "La proposition relative est remplacée par un adjectif." },
+    { q: "Garder la phrase de l'auteur en changeant juste un ou deux mots, c'est…", choix: ["une bonne reformulation", "du décalque", "une nominalisation"], bonne: 1, pourquoi: "Le décalque garde la construction de l'auteur : c'est de la paraphrase, sanctionnée." }
+  ],
+  enchainer: [
+    { q: "À quoi servent les connecteurs dans le résumé ?", choix: ["À allonger le résumé", "À rétablir la cohérence entre les idées", "À donner son avis"], bonne: 1, pourquoi: "Ils montrent comment les idées sont reliées : cause, opposition, concession, conséquence…" },
+    { q: "L'auteur écrit « Certes… mais… ». Dans ton résumé…", choix: ["tu gardes une concession", "tu supprimes la partie après « certes »", "tu inverses l'ordre"], bonne: 0, pourquoi: "Le résumé garde les mêmes liens logiques que le texte, même avec d'autres mots." },
+    { q: "Quel connecteur exprime une conséquence ?", choix: ["pourtant", "c'est pourquoi", "car"], bonne: 1, pourquoi: "« C'est pourquoi » introduit une conséquence ; « car » une cause ; « pourtant » une opposition." }
+  ],
+  rediger: [
+    { q: "Comment se présente le résumé sur la copie ?", choix: ["En plusieurs paragraphes avec un titre", "En un seul paragraphe, avec un alinéa au début", "Sous forme de liste"], bonne: 1, pourquoi: "Le résumé se rédige en un seul bloc, avec un alinéa." },
+    { q: "Un texte de 800 mots est à réduire au quart, avec 10 % de marge. Ton résumé doit faire…", choix: ["entre 180 et 220 mots", "entre 720 et 880 mots", "exactement 200 mots"], bonne: 0, pourquoi: "800 ÷ 4 = 200 mots ; 10 % de 200 = 20 ; donc entre 180 et 220 mots." },
+    { q: "Combien de mots compte « c'est-à-dire » ?", choix: ["1", "2", "4"], bonne: 2, pourquoi: "On compte comme mot tout ce qui est séparé par un blanc, une apostrophe ou un trait d'union : c', est, à, dire." },
+    { q: "Ton résumé est trop long. Que vérifies-tu d'abord ?", choix: ["Que tu n'as pas gardé d'exemples ou d'explications", "Que tu as bien donné ton avis", "Que tu as recopié les phrases clés"], bonne: 0, pourquoi: "Un résumé trop long a souvent gardé des exemples ou des explications à supprimer." }
   ]
 };

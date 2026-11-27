@@ -23,10 +23,11 @@ import type { QuestionQuiz } from "../data/types";
 
 const pretes = () => LECONS_RS.filter(l => l.blocs.length);
 
-function CoursOngletsRS({ actif }: { actif: "lecons" | "sujets" }) {
+function CoursOngletsRS({ actif }: { actif: "lecons" | "sujets" | "outils" }) {
   return <Segments groupe="rs-cours" label="Résumé" items={[
     { label: "Leçons", href: "#/rs/cours", actif: actif === "lecons" },
-    { label: "Exercices", href: "#/rs/sujets", actif: actif === "sujets" }
+    { label: "Exercices", href: "#/rs/sujets", actif: actif === "sujets" },
+    { label: "Outils", href: "#/rs/outils", actif: actif === "outils" }
   ]} />;
 }
 
@@ -54,6 +55,11 @@ export function AccueilResume() {
           <Icon name="history_edu" size={24} />
           <span class="choix-titre">Exercices</span>
           <span class="choix-detail">Textes corrigés et entraînement</span>
+        </a>
+        <a class="choix-carte choix-outils" href="#/rs/outils">
+          <Icon name="inventory_2" size={24} />
+          <span class="choix-titre">Calculateur de mots</span>
+          <span class="choix-detail">La fourchette de mots et le compte de ton résumé</span>
         </a>
       </nav>
       <LienDevoirs />
@@ -251,6 +257,61 @@ function SujetsRS() {
   );
 }
 
+const FRACTIONS = [{ d: 4, nom: "au quart" }, { d: 3, nom: "au tiers" }];
+
+/** Calculateur de mots : la fourchette à respecter, puis le compte du résumé de l'élève (règle du bac). */
+function OutilsRS() {
+  const [total, setTotal] = useStored<string>("rs-calcul-total", "");
+  const [div, setDiv] = useStored<number>("rs-calcul-fraction", 4);
+  const [brouillon, setBrouillon] = useStored<string>("rs-calcul-brouillon", "");
+  const n = parseInt(total, 10);
+  const cible = n > 0 ? Math.round(n / div) : 0;
+  const marge = Math.round(cible / 10);
+  const min = cible - marge, max = cible + marge;
+  const compte = compterMots(brouillon);
+  const etat = !cible || !compte ? "" : compte < min ? "court" : compte > max ? "long" : "ok";
+  return (
+    <Page>
+      <CoursOngletsRS actif="outils" />
+      <header class="page-header">
+        <h1 class="page-title">Calculateur de mots</h1>
+        <p class="lede">Combien de mots doit faire ton résumé, et combien il en fait.</p>
+      </header>
+      <section class="rs-calcul">
+        <label class="rs-calcul-champ">
+          <span>Nombre de mots du texte</span>
+          <input type="number" inputMode="numeric" min={1} placeholder="Ex. 610" value={total} onInput={e => setTotal((e.target as HTMLInputElement).value)} />
+        </label>
+        <div class="rs-calcul-champ">
+          <span>Le sujet demande de réduire le texte…</span>
+          <div class="chips" role="group" aria-label="Réduire le texte">
+            {FRACTIONS.map(f => <button key={f.d} type="button" class="chip" aria-pressed={div === f.d} onClick={() => setDiv(f.d)}>{f.nom}</button>)}
+          </div>
+        </div>
+        {cible > 0 && (
+          <div class="rs-calcul-resultat" role="status">
+            <p class="rs-calcul-fourchette">Entre <strong>{min}</strong> et <strong>{max}</strong> mots</p>
+            <p class="meta">{n} ÷ {div} = environ {cible} mots, avec une marge de 10 % ({marge} mots) en plus ou en moins.</p>
+          </div>
+        )}
+      </section>
+      <section class="rs-calcul">
+        <label class="rs-calcul-champ">
+          <span>Écris ou colle ton résumé pour compter ses mots</span>
+          <textarea rows={7} value={brouillon} placeholder="Ton résumé…" onInput={e => setBrouillon((e.target as HTMLTextAreaElement).value)} />
+        </label>
+        <p class={`rs-calcul-compte ${etat}`} role="status">
+          <strong>{compte} mot{compte > 1 ? "s" : ""}</strong>
+          {etat === "ok" && " · dans la fourchette"}
+          {etat === "court" && ` · trop court de ${min - compte} mot${min - compte > 1 ? "s" : ""}`}
+          {etat === "long" && ` · trop long de ${compte - max} mot${compte - max > 1 ? "s" : ""}`}
+        </p>
+        <p class="meta">Compté comme au bac : « l'école » = 2 mots, « c'est-à-dire » = 4 mots, un nombre en chiffres ou un sigle = 1 mot.</p>
+      </section>
+    </Page>
+  );
+}
+
 /** Toutes les pages du résumé de texte, selon l'adresse #/rs/… */
 export function ResumeScreen({ path }: { path: string[] }) {
   const [, partie, id] = path;
@@ -262,6 +323,7 @@ export function ResumeScreen({ path }: { path: string[] }) {
   switch (partie) {
     case "cours": return id ? <LeconRS id={id} /> : <CoursRS />;
     case "sujets": return <SujetsRS />;
+    case "outils": return <OutilsRS />;
     case "texte": return id ? <TexteSupportRS id={id} /> : <CoursRS />;
     default: return <AccueilResume />;
   }
