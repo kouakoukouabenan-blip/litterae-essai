@@ -2,7 +2,6 @@ import { useEffect, useState } from "preact/hooks";
 import { Page } from "../components/Page";
 import { Icon } from "../components/Icon";
 import { Texte } from "../components/Texte";
-import { Segments } from "../components/SujetsOnglets";
 import { InstallBanner } from "../components/Install";
 import { Annonces } from "../components/Annonces";
 import { LienDevoirs, TuileDevoirs } from "../components/TuileDevoirs";
@@ -22,14 +21,6 @@ import type { QuestionQuiz } from "../data/types";
 // Adresses : #/rs/cours[/id], #/rs/sujets. Brouillon du site d'essai : tout est ouvert pour la relecture.
 
 const pretes = () => LECONS_RS.filter(l => l.blocs.length);
-
-function CoursOngletsRS({ actif }: { actif: "lecons" | "sujets" | "outils" }) {
-  return <Segments groupe="rs-cours" label="Résumé" items={[
-    { label: "Leçons", href: "#/rs/cours", actif: actif === "lecons" },
-    { label: "Exercices", href: "#/rs/sujets", actif: actif === "sujets" },
-    { label: "Outils", href: "#/rs/outils", actif: actif === "outils" }
-  ]} />;
-}
 
 /** Accueil quand l'élève a choisi le résumé de texte. */
 export function AccueilResume() {
@@ -73,7 +64,6 @@ function CoursRS() {
   const [lues] = useStored<string[]>("rs-lecons-lues", []);
   return (
     <Page>
-      <CoursOngletsRS actif="lecons" />
       <header class="page-header">
         <h1 class="page-title">Le résumé de texte</h1>
         <p class="lede">Aussi appelé contraction de texte.</p>
@@ -248,7 +238,6 @@ function LeconRS({ id }: { id: string }) {
 function SujetsRS() {
   return (
     <Page>
-      <CoursOngletsRS actif="sujets" />
       <header class="page-header">
         <h1 class="page-title">Exercices</h1>
         <p class="lede">Bientôt : des textes corrigés pas à pas, et des textes pour t'entraîner.</p>
@@ -272,7 +261,6 @@ function OutilsRS() {
   const etat = !cible || !compte ? "" : compte < min ? "court" : compte > max ? "long" : "ok";
   return (
     <Page>
-      <CoursOngletsRS actif="outils" />
       <header class="page-header">
         <h1 class="page-title">Calculateur de mots</h1>
         <p class="lede">Combien de mots doit faire ton résumé, et combien il en fait.</p>
