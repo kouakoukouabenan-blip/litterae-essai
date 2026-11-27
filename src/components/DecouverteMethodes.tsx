@@ -79,6 +79,7 @@ export function RepereMethode() {
   const [active] = useMethode();
   const [pos, setPos] = useState<Position | null>(null);
   const bouton = useRef<HTMLElement | null>(null);
+  const bulle = useRef<HTMLDivElement>(null);
   // Juste après le tout premier choix, le repère suit.
   const [tour, setTour] = useState(0);
   useEffect(() => {
@@ -121,7 +122,9 @@ export function RepereMethode() {
 
   useEffect(() => {
     if (!pos) return;
-    const toucher = () => fermer();
+    // Un toucher sur la bulle elle-même ne la retire pas tout de suite : sinon le doigt « tombe »
+    // sur ce qu'il y a dessous (le devoir du jour, par exemple). La bulle se ferme au clic, sans rien ouvrir.
+    const toucher = (e: Event) => { if (!(e.target instanceof Node && bulle.current?.contains(e.target))) fermer(); };
     // Le toucher qui ouvre le choix de méthode ferme aussi le repère.
     const t = setTimeout(() => document.addEventListener("pointerdown", toucher), 300);
     addEventListener("resize", placer);
@@ -132,9 +135,9 @@ export function RepereMethode() {
   if (!pos) return null;
   const autres = METHODES.filter(m => m.prete && m.id !== active.id).map(m => AVEC_ARTICLE[m.id] ?? m.nom);
   return (
-    <div class="repere-methode" role="status" style={{ top: `${pos.top}px`, left: `${pos.left}px`, width: `${pos.largeur}px`, "--fleche": `${pos.fleche}px` }}>
+    <div ref={bulle} class="repere-methode" role="status" onClick={e => { e.preventDefault(); e.stopPropagation(); fermer(); }} style={{ top: `${pos.top}px`, left: `${pos.left}px`, width: `${pos.largeur}px`, "--fleche": `${pos.fleche}px` }}>
       <p><strong>Il y a aussi {autres.join(" et ")}.</strong> Touche ici pour changer de méthode.</p>
-      <button type="button" class="repere-methode-ok" onClick={fermer}>Compris</button>
+      <button type="button" class="repere-methode-ok">Compris</button>
     </div>
   );
 }
