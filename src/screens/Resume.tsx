@@ -288,12 +288,18 @@ function OutilsRS() {
           <span>Écris ou colle ton résumé pour compter ses mots</span>
           <textarea rows={7} value={brouillon} placeholder="Ton résumé…" onInput={e => setBrouillon((e.target as HTMLTextAreaElement).value)} />
         </label>
-        <p class={`rs-calcul-compte ${etat}`} role="status">
-          <strong>{compte} mot{compte > 1 ? "s" : ""}</strong>
-          {etat === "ok" && " · dans la fourchette"}
-          {etat === "court" && ` · trop court de ${min - compte} mot${min - compte > 1 ? "s" : ""}`}
-          {etat === "long" && ` · trop long de ${compte - max} mot${compte - max > 1 ? "s" : ""}`}
-        </p>
+        <div class="rs-calcul-ligne">
+          <p class={`rs-calcul-compte ${etat}`} role="status">
+            <strong>{compte} mot{compte > 1 ? "s" : ""}</strong>
+            {etat === "ok" && " · dans la fourchette"}
+            {etat === "court" && ` · trop court de ${min - compte} mot${min - compte > 1 ? "s" : ""}`}
+            {etat === "long" && ` · trop long de ${compte - max} mot${compte - max > 1 ? "s" : ""}`}
+          </p>
+          {brouillon && <button type="button" class="rs-calcul-effacer" onClick={e => {
+            setBrouillon("");
+            ((e.currentTarget as HTMLElement).closest(".rs-calcul")?.querySelector("textarea") as HTMLTextAreaElement | null)?.focus();
+          }}>Tout effacer</button>}
+        </div>
         <p class="meta">Compté comme au bac : « l'école » = 2 mots, « c'est-à-dire » = 4 mots, un nombre en chiffres ou un sigle = 1 mot.</p>
       </section>
     </Page>

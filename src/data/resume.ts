@@ -593,7 +593,7 @@ export const LECONS_RS: LeconRS[] = [
       ] },
 
       { h: "Les arguments" },
-      { p: "Ensuite, tu donnes deux ou trois arguments. Chaque argument a son propre paragraphe, et chaque paragraphe se construit toujours de la même façon :" },
+      { p: "Ensuite, tu donnes trois arguments. Chaque argument a son propre paragraphe, et chaque paragraphe se construit toujours de la même façon :" },
       { etapes: [
         ["L'argument", "Une phrase claire qui dit ton idée."],
         ["L'explication", "Tu développes cette idée : pourquoi est-elle vraie ? Comment cela se passe-t-il ?"],
@@ -607,7 +607,7 @@ export const LECONS_RS: LeconRS[] = [
       ] } },
 
       { h: "Et pour discuter ?" },
-      { p: "Discuter, c'est faire les deux. Dans un premier temps, tu montres ce qui est juste dans la thèse de l'auteur, comme si tu l'étayais. Puis une phrase de transition annonce le retournement : « Cependant, cette thèse a ses limites. » Dans un second temps, tu montres ce qu'elle oublie ou exagère, comme si tu la réfutais." },
+      { p: "Discuter, c'est faire les deux, avec quatre arguments au lieu de trois. Dans un premier temps, tu étayes la thèse de l'auteur avec deux arguments : tu montres ce qu'elle a de juste. Puis une phrase de transition annonce le retournement : « Cependant, cette thèse a ses limites. » Dans un second temps, tu montres ses limites avec deux autres arguments : ce qu'elle oublie ou exagère." },
       { astuce: "Tes arguments sont à toi. Tu peux t'inspirer du texte, mais ne te contente pas de recopier ce que dit l'auteur : apporte tes propres idées et tes propres exemples." }
     ]
   },
@@ -731,7 +731,8 @@ export const QUIZ_RS: Record<string, QuestionQuiz[]> = {
     { q: "Par quoi commence le développement ?", choix: ["Par le premier exemple", "Par une phrase introductive qui reprend la thèse", "Par la conclusion"], bonne: 1, pourquoi: "La phrase introductive reprend la thèse de l'auteur et annonce ta position." },
     { q: "« Il n'est pas justifiable de dire que… » est une phrase introductive pour…", choix: ["étayer", "réfuter", "discuter"], bonne: 1, pourquoi: "Elle rejette la thèse de l'auteur : c'est pour réfuter." },
     { q: "Chaque paragraphe d'argument contient…", choix: ["l'argument, l'explication et un exemple", "seulement un exemple", "un résumé du texte"], bonne: 0, pourquoi: "Une idée, son explication, puis un fait précis qui la prouve." },
-    { q: "Pour discuter, ton développement…", choix: ["montre d'abord ce qui est juste, puis les limites", "ne donne que des arguments contre", "ne donne que des exemples"], bonne: 0, pourquoi: "Discuter, c'est étayer puis réfuter, avec une transition comme « Cependant, cette thèse a ses limites »." }
+    { q: "Combien d'arguments donnes-tu pour étayer ou réfuter ?", choix: ["Un seul", "Trois", "Six"], bonne: 1, pourquoi: "Le développement compte trois arguments, chacun dans son paragraphe." },
+    { q: "Pour discuter, ton développement…", choix: ["étaye la thèse en deux arguments, puis montre ses limites en deux arguments", "ne donne que des arguments contre", "ne donne que des exemples"], bonne: 0, pourquoi: "Discuter, c'est deux arguments pour, une transition comme « Cependant, cette thèse a ses limites », puis deux arguments sur les limites." }
   ],
   "conclusion-pe": [
     { q: "Quelles sont les trois étapes de la conclusion ?", choix: ["Bilan, jugement personnel, ouverture", "Généralité, thèse, plan", "Argument, explication, exemple"], bonne: 0, pourquoi: "On fait le bilan, on donne son avis, puis on ouvre sur un problème voisin." },

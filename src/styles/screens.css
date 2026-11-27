@@ -1185,3 +1185,5 @@ html[data-univers="composa"] .bandeau-essai { display: none; }
 .rs-calcul-compte { margin: 0; font-size: var(--text-sm); }
 .rs-calcul-compte.ok { color: var(--green); }
 .rs-calcul-compte.court, .rs-calcul-compte.long { color: var(--orange-text); }
+.rs-calcul-ligne { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rs-calcul-effacer { flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--orange-text); border-radius: 999px; padding: 6px 14px; font: inherit; font-size: var(--text-sm); font-weight: 600; cursor: pointer; }
