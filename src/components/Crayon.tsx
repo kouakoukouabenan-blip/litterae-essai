@@ -135,6 +135,7 @@ export function TexteCrayon({ id, texte, note }: { id: string; texte: string; no
       {!actif ? (
         // Reste à portée de main pendant qu'on fait défiler le texte.
         <div class="crayon-prendre-zone">
+          <span class="crayon-prendre-aide">Souligne, entoure, annote…</span>
           <button type="button" class="crayon-prendre" onClick={() => setActif(true)}>
             <Icon name="edit" size={18} />Crayon
           </button>
