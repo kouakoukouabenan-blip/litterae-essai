@@ -13,7 +13,7 @@ import { marquer } from "../lib/progres";
 import { NotFound } from "./NotFound";
 import { Bloc } from "./Lecon";
 import { TexteCrayon } from "../components/Crayon";
-import { LECONS_RS, QUIZ_RS, type BlocRS } from "../data/resume";
+import { LECONS_RS, PARTIES_RS, QUIZ_RS, type BlocRS } from "../data/resume";
 import type { TexteEtudie } from "../data/cc-types";
 import { compterMots } from "../lib/mots";
 import type { QuestionQuiz } from "../data/types";
@@ -72,20 +72,28 @@ function CoursRS() {
         <h1 class="page-title">Le résumé de texte</h1>
         <p class="lede">Aussi appelé contraction de texte.</p>
       </header>
-      <ol class="list" aria-label="Leçons">
-        {LECONS_RS.map((l, i) => {
-          const lue = lues.includes(l.id), vide = !l.blocs.length;
-          return (
-            <li key={l.id}>
-              <a class="row" href={`#/rs/cours/${l.id}`}>
-                <span class={`step-num ${lue ? "done" : ""}`} aria-hidden="true">{lue ? <Icon name="check" size={18} /> : i + 1}</span>
-                <span class="row-body"><span class="row-title">{l.titre}</span><span class="meta">{vide ? "Bientôt" : `${l.duree}${lue ? " · lue" : ""}`}</span></span>
-                <Icon name="chevron_right" />
-              </a>
-            </li>
-          );
-        })}
-      </ol>
+      {PARTIES_RS.map((partie, k) => {
+        const lecons = LECONS_RS.filter(l => l.partie === partie.id);
+        return (
+          <section key={partie.id} class="rs-partie">
+            <h2 class="rs-partie-titre"><span class="rs-partie-num">{k + 1}</span>{partie.titre}</h2>
+            <ol class="list" aria-label={partie.titre}>
+              {lecons.map(l => {
+                const i = LECONS_RS.indexOf(l), lue = lues.includes(l.id), vide = !l.blocs.length;
+                return (
+                  <li key={l.id}>
+                    <a class="row" href={`#/rs/cours/${l.id}`}>
+                      <span class={`step-num ${lue ? "done" : ""}`} aria-hidden="true">{lue ? <Icon name="check" size={18} /> : i + 1}</span>
+                      <span class="row-body"><span class="row-title">{l.titre}</span><span class="meta">{vide ? "Bientôt" : `${l.duree}${lue ? " · lue" : ""}`}</span></span>
+                      <Icon name="chevron_right" />
+                    </a>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        );
+      })}
     </Page>
   );
 }
@@ -215,7 +223,7 @@ function LeconRS({ id }: { id: string }) {
     <Page title={`Leçon ${i + 1}`} back="#/rs/cours">
       <article class="reading">
         <header class="page-header">
-          <p class="eyebrow">Résumé de texte · Leçon {i + 1} sur {LECONS_RS.length}{l.duree ? ` · ${l.duree}` : ""}</p>
+          <p class="eyebrow">{PARTIES_RS.find(x => x.id === l.partie)?.titre} · Leçon {i + 1}{l.duree ? ` · ${l.duree}` : ""}</p>
           <h1 class="page-title"><Texte text={l.titre} /></h1>
         </header>
         {l.blocs.length

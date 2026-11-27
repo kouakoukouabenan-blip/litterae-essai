@@ -5,7 +5,15 @@ import type { BlocLecon, QuestionQuiz } from "./types";
 import type { TexteEtudie } from "./cc-types";
 
 export type BlocRS = BlocLecon | { texte: TexteEtudie } | { plie: { titre: string; liste: string[] } };
-export interface LeconRS { id: string; titre: string; duree: string; blocs: BlocRS[] }
+export interface LeconRS { id: string; partie: string; titre: string; duree: string; blocs: BlocRS[] }
+
+/** Les quatre parties du cours, dans l'ordre de l'épreuve. */
+export const PARTIES_RS = [
+  { id: "comprendre", titre: "Comprendre le texte" },
+  { id: "questions", titre: "Répondre aux questions" },
+  { id: "resume", titre: "Rédiger le résumé" },
+  { id: "production", titre: "La production écrite" }
+];
 
 / Texte de Francis Bebey, fil rouge des leçons. */
 export const BEBEY: TexteEtudie = {
@@ -35,7 +43,7 @@ const DE_CLOSETS = "Dans la classe actuelle, des enfants très doués côtoient 
 
 export const LECONS_RS: LeconRS[] = [
   {
-    id: "definition", titre: "Le résumé de texte, c'est quoi ?", duree: "8 min", blocs: [
+    id: "definition", partie: "comprendre", titre: "Le résumé de texte, c'est quoi ?", duree: "8 min", blocs: [
       { p: "Le résumé de texte s'appelle aussi la contraction de texte. En Côte d'Ivoire, on dit surtout « résumé » ; dans d'autres pays, on dit plutôt « contraction ». C'est le même exercice. Dans ces leçons, tu trouveras les deux mots." },
 
       { h: "Le principe, tout simplement" },
@@ -66,7 +74,7 @@ export const LECONS_RS: LeconRS[] = [
     ]
   },
   {
-    id: "comprendre", titre: "Comprendre le texte", duree: "15 min", blocs: [
+    id: "comprendre", partie: "comprendre", titre: "Le paratexte et la lecture passive", duree: "6 min", blocs: [
       { p: "Dans les autres méthodes, on se contente souvent de lire le texte. Ici, la lecture seule ne suffit pas. Avant même de lire, on observe ce qui entoure le texte. Puis on lit deux fois, et chaque lecture a un rôle précis. Voici les étapes, dans l'ordre :" },
       { etapes: [
         ["Le paratexte", "Avant de lire, on regarde le titre, l'auteur, la source et la date, et on fait des suppositions sur le texte."],
@@ -98,9 +106,13 @@ export const LECONS_RS: LeconRS[] = [
       { p: "Lis maintenant le texte de Francis Bebey de cette façon." },
       { texte: BEBEY },
       { p: "Après cette lecture, tu sais que le texte parle de la tradition orale, de l'écriture, et de leur rôle dans le progrès des sociétés. Notre hypothèse semble se confirmer : l'auteur défend la tradition orale. Mais il reconnaît aussi des qualités à l'écrit. Il faudra regarder de plus près." },
-
-      { h: "3. La lecture active : cinq choses à trouver" },
-      { p: "Tu relis maintenant le texte crayon en main. Tu soulignes les mots qui reviennent, tu entoures les mots de liaison (mais, certes, car, donc…), tu notes dans la marge ce que tu comprends. Dans l'appli, ouvre le texte support et touche « Prendre le crayon » : tu peux souligner, entourer, encadrer et écrire des annotations, comme sur ta feuille. Cette lecture active doit te permettre de trouver cinq éléments. Pour chacun, il existe une petite phrase qui t'aide à le formuler sans te tromper." },
+    ]
+  },
+  {
+    id: "lecture-active", partie: "comprendre", titre: "La lecture active : thème, thèse et visée", duree: "7 min", blocs: [
+      { p: "Après le paratexte et la lecture passive, tu connais le thème général du texte. Il faut maintenant aller plus loin : c'est le rôle de la lecture active." },
+      { p: "Tu relis maintenant le texte crayon en main. Tu soulignes les mots qui reviennent, tu entoures les mots de liaison (mais, certes, car, donc…), tu notes dans la marge ce que tu comprends. Dans l'appli, ouvre le texte support et touche « Crayon » : tu peux souligner, entourer, encadrer et écrire des annotations, comme sur ta feuille. Cette lecture active doit te permettre de trouver cinq éléments. Pour chacun, il existe une petite phrase qui t'aide à le formuler sans te tromper." },
+      { texte: BEBEY },
 
       { h: "Le thème : « Dans ce texte, on parle de… »" },
       { p: "Le thème, c'est le sujet du texte, ce dont il parle. Pour le trouver, complète la phrase : « Dans ce texte, on parle de… ». Ce qui suit est le thème. Il s'écrit toujours sous la forme d'un groupe nominal, c'est-à-dire un nom avec ses compléments, sans verbe conjugué." },
@@ -125,7 +137,11 @@ export const LECONS_RS: LeconRS[] = [
       { p: "La visée argumentative, c'est ce que l'auteur cherche à obtenir de son lecteur. Il n'écrit pas pour rien : il veut changer quelque chose dans sa façon de penser ou d'agir. Pour la trouver, commence ta phrase par « L'auteur voudrait que… » ou « L'auteur veut que… »." },
       { p: "Pour François de Closets : « L'auteur voudrait que l'on accepte l'ordinateur à l'école, parce qu'il respecte le rythme de chaque élève. » Pour Jean-Marc Ela : « L'auteur voudrait que l'on cesse d'accuser les cultures africaines et que l'on regarde enfin les vraies causes de la pauvreté. »" },
       { p: "Ne confonds pas thèse et visée. La thèse, c'est ce que l'auteur pense. La visée, c'est ce qu'il veut que tu fasses ou que tu penses après l'avoir lu." },
-
+    ]
+  },
+  {
+    id: "enonciation-structure", partie: "comprendre", titre: "Situation d'énonciation et structure logique", duree: "7 min", blocs: [
+      { p: "Tu as trouvé le thème, la thèse et la visée. La lecture active doit encore te donner deux choses : la situation d'énonciation, puis la structure logique du texte. Ensuite, tu rangeras tout sur une fiche de compréhension." },
       { h: "La situation d'énonciation : qui parle, à qui, où, quand ?" },
       { p: "La situation d'énonciation, c'est le cadre dans lequel le texte est écrit. Quatre questions suffisent :" },
       { def: [
@@ -167,9 +183,9 @@ export const LECONS_RS: LeconRS[] = [
       { p: "Remarque que le paragraphe 3 contient à lui seul plusieurs idées, et que le paragraphe 4 se coupe en deux. Avec cette fiche sous les yeux, tu as compris le texte en profondeur. Tu es prêt à répondre aux questions, ce que tu vas apprendre dans la leçon suivante." }
     ]
   },
-  { id: "questions", titre: "Répondre aux questions", duree: "", blocs: [] },
-  { id: "resume", titre: "Le résumé (contraction de texte)", duree: "", blocs: [] },
-  { id: "production", titre: "La production écrite (essai ou discussion)", duree: "", blocs: [] }
+  { id: "questions", partie: "questions", titre: "Les différentes questions et les réponses attendues", duree: "", blocs: [] },
+  { id: "resume", partie: "resume", titre: "Rédiger le résumé (contraction de texte)", duree: "", blocs: [] },
+  { id: "production", partie: "production", titre: "La production écrite (essai ou discussion)", duree: "", blocs: [] }
 ];
 
 export const QUIZ_RS: Record<string, QuestionQuiz[]> = {
@@ -183,8 +199,16 @@ export const QUIZ_RS: Record<string, QuestionQuiz[]> = {
   comprendre: [
     { q: "Que fais-tu avant même de lire le texte ?", choix: ["Je compte les mots", "J'observe le paratexte : titre, auteur, source, date", "Je souligne les mots clés"], bonne: 1, pourquoi: "Le paratexte permet de faire des suppositions sur le sens du texte avant de le lire." },
     { q: "La lecture passive sert à trouver…", choix: ["le thème", "la thèse", "la structure"], bonne: 0, pourquoi: "La lecture passive ne sert qu'à savoir de quoi parle le texte. Le reste vient avec la lecture active." },
+    { q: "Le titre « Tradition orale et écriture » permet surtout de supposer que le texte va…", choix: ["raconter une histoire", "comparer la parole et l'écrit", "expliquer l'Égypte antique"], bonne: 1, pourquoi: "Le titre met face à face deux façons de transmettre le savoir : on peut supposer que le texte va les comparer." }
+  ],
+  "lecture-active": [
     { q: "Lequel est bien formulé comme un thème ?", choix: ["L'école doit changer.", "Le rôle de l'ordinateur dans l'apprentissage", "L'auteur pense que l'école doit changer."], bonne: 1, pourquoi: "Le thème est un groupe nominal, sans verbe conjugué : « Dans ce texte, on parle du rôle de l'ordinateur dans l'apprentissage »." },
     { q: "« L'auteur voudrait que les jeunes lisent davantage. » Cette phrase donne…", choix: ["le thème", "la thèse", "la visée argumentative"], bonne: 2, pourquoi: "« L'auteur voudrait que… » introduit la visée : ce que l'auteur cherche à obtenir de son lecteur." },
-    { q: "Une unité significative, c'est…", choix: ["toujours un paragraphe", "un morceau du texte qui développe une seule idée", "une phrase importante"], bonne: 1, pourquoi: "On découpe selon les idées, pas selon les paragraphes, et on donne un titre à chaque unité." }
+    { q: "Pour formuler la thèse, tu commences ta phrase par…", choix: ["« Dans ce texte, on parle de… »", "« L'auteur pense que… »", "« L'auteur voudrait que… »"], bonne: 1, pourquoi: "« L'auteur pense que… » introduit la thèse ; « Dans ce texte, on parle de… » introduit le thème ; « L'auteur voudrait que… », la visée." }
+  ],
+  "enonciation-structure": [
+    { q: "Une unité significative, c'est…", choix: ["toujours un paragraphe", "un morceau du texte qui développe une seule idée", "une phrase importante"], bonne: 1, pourquoi: "On découpe selon les idées, pas selon les paragraphes, et on donne un titre à chaque unité." },
+    { q: "La situation d'énonciation répond à quatre questions. Lesquelles ?", choix: ["Qui parle, à qui, où, quand ?", "Quoi, comment, pourquoi, combien ?", "Thème, thèse, visée, structure ?"], bonne: 0, pourquoi: "Qui parle, à qui il parle, où et quand : c'est le cadre dans lequel le texte est écrit." },
+    { q: "Dans « Certes, l'écrit est un progrès. Mais il est né de l'oral », la pensée de l'auteur est surtout…", choix: ["après « certes »", "après « mais »", "dans les deux, à égalité"], bonne: 1, pourquoi: "« Certes » introduit ce que l'auteur accorde aux autres ; « mais » introduit ce qu'il pense vraiment." }
   ]
 };
