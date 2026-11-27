@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import { METHODES, useMethode, type Methode } from "../lib/methodes";
+import { MATIERES, METHODES, useMethode, type Methode } from "../lib/methodes";
 import { write } from "../lib/storage";
 import { useRoute } from "../lib/router";
 import { choixAFaire, choixFait, repereAMontrer, repereVu } from "../lib/decouverte-methodes";
@@ -38,20 +38,27 @@ export function PremierChoix() {
         <p class="premier-choix-marque">Litter<span>ae</span></p>
         <h1 id="premier-choix-titre" class="premier-choix-titre">Que veux-tu travailler ?</h1>
         <p class="premier-choix-sous">Tu pourras changer quand tu veux.</p>
-        <ul class="premier-choix-liste">
-          {METHODES.map(m => (
-            <li key={m.id}>
-              <button type="button" class={`premier-choix-carte ${m.prete ? "" : "is-bientot"}`} disabled={!m.prete}
-                style={{ "--m": m.couleur, "--m-fond": m.fond, "--m-encre": m.encre }} onClick={() => prendre(m)}>
-                <span class="premier-choix-icone"><IconeMethode id={m.id} /></span>
-                <span class="premier-choix-texte">
-                  <strong>{m.nom}</strong>
-                  <span>{m.prete ? DESCRIPTION[m.id] : "Bientôt dans Litterae"}</span>
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
+        {MATIERES.map(x => x.prete ? (
+          <section key={x.id} class="premier-choix-matiere">
+            <h2 class="premier-choix-matiere-nom">{x.nom}</h2>
+            <ul class="premier-choix-liste">
+              {METHODES.filter(m => m.matiere === x.id).map(m => (
+                <li key={m.id}>
+                  <button type="button" class={`premier-choix-carte ${m.prete ? "" : "is-bientot"}`} disabled={!m.prete}
+                    style={{ "--m": m.couleur, "--m-fond": m.fond, "--m-encre": m.encre }} onClick={() => prendre(m)}>
+                    <span class="premier-choix-icone"><IconeMethode id={m.id} /></span>
+                    <span class="premier-choix-texte">
+                      <strong>{m.nom}</strong>
+                      <span>{m.prete ? DESCRIPTION[m.id] : "Bientôt dans Litterae"}</span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : (
+          <p key={x.id} class="premier-choix-autre"><strong>{x.nom}</strong><span>Bientôt</span></p>
+        ))}
       </div>
     </div>
   );

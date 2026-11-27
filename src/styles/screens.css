@@ -1106,3 +1106,7 @@ html[data-univers="composa"] .bandeau-essai { display: none; }
 @keyframes repere-entre { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 @keyframes repere-pouls { 0% { box-shadow: 0 0 0 0 rgba(242, 165, 65, .7); } 100% { box-shadow: 0 0 0 10px rgba(242, 165, 65, 0); } }
 @media (prefers-reduced-motion: reduce) { .repere-methode, .methode-bouton.repere-actif { animation: none; } }
+.premier-choix-matiere + .premier-choix-matiere, .premier-choix-matiere + .premier-choix-autre { margin-top: var(--s5); }
+.premier-choix-matiere-nom { margin: 0 0 var(--s2); font: 700 var(--text-xs)/1.2 var(--font-text); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.premier-choix-autre { display: flex; justify-content: space-between; align-items: center; margin: var(--s3) 0 0; padding: var(--s3) var(--s4); border: 1.5px dashed var(--line-strong); border-radius: var(--radius-sm); color: var(--muted); font-size: var(--text-sm); }
+.premier-choix-autre span { font-size: var(--text-xs); }
