@@ -100,7 +100,7 @@ export const LECONS_RS: LeconRS[] = [
       { p: "Après cette lecture, tu sais que le texte parle de la tradition orale, de l'écriture, et de leur rôle dans le progrès des sociétés. Notre hypothèse semble se confirmer : l'auteur défend la tradition orale. Mais il reconnaît aussi des qualités à l'écrit. Il faudra regarder de plus près." },
 
       { h: "3. La lecture active : cinq choses à trouver" },
-      { p: "Tu relis maintenant le texte crayon en main. Tu soulignes les mots qui reviennent, tu entoures les mots de liaison (mais, certes, car, donc…), tu notes dans la marge ce que tu comprends. Cette lecture active doit te permettre de trouver cinq éléments. Pour chacun, il existe une petite phrase qui t'aide à le formuler sans te tromper." },
+      { p: "Tu relis maintenant le texte crayon en main. Tu soulignes les mots qui reviennent, tu entoures les mots de liaison (mais, certes, car, donc…), tu notes dans la marge ce que tu comprends. Dans l'appli, ouvre le texte support et touche « Prendre le crayon » : tu peux souligner, entourer, encadrer et écrire des annotations, comme sur ta feuille. Cette lecture active doit te permettre de trouver cinq éléments. Pour chacun, il existe une petite phrase qui t'aide à le formuler sans te tromper." },
 
       { h: "Le thème : « Dans ce texte, on parle de… »" },
       { p: "Le thème, c'est le sujet du texte, ce dont il parle. Pour le trouver, complète la phrase : « Dans ce texte, on parle de… ». Ce qui suit est le thème. Il s'écrit toujours sous la forme d'un groupe nominal, c'est-à-dire un nom avec ses compléments, sans verbe conjugué." },
@@ -143,7 +143,9 @@ export const LECONS_RS: LeconRS[] = [
       { astuce: "Avec « certes… mais… », la vraie pensée de l'auteur est après « mais ». Ce qui suit « certes » est ce qu'il accorde aux autres." },
 
       { h: "Application : la fiche de compréhension du texte de Bebey" },
-      { p: "Relis le texte de Francis Bebey crayon en main, puis compare avec ce qu'on trouve. Voici, rangés dans l'ordre, tous les éléments de la compréhension. C'est ce que tu dois avoir sur ton brouillon avant d'écrire la moindre ligne de ta copie." },
+      { p: "Relis le texte de Francis Bebey crayon en main, et cherche toi-même les cinq éléments avant de lire la suite." },
+      { texte: BEBEY },
+      { p: "Compare maintenant avec ce qu'on trouve. Voici, rangés dans l'ordre, tous les éléments de la compréhension. C'est ce que tu dois avoir sur ton brouillon avant d'écrire la moindre ligne de ta copie." },
       { def: [
         ["Thème", "Dans ce texte, on parle de la place de la tradition orale face à l'écriture dans le développement des sociétés."],
         ["Thèse", "L'auteur pense que la tradition orale n'est pas un frein au progrès : elle fonde les sociétés et leur diversité, et l'écriture elle-même est née d'elle."],

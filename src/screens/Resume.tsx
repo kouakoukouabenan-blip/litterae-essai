@@ -12,8 +12,10 @@ import { useMethode } from "../lib/methodes";
 import { marquer } from "../lib/progres";
 import { NotFound } from "./NotFound";
 import { Bloc } from "./Lecon";
-import { TexteEtudieBloc } from "./Commentaire";
+import { TexteCrayon } from "../components/Crayon";
 import { LECONS_RS, QUIZ_RS, type BlocRS } from "../data/resume";
+import type { TexteEtudie } from "../data/cc-types";
+import { compterMots } from "../lib/mots";
 import type { QuestionQuiz } from "../data/types";
 
 // Résumé de texte argumentatif (contraction de texte) : cours, puis exercices.
@@ -88,8 +90,45 @@ function CoursRS() {
   );
 }
 
+/** Tous les textes supports des leçons (et plus tard des exercices), par identifiant. */
+const TEXTES_RS = new Map<string, TexteEtudie>();
+LECONS_RS.forEach(l => l.blocs.forEach(b => { if ("texte" in b) TEXTES_RS.set(b.texte.id, b.texte); }));
+// Le nombre de mots donné par le sujet fait foi ; sinon on compte comme au bac.
+const nbMots = (t: TexteEtudie) => Number(/(\d+) mots/.exec(t.consigne)?.[1]) || compterMots(t.texte);
+
+/** Dans une leçon : le texte support se lit sur sa propre page, avec le crayon. */
+function CarteTexte({ t }: { t: TexteEtudie }) {
+  const [traits] = useStored<unknown[]>(`crayon:${t.id}`, []);
+  return (
+    <aside class="rs-carte-texte">
+      <p class="callout-label">Texte support</p>
+      <p class="rs-carte-titre"><Texte text={`« ${t.titre} »`} /></p>
+      <p class="meta">{t.auteur} · {nbMots(t)} mots{traits.length ? " · annoté" : ""}</p>
+      <a class="btn btn-primary align-start" href={`#/rs/texte/${t.id}`}><Icon name="menu_book" size={20} />Ouvrir le texte support</a>
+    </aside>
+  );
+}
+
+/** Le texte support en pleine page, avec le crayon pour souligner, entourer, encadrer et annoter. */
+function TexteSupportRS({ id }: { id: string }) {
+  const t = TEXTES_RS.get(id);
+  if (!t) return <NotFound what="Ce texte n'existe pas." back="#/rs/cours" />;
+  return (
+    <Page title="Texte support" back="#/rs/cours">
+      <article class="reading">
+        <header class="page-header">
+          <p class="eyebrow">Texte support · {nbMots(t)} mots</p>
+          <h1 class="page-title">{t.titre}</h1>
+          <p class="lede">{t.auteur}, <Texte text={t.source} /></p>
+        </header>
+        <TexteCrayon id={t.id} texte={t.texte} note={t.note} />
+      </article>
+    </Page>
+  );
+}
+
 function BlocLeconRS({ b }: { b: BlocRS }) {
-  if ("texte" in b) return <TexteEtudieBloc t={b.texte} />;
+  if ("texte" in b) return <CarteTexte t={b.texte} />;
   if ("plie" in b)
     return (
       <details class="cc-plie">
@@ -205,6 +244,7 @@ export function ResumeScreen({ path }: { path: string[] }) {
   switch (partie) {
     case "cours": return id ? <LeconRS id={id} /> : <CoursRS />;
     case "sujets": return <SujetsRS />;
+    case "texte": return id ? <TexteSupportRS id={id} /> : <CoursRS />;
     default: return <AccueilResume />;
   }
 }

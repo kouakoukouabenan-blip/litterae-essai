@@ -59,7 +59,7 @@ function useLibelle() {
 function useSection() {
   const [premier, second] = useRoute().path;
   // Commentaire composé : les leçons et outils vont avec Cours, les corrigés et l'entraînement avec Sujets.
-  if (premier === "rs") return second === "cours" ? "cours" : second === "sujets" ? "sujets" : "accueil";
+  if (premier === "rs") return second === "cours" || second === "texte" ? "cours" : second === "sujets" ? "sujets" : "accueil";
   if (premier === "cc") return second === "cours" || second === "outils" || second === "figures" ? "cours" : second === "corriges" || second === "entrainement" || second === "atelier" ? "sujets" : second === "genres" || second === "tonalites" ? "oeuvres" : "accueil";
   const section = premier ?? "accueil";
   // Les sujets d'entraînement et « J'ai un devoir » sont des onglets de Sujets ; la boîte à outils se range avec le cours.
