@@ -501,7 +501,152 @@ export const LECONS_RS: LeconRS[] = [
       { lien: { texte: "Ouvrir le calculateur de mots", href: "#/rs/outils" } }
     ]
   },
-  { id: "production", partie: "production", titre: "La production écrite (essai ou discussion)", duree: "", blocs: [] }
+  {
+    id: "production", partie: "production", titre: "La production écrite, c'est quoi ?", duree: "5 min", blocs: [
+      { p: "La production écrite est le troisième exercice du sujet, après les questions et le résumé. On l'appelle aussi l'essai ou la discussion. Elle vaut 8 points, autant que le résumé." },
+      { p: "C'est une mini-dissertation. Cette fois, tu ne parles plus à la place de l'auteur : tu donnes ton propre raisonnement, avec tes arguments et tes exemples. Mais tu ne pars pas de rien. Le sujet te donne une citation tirée du texte que tu viens de résumer, et il te dit quoi en faire." },
+      { sujet: "Dans un développement organisé et argumenté, vous étayerez cette affirmation de Francis Bebey : « La tradition orale n'est pas un frein à l'éclosion et au développement d'une société. »" },
+
+      { h: "Trois consignes possibles" },
+      { p: "Le verbe de la consigne décide de tout ton devoir. Il n'y en a que trois :" },
+      { def: [
+        ["Étayer", "Tu es d'accord avec l'auteur. Tu montres que sa thèse est juste, avec des arguments et des exemples."],
+        ["Réfuter", "Tu n'es pas d'accord avec l'auteur. Tu montres que sa thèse est fausse ou insuffisante, avec des arguments contraires."],
+        ["Discuter", "Tu pèses le pour et le contre. Tu montres ce qui est juste dans la thèse de l'auteur, puis ses limites."]
+      ] },
+      { astuce: "Tu n'as pas le choix de ta position. Si le sujet dit « réfutez », tu réfutes, même si tu es d'accord avec l'auteur. Ton avis personnel, tu le donneras dans la conclusion." },
+
+      { h: "Comment se présente le devoir" },
+      { p: "Comme une dissertation, la production écrite se rédige en trois parties : une introduction, un développement et une conclusion. Chacune a sa leçon. Mais avant d'écrire, il faut comprendre le sujet : c'est la leçon suivante." },
+      { plie: { titre: "Un autre type de sujet, plus rare", liste: [
+        "Parfois, le sujet ne porte pas sur une citation mais sur toute l'argumentation du texte : « Étayez l'argumentation de l'auteur selon laquelle… ».",
+        "Dans ce cas, ton développement a deux temps. D'abord, tu reprends les arguments de l'auteur, avec tes mots, et tu montres qu'ils sont justes (ou leurs limites si tu réfutes).",
+        "Ensuite, tu ajoutes tes propres arguments, que l'auteur n'a pas donnés, avec tes exemples.",
+        "Ce type de sujet est rare à l'examen. Le plus fréquent reste la citation."
+      ] } }
+    ]
+  },
+  {
+    id: "comprendre-sujet", partie: "production", titre: "Comprendre le sujet", duree: "6 min", blocs: [
+      { p: "Avant de chercher le moindre argument, tu dois savoir exactement de quoi parle la citation et ce qu'elle affirme. Beaucoup d'élèves perdent des points ici : ils écrivent sur le texte en général, et pas sur la citation qu'on leur donne." },
+      { etapes: [
+        ["Trouver le thème", "De quoi parle la citation ? Comme pour le texte, tu réponds par un groupe nominal : « Dans cette citation, on parle de… »."],
+        ["Reformuler la thèse", "Que dit l'auteur sur ce thème ? Tu le redis avec tes propres mots : « L'auteur pense que… »."],
+        ["Lire le verbe de consigne", "Étayer, réfuter ou discuter : il te dit ce que tu vas faire de cette thèse."]
+      ] },
+
+      { h: "Le thème" },
+      { p: "En général, le thème de la citation est celui du texte. Mais pas toujours : la citation ne reprend souvent qu'une partie du texte. Regarde le sujet sur Bebey. Le texte parle de la tradition orale et de l'écriture. La citation, elle, parle d'autre chose : de la tradition orale et du progrès des sociétés. C'est sur ce thème-là que tu dois écrire, pas sur l'écriture." },
+      { def: [
+        ["Thème du texte", "La tradition orale et l'écriture."],
+        ["Thème de la citation", "La tradition orale et le développement des sociétés."]
+      ] },
+
+      { h: "La thèse" },
+      { p: "Reformuler la thèse t'oblige à la comprendre. Prends chaque mot important de la citation et demande-toi ce qu'il veut dire ici. « Un frein », c'est ce qui ralentit ou bloque. « L'éclosion », c'est la naissance. Ta reformulation devient : « L'auteur pense que la tradition orale ne bloque ni la naissance ni le progrès d'une société. »" },
+      { p: "Autre exemple, avec Georges Duhamel : « La civilisation mécanique a restauré les lois de la jungle. » Thème : les machines et les relations entre les hommes. Thèse reformulée : « L'auteur pense que les machines ont rendu les hommes brutaux : le plus fort écrase le plus faible, comme chez les animaux. »" },
+
+      { h: "Ce que le sujet te demande" },
+      { p: "Il ne reste plus qu'à ajouter le verbe de consigne à ta thèse reformulée. Tu obtiens une phrase qui te servira de boussole pendant tout le devoir :" },
+      { def: [
+        ["Étayer Bebey", "Je dois montrer que la tradition orale ne bloque pas le progrès d'une société."],
+        ["Réfuter Bebey", "Je dois montrer que la tradition orale peut bloquer le progrès d'une société."],
+        ["Réfuter Duhamel", "Je dois montrer que les machines n'ont pas rendu les hommes brutaux."]
+      ] },
+      { astuce: "Écris cette phrase en haut de ton brouillon. Chaque fois que tu trouves un argument, vérifie qu'il répond bien à elle." }
+    ]
+  },
+  {
+    id: "introduction-pe", partie: "production", titre: "Rédiger l'introduction", duree: "5 min", blocs: [
+      { p: "L'introduction de la production écrite est très simple, beaucoup plus que celle de la dissertation. Pas de généralité, pas de définition : tu présentes le texte, tu cites la thèse de l'auteur et tu dis ce que tu vas en faire." },
+
+      { h: "Les éléments à relever" },
+      { p: "Au brouillon, relève d'abord ces éléments. Le paratexte t'en donne la plupart :" },
+      { liste: [
+        "le titre du texte ;",
+        "la source : le livre, le journal ou la revue d'où il est extrait ;",
+        "la date de parution ;",
+        "le nom de l'auteur ;",
+        "la thèse de l'auteur, c'est-à-dire la citation du sujet ;",
+        "le verbe de consigne : étayer, réfuter ou discuter."
+      ] },
+
+      { h: "Le modèle" },
+      { p: "Ensuite, tu places ces éléments dans cette phrase, toujours la même :" },
+      { sujet: "Dans son texte intitulé « [titre du texte] », extrait de [source], paru en [date], [nom de l'auteur] affirme : « [thèse de l'auteur] ». Dans notre analyse, nous allons [étayer / réfuter / discuter] cette affirmation." },
+      { p: "Avec le texte de Bebey, cela donne :" },
+      { modele: "Dans son texte intitulé « Tradition orale et écriture », extrait de la revue *Recherche, Pédagogie et Culture*, paru en 1977, Francis Bebey affirme : « La tradition orale n'est pas un frein à l'éclosion et au développement d'une société. » Dans notre analyse, nous allons étayer cette affirmation." },
+      { p: "Si une information manque (pas de date, par exemple), tu la laisses simplement de côté. Et si le sujet est de réfuter ou de discuter, seule la dernière phrase change : « nous allons réfuter cette affirmation », « nous allons discuter cette affirmation »." },
+      { astuce: "Recopie la citation exactement, entre guillemets, sans changer un mot. Souligne le titre d'un livre ou d'une revue sur ta copie ; le titre d'un article ou d'un extrait se met entre guillemets." }
+    ]
+  },
+  {
+    id: "developpement-pe", partie: "production", titre: "Rédiger le développement", duree: "8 min", blocs: [
+      { p: "Le développement, c'est le cœur de la production écrite. Il commence par une phrase introductive, puis il donne tes arguments, chacun dans son paragraphe." },
+
+      { h: "La phrase introductive" },
+      { p: "Elle reprend la thèse de l'auteur et annonce ta position. Elle change selon la consigne :" },
+      { def: [
+        ["Pour étayer", "« La thèse selon laquelle la tradition orale n'est pas un frein au développement se justifie à plusieurs niveaux. » ; « L'affirmation de l'auteur est fondée à plus d'un titre. » ; « Il est juste de dire que…, et plusieurs raisons le prouvent. »"],
+        ["Pour réfuter", "« Il n'est pas justifiable de dire que la tradition orale n'est pas un frein au développement. » ; « Il n'est pas loisible d'affirmer que… » ; « La thèse selon laquelle… ne résiste pas à l'examen. »"],
+        ["Pour discuter", "« La thèse selon laquelle… est juste à bien des égards, mais elle a ses limites. » ; « S'il est vrai que…, il faut reconnaître que cette affirmation ne dit pas tout. »"]
+      ] },
+
+      { h: "Les arguments" },
+      { p: "Ensuite, tu donnes deux ou trois arguments. Chaque argument a son propre paragraphe, et chaque paragraphe se construit toujours de la même façon :" },
+      { etapes: [
+        ["L'argument", "Une phrase claire qui dit ton idée."],
+        ["L'explication", "Tu développes cette idée : pourquoi est-elle vraie ? Comment cela se passe-t-il ?"],
+        ["L'exemple", "Un fait précis qui prouve ton idée : un événement, un pays, un personnage, une œuvre, une expérience de ta vie."]
+      ] },
+      { p: "Relie tes paragraphes avec des connecteurs : « D'abord… Ensuite… Enfin… », « De plus », « Par ailleurs »." },
+      { plie: { titre: "Voir un paragraphe d'argument", liste: [
+        "Argument : D'abord, la tradition orale transmet des savoirs utiles au développement.",
+        "Explication : Les connaissances des anciens sur les plantes, les sols ou les métiers passent de génération en génération par la parole. Elles ne sont pas des superstitions : elles sont le fruit de siècles d'observation.",
+        "Exemple : Ainsi, la quinine, longtemps le principal remède contre le paludisme, vient de l'écorce d'un arbre que les peuples des Andes utilisaient déjà pour soigner la fièvre. Leur savoir, transmis oralement, a servi à la médecine moderne."
+      ] } },
+
+      { h: "Et pour discuter ?" },
+      { p: "Discuter, c'est faire les deux. Dans un premier temps, tu montres ce qui est juste dans la thèse de l'auteur, comme si tu l'étayais. Puis une phrase de transition annonce le retournement : « Cependant, cette thèse a ses limites. » Dans un second temps, tu montres ce qu'elle oublie ou exagère, comme si tu la réfutais." },
+      { astuce: "Tes arguments sont à toi. Tu peux t'inspirer du texte, mais ne te contente pas de recopier ce que dit l'auteur : apporte tes propres idées et tes propres exemples." }
+    ]
+  },
+  {
+    id: "conclusion-pe", partie: "production", titre: "Rédiger la conclusion", duree: "6 min", blocs: [
+      { p: "La conclusion se fait en trois temps : le bilan, ton jugement personnel, puis une ouverture." },
+
+      { h: "Le bilan" },
+      { p: "Tu rappelles en une ou deux phrases ce que ton développement a montré. La formule change selon la consigne :" },
+      { def: [
+        ["Si tu as étayé", "« Au terme de notre analyse, il apparaît que la thèse de l'auteur est justifiée : la tradition orale transmet des savoirs, soude les communautés et a porté de grandes civilisations. »"],
+        ["Si tu as réfuté", "« Au terme de notre analyse, il apparaît que la thèse de l'auteur ne résiste pas à l'examen : la tradition orale peut enfermer une société dans ses habitudes et freiner son ouverture. »"],
+        ["Si tu as discuté", "« Au terme de notre analyse, il apparaît que la thèse de l'auteur n'est vraie qu'en partie : la tradition orale peut nourrir le progrès, mais elle peut aussi le freiner quand elle refuse tout changement. »"]
+      ] },
+
+      { h: "Le jugement personnel" },
+      { p: "C'est le seul endroit du devoir où tu donnes ton avis à toi, en une phrase : « Pour notre part, nous pensons que… ». Ton avis peut aller plus loin que ton développement, mais il ne doit pas le contredire." },
+      { p: "Par exemple : « Pour notre part, nous pensons que la tradition orale est une richesse à condition de la confier aussi à l'écrit, pour qu'elle ne se perde pas. »" },
+
+      { h: "L'ouverture" },
+      { p: "Tu termines par une question qui élargit le sujet à un problème voisin. Par exemple : « Mais à l'heure des téléphones et des réseaux sociaux, nos jeunes écoutent-ils encore la parole des anciens ? »" },
+      { astuce: "Le bilan regarde en arrière, le jugement personnel donne ton avis, l'ouverture regarde plus loin." }
+    ]
+  },
+  {
+    id: "exemple-pe", partie: "production", titre: "Une production écrite complète", duree: "6 min", blocs: [
+      { p: "Voici une production écrite entière, sur le sujet du texte de Bebey. Repère chaque étape : l'introduction, la phrase introductive, les trois paragraphes d'argument (argument, explication, exemple), puis la conclusion." },
+      { sujet: "Dans un développement organisé et argumenté, vous étayerez cette affirmation de Francis Bebey : « La tradition orale n'est pas un frein à l'éclosion et au développement d'une société. »" },
+      { h: "Introduction" },
+      { modele: "Dans son texte intitulé « Tradition orale et écriture », extrait de la revue *Recherche, Pédagogie et Culture*, paru en 1977, Francis Bebey affirme : « La tradition orale n'est pas un frein à l'éclosion et au développement d'une société. » Dans notre analyse, nous allons étayer cette affirmation." },
+      { h: "Développement" },
+      { modele: "La thèse selon laquelle la tradition orale n'est pas un frein au développement d'une société se justifie à plusieurs niveaux." },
+      { modele: "D'abord, la tradition orale transmet des savoirs utiles au développement. Les connaissances des anciens sur les plantes, les sols ou les métiers passent de génération en génération par la parole. Elles ne sont pas des superstitions : elles sont le fruit de siècles d'observation. Ainsi, la quinine, longtemps le principal remède contre le paludisme, vient de l'écorce d'un arbre que les peuples des Andes utilisaient déjà pour soigner la fièvre." },
+      { modele: "Ensuite, la tradition orale crée des liens qui permettent aux hommes de vivre et de travailler ensemble. Les contes, les proverbes et les palabres enseignent le respect, la solidarité et le pardon. Or, aucune société ne peut se développer dans la haine. En Côte d'Ivoire, l'alliance à plaisanterie entre certains peuples, transmise par la parole, désamorce encore aujourd'hui bien des conflits." },
+      { modele: "Enfin, la tradition orale a porté de grandes civilisations. Bien avant l'écriture, des peuples entiers se sont organisés, ont fait des lois et bâti des empires en confiant leur mémoire à la parole. La Charte du Manden, proclamée au XIIIe siècle dans l'empire du Mali et transmise par les griots, défendait déjà le respect de la vie humaine ; l'UNESCO l'a inscrite au patrimoine de l'humanité." },
+      { h: "Conclusion" },
+      { modele: "Au terme de notre analyse, il apparaît que la thèse de Francis Bebey est justifiée : la tradition orale transmet des savoirs, soude les communautés et a porté de grandes civilisations. Pour notre part, nous pensons qu'elle est une richesse à condition de la confier aussi à l'écrit, pour qu'elle ne se perde pas. Mais à l'heure des téléphones et des réseaux sociaux, nos jeunes écoutent-ils encore la parole des anciens ?" }
+    ]
+  }
 ];
 
 export const QUIZ_RS: Record<string, QuestionQuiz[]> = {
@@ -565,5 +710,32 @@ export const QUIZ_RS: Record<string, QuestionQuiz[]> = {
     { q: "Un texte de 800 mots est à réduire au quart, avec 10 % de marge. Ton résumé doit faire…", choix: ["entre 180 et 220 mots", "entre 720 et 880 mots", "exactement 200 mots"], bonne: 0, pourquoi: "800 ÷ 4 = 200 mots ; 10 % de 200 = 20 ; donc entre 180 et 220 mots." },
     { q: "Combien de mots compte « c'est-à-dire » ?", choix: ["1", "2", "4"], bonne: 2, pourquoi: "On compte comme mot tout ce qui est séparé par un blanc, une apostrophe ou un trait d'union : c', est, à, dire." },
     { q: "Ton résumé est trop long. Que vérifies-tu d'abord ?", choix: ["Que tu n'as pas gardé d'exemples ou d'explications", "Que tu as bien donné ton avis", "Que tu as recopié les phrases clés"], bonne: 0, pourquoi: "Un résumé trop long a souvent gardé des exemples ou des explications à supprimer." }
+  ],
+  production: [
+    { q: "La production écrite, c'est…", choix: ["un deuxième résumé", "une mini-dissertation sur une citation du texte", "une liste de questions"], bonne: 1, pourquoi: "C'est une petite dissertation : tu raisonnes sur une citation tirée du texte." },
+    { q: "Le sujet te demande de « réfuter » la citation. Tu…", choix: ["montres que la thèse de l'auteur est juste", "montres que la thèse de l'auteur est fausse ou insuffisante", "donnes le pour et le contre"], bonne: 1, pourquoi: "Réfuter, c'est s'opposer à la thèse, avec des arguments contraires." },
+    { q: "« Discuter » une citation, c'est…", choix: ["montrer ce qui est juste, puis ses limites", "la recopier en la commentant", "seulement donner son avis"], bonne: 0, pourquoi: "On pèse le pour et le contre : ce qui est juste dans la thèse, puis ses limites." },
+    { q: "Combien de points vaut en général la production écrite ?", choix: ["4 points", "8 points", "12 points"], bonne: 1, pourquoi: "Questions 4 points, résumé 8 points, production écrite 8 points." }
+  ],
+  "comprendre-sujet": [
+    { q: "Le thème de la citation est-il toujours celui du texte ?", choix: ["Oui, toujours", "Souvent, mais pas toujours", "Jamais"], bonne: 1, pourquoi: "La citation ne reprend souvent qu'une partie du texte : vérifie son thème à elle." },
+    { q: "Pour bien comprendre la thèse de la citation, tu…", choix: ["la recopies plusieurs fois", "la reformules avec tes propres mots", "cherches l'avis de l'auteur sur un autre sujet"], bonne: 1, pourquoi: "Reformuler la thèse t'oblige à comprendre chacun de ses mots." },
+    { q: "Dans la citation de Bebey, « un frein » veut dire…", choix: ["ce qui ralentit ou bloque", "ce qui accélère", "ce qui protège"], bonne: 0, pourquoi: "Un frein ralentit ou arrête : la tradition orale ne bloque pas le progrès, dit l'auteur." }
+  ],
+  "introduction-pe": [
+    { q: "Comment commence l'introduction de la production écrite ?", choix: ["Par une généralité", "Par la présentation du texte : titre, source, date, auteur", "Par une définition"], bonne: 1, pourquoi: "Pas de généralité ni de définition : on présente directement le texte." },
+    { q: "Quelle phrase termine l'introduction ?", choix: ["« Dans notre analyse, nous allons étayer (réfuter, discuter) cette affirmation. »", "« Je suis d'accord avec l'auteur. »", "« Qu'en pensez-vous ? »"], bonne: 0, pourquoi: "Elle annonce ce que tu vas faire de la thèse, selon le verbe de la consigne." },
+    { q: "La citation du sujet, dans l'introduction, tu la…", choix: ["résumes", "recopies exactement, entre guillemets", "remplaces par ta reformulation"], bonne: 1, pourquoi: "La thèse de l'auteur se cite mot pour mot, entre guillemets." }
+  ],
+  "developpement-pe": [
+    { q: "Par quoi commence le développement ?", choix: ["Par le premier exemple", "Par une phrase introductive qui reprend la thèse", "Par la conclusion"], bonne: 1, pourquoi: "La phrase introductive reprend la thèse de l'auteur et annonce ta position." },
+    { q: "« Il n'est pas justifiable de dire que… » est une phrase introductive pour…", choix: ["étayer", "réfuter", "discuter"], bonne: 1, pourquoi: "Elle rejette la thèse de l'auteur : c'est pour réfuter." },
+    { q: "Chaque paragraphe d'argument contient…", choix: ["l'argument, l'explication et un exemple", "seulement un exemple", "un résumé du texte"], bonne: 0, pourquoi: "Une idée, son explication, puis un fait précis qui la prouve." },
+    { q: "Pour discuter, ton développement…", choix: ["montre d'abord ce qui est juste, puis les limites", "ne donne que des arguments contre", "ne donne que des exemples"], bonne: 0, pourquoi: "Discuter, c'est étayer puis réfuter, avec une transition comme « Cependant, cette thèse a ses limites »." }
+  ],
+  "conclusion-pe": [
+    { q: "Quelles sont les trois étapes de la conclusion ?", choix: ["Bilan, jugement personnel, ouverture", "Généralité, thèse, plan", "Argument, explication, exemple"], bonne: 0, pourquoi: "On fait le bilan, on donne son avis, puis on ouvre sur un problème voisin." },
+    { q: "Où donnes-tu ton avis personnel ?", choix: ["Dans l'introduction", "Dans la conclusion, après le bilan", "Dans chaque argument"], bonne: 1, pourquoi: "Le jugement personnel vient dans la conclusion : « Pour notre part, nous pensons que… »." },
+    { q: "L'ouverture prend souvent la forme…", choix: ["d'une question qui élargit le sujet", "d'un nouvel argument", "d'une citation de l'auteur"], bonne: 0, pourquoi: "Une question sur un problème voisin, qui regarde plus loin que le sujet." }
   ]
 };
