@@ -10,7 +10,9 @@ import { useStored } from "../lib/storage";
 import { useMethode } from "../lib/methodes";
 import { marquer } from "../lib/progres";
 import { NotFound } from "./NotFound";
-import { Bloc } from "./Lecon";
+import { Bloc, OuvertureLecon } from "./Lecon";
+import { LECONS_GRATUITES_METHODE, ouvrirLeconMethode, useLeconsMethode } from "../lib/lecons-methode";
+import type { EchecLecon } from "../lib/lecons-libres";
 import { Segments } from "../components/SujetsOnglets";
 import { TexteCrayon } from "../components/Crayon";
 import { PARTIES_RS, type BlocRS } from "../data/resume-types";
@@ -98,13 +100,14 @@ export function AccueilResume() {
 
 function CoursRS() {
   const [lues] = useStored<string[]>("rs-lecons-lues", []);
+  const acces = useLeconsMethode("rs", RS_COMPLET);
   return (
     <Page>
       <header class="page-header">
         <h1 class="page-title">Le résumé de texte</h1>
         <p class="lede">Aussi appelé contraction de texte.</p>
       </header>
-      {!RS_COMPLET && !licence() && <p class="quota cc-quota"><span class="muted quota-texte">Réservé à l'accès complet</span><AchatLien label="Débloquer" /></p>}
+      {acces.libre && <p class="quota cc-quota"><span class="muted quota-texte">{acces.restantes ? `${acces.restantes} leçon${acces.restantes > 1 ? "s" : ""} gratuite${acces.restantes > 1 ? "s" : ""} au choix` : "Leçons gratuites lues"}</span><AchatLien label="Tout débloquer" /></p>}
       {PARTIES_RS.map((partie, k) => {
         const lecons = LECONS_RS.filter(l => l.partie === partie.id);
         return (
@@ -118,7 +121,7 @@ function CoursRS() {
                     <a class="row" href={`#/rs/cours/${l.id}`}>
                       <span class={`step-num ${lue ? "done" : ""}`} aria-hidden="true">{lue ? <Icon name="check" size={18} /> : i + 1}</span>
                       <span class="row-body"><span class="row-title">{l.titre}</span><span class="meta">{vide ? "Bientôt" : `${l.duree}${lue ? " · lue" : ""}`}</span></span>
-                      {RS_COMPLET ? <Icon name="chevron_right" /> : <Cadenas />}
+                      {acces.peutLire(l.id) || !acces.libre ? <Icon name="chevron_right" /> : <Cadenas />}
                     </a>
                   </li>
                 );
@@ -249,20 +252,38 @@ function QuizRS({ id, questions }: { id: string; questions: QuestionQuiz[] }) {
 function LeconRS({ id }: { id: string }) {
   const i = LECONS_RS.findIndex(l => l.id === id);
   const [lues, setLues] = useStored<string[]>("rs-lecons-lues", []);
+  const acces = useLeconsMethode("rs", RS_COMPLET);
+  // Sans clé : 3 leçons au choix, demandées au serveur à la première ouverture.
+  const ouverte = acces.ouverte(id);
+  const aOuvrir = i > -1 && acces.libre && !ouverte && acces.peutLire(id);
+  const [echec, setEchec] = useState<EchecLecon | null>(null);
+  const [essai, setEssai] = useState(0);
+  useEffect(() => {
+    if (!aOuvrir) return;
+    let actif = true;
+    setEchec(null);
+    ouvrirLeconMethode("rs", id).then(r => { if (actif && typeof r === "string") setEchec(r); });
+    return () => { actif = false; };
+  }, [id, aOuvrir, essai]);
   if (i < 0) return <NotFound what="Cette leçon n'existe pas." back="#/rs/cours" />;
-  const l = LECONS_RS[i], prev = LECONS_RS[i - 1], next = LECONS_RS[i + 1];
-  if (l.blocs.length && !lues.includes(id)) setTimeout(() => setLues([...lues, id]));
+  const base = LECONS_RS[i], prev = LECONS_RS[i - 1], next = LECONS_RS[i + 1];
+  const l = ouverte ? { ...base, blocs: ouverte.blocs as BlocRS[] } : base;
+  const quiz = ouverte ? ouverte.quiz : QUIZ_RS[l.id];
+  const lisible = RS_COMPLET || !!ouverte;
+  if (lisible && l.blocs.length && !lues.includes(id)) setTimeout(() => setLues([...lues, id]));
   return (
     <Page title={`Leçon ${i + 1}`} back="#/rs/cours">
       <article class="reading">
         <header class="page-header">
           <p class="eyebrow">{PARTIES_RS.find(x => x.id === l.partie)?.titre} · Leçon {i + 1}{l.duree ? ` · ${l.duree}` : ""}</p>
           <h1 class="page-title"><Texte text={l.titre} /></h1>
+          {ouverte && <p class="small muted fiche-quota">Leçon gratuite. <AchatLien label="Tout débloquer" /></p>}
         </header>
-        {!RS_COMPLET ? <VerrouRS /> : l.blocs.length
-          ? <div class="prose">{l.blocs.map((b, k) => <BlocLeconRS key={k} b={b} />)}</div>
+        {aOuvrir && echec !== "limite" ? <OuvertureLecon echec={echec} reessayer={() => setEssai(essai + 1)} />
+          : !lisible ? (acces.libre ? <LockPanel reason={`Tu as lu tes ${LECONS_GRATUITES_METHODE} leçons gratuites du Résumé de texte.`} contenu={CONTENU_RS} /> : <VerrouRS />)
+          : l.blocs.length ? <div class="prose">{l.blocs.map((b, k) => <BlocLeconRS key={k} b={b} />)}</div>
           : <p class="lede">Cette leçon arrive bientôt.</p>}
-        {QUIZ_RS[l.id] && <QuizRS id={l.id} questions={QUIZ_RS[l.id]} />}
+        {lisible && quiz && <QuizRS id={l.id} questions={quiz} />}
         <nav class="pager" aria-label="Leçons">
           {prev ? <a class="pager-link" href={`#/rs/cours/${prev.id}`}><span class="meta">Précédente</span>{prev.titre}</a> : <span />}
           {next ? <a class="pager-link pager-next" href={`#/rs/cours/${next.id}`}><span class="meta">Suivante</span>{next.titre}</a> : <span />}
