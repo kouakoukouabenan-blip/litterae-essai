@@ -183,7 +183,123 @@ export const LECONS_RS: LeconRS[] = [
       { p: "Remarque que le paragraphe 3 contient à lui seul plusieurs idées, et que le paragraphe 4 se coupe en deux. Avec cette fiche sous les yeux, tu as compris le texte en profondeur. Tu es prêt à répondre aux questions, ce que tu vas apprendre dans la leçon suivante." }
     ]
   },
-  { id: "questions", partie: "questions", titre: "Les différentes questions et les réponses attendues", duree: "", blocs: [] },
+  {
+    id: "questions", partie: "questions", titre: "À quoi servent les questions ?", duree: "7 min", blocs: [
+      { p: "Avant le résumé, le sujet te pose deux ou trois questions sur le texte. Elles valent 4 points. Leur but est simple : permettre au correcteur de vérifier que tu as compris le texte. Chaque réponse lui montre si tu as saisi de quoi parle l'auteur, ce qu'il pense, ce qu'il veut, et le sens de ses mots." },
+      { p: "C'est une bonne nouvelle. Si tu as fait le travail de la première partie (paratexte, lecture passive, lecture active), tu as déjà presque toutes les réponses sur ton brouillon. Les questions ne te demandent rien de nouveau : elles te demandent de montrer ce que tu as compris." },
+
+      { h: "Les questions que l'on peut te poser" },
+      { p: "On retrouve presque toujours les mêmes familles de questions :" },
+      { def: [
+        ["Le thème", "« Quel est le thème de ce texte ? » ou « De quoi parle ce texte ? »"],
+        ["La thèse", "« Quelle est la thèse de l'auteur ? » ou « Relevez la phrase qui exprime la thèse de l'auteur. »"],
+        ["La visée argumentative", "« Quelle est la visée argumentative de l'auteur ? » ou « Que cherche à obtenir l'auteur ? »"],
+        ["Le vocabulaire", "« Expliquez en contexte le mot… », « Expliquez l'expression… », « Expliquez la phrase… »"]
+      ] },
+      { p: "On peut aussi te demander combien de points de vue sont présentés dans le texte, ou de relever une phrase précise. Ce sont toujours des façons de vérifier la même chose : as-tu bien lu ?" },
+      { p: "Les trois premières questions, tu sais déjà y répondre grâce aux petites phrases de la lecture active. La question de vocabulaire est différente : elle a sa propre technique, que tu verras dans la leçon suivante." },
+
+      { h: "La règle d'or : des phrases complètes" },
+      { p: "Une réponse ne s'écrit jamais en quelques mots jetés sur la copie. Tu réponds avec une phrase complète, qui reprend les mots de la question. Le correcteur doit pouvoir comprendre ta réponse sans relire la question." },
+      { def: [
+        ["Réponse à éviter", "Thème : la tradition orale."],
+        ["Bonne réponse", "Le thème abordé dans ce texte est la place de la tradition orale face à l'écriture."]
+      ] },
+      { p: "Pour ne jamais te tromper, garde ces débuts de phrase :" },
+      { etapes: [
+        ["Pour le thème", "« Le thème abordé dans ce texte est… »"],
+        ["Pour la thèse", "« La thèse de l'auteur est la suivante : … »"],
+        ["Pour la visée", "« La visée argumentative de l'auteur est que… »"],
+        ["Pour une phrase à relever", "« La phrase qui exprime la thèse de l'auteur est : « … » »"]
+      ] },
+      { astuce: "Ces débuts de phrase ressemblent à ceux de ton brouillon (« Dans ce texte, on parle de… », « L'auteur pense que… », « L'auteur voudrait que… »). Sur la copie, tu les transformes en vraies phrases de réponse." },
+
+      { h: "Application : le texte de Francis Bebey" },
+      { p: "Ouvre le texte et réponds toi-même aux trois questions avant de lire les réponses." },
+      { texte: BEBEY },
+      { def: [
+        ["Quel est le thème du texte ?", "Le thème abordé dans ce texte est la place de la tradition orale face à l'écriture dans le développement des sociétés."],
+        ["Relevez la phrase qui exprime la thèse de l'auteur.", "La phrase qui exprime la thèse de l'auteur est : « L'expérience et l'histoire prouvent que la tradition orale n'est pas un frein à l'éclosion et au développement d'une société, d'une culture, d'une civilisation. »"],
+        ["Quelle est la visée argumentative de l'auteur ?", "La visée argumentative de l'auteur est que le lecteur reconnaisse l'importance et l'utilité de la tradition orale, et qu'il travaille à la préserver."]
+      ] },
+      { p: "Remarque que chaque réponse se suffit à elle-même. Même sans la question, on sait de quoi elle parle." }
+    ]
+  },
+  {
+    id: "vocabulaire", partie: "questions", titre: "Expliquer un mot ou une expression en contexte", duree: "8 min", blocs: [
+      { p: "La question de vocabulaire te demande d'expliquer un mot, une expression ou une phrase du texte. Sa particularité : le jour de l'examen, tu n'as pas de dictionnaire. Tu dois donc trouver le sens tout seul. Bonne nouvelle : le texte lui-même te le donne, à condition de savoir où regarder. C'est ce qu'on appelle le contexte." },
+
+      { h: "Le contexte, c'est quoi ?" },
+      { p: "Le contexte d'un mot, ce sont les phrases qui l'entourent. Concrètement, c'est trois phrases :" },
+      { etapes: [
+        ["La phrase qui précède", "Elle prépare l'idée."],
+        ["La phrase qui contient le mot", "C'est là que le mot prend son sens."],
+        ["La phrase qui suit", "Elle prolonge ou explique l'idée."]
+      ] },
+      { p: "Un mot n'a pas toujours le même sens. « Arrêter », c'est appréhender un voleur, fixer une date, cesser de faire quelque chose, ou bloquer un ballon. Seule la phrase dit lequel. C'est pour cela qu'on te demande toujours d'expliquer « en contexte » : le correcteur ne veut pas la définition du dictionnaire, il veut le sens du mot dans ce texte-là." },
+
+      { h: "La technique" },
+      { etapes: [
+        ["Repère les trois phrases", "Souligne la phrase du mot, entoure celle d'avant et celle d'après."],
+        ["Explique ces phrases avec tes mots", "Demande-toi : que dit l'auteur ici ? Redis-le simplement, comme à un camarade."],
+        ["Fais ressortir le sens du mot", "En expliquant les phrases, le sens logique du mot apparaît tout seul. Tu n'as plus qu'à l'écrire clairement."]
+      ] },
+
+      { h: "Exemple : « la force réfractaire du milieu ethnique »" },
+      { p: "Dans le texte de Bebey, on te demande d'expliquer cette expression. Le mot « réfractaire » est difficile. Regardons son contexte, au paragraphe 3." },
+      { def: [
+        ["Phrase d'avant", "« En préservant et perpétuant ainsi les différences entre communautés ou groupes ethniques, la tradition orale contribue à agrémenter la vie des hommes, de laquelle elle bannit la monotonie. »"],
+        ["Phrase du mot", "« Elle oppose à la civilisation uniforme ou homogène des nations la force réfractaire du milieu ethnique, de la croyance de petits groupes à des valeurs non codifiées par l'écrit, de l'enracinement enfin. »"],
+        ["Phrase d'après", "« Force perpétuellement en mouvement, force dynamique donc, grâce à laquelle le breton, le provençal, le bambara ou le lingala restent des réalités vivantes… »"]
+      ] },
+      { p: "Expliquons. Avant : la tradition orale garde les différences entre les groupes. Dans la phrase : elle « oppose » quelque chose à une civilisation qui voudrait que tout le monde soit pareil. Après : grâce à cette force, des langues comme le bambara ou le lingala restent vivantes. La force réfractaire, c'est donc une force qui s'oppose, qui résiste. On peut répondre :" },
+      { modele: "Dans ce texte, l'expression « la force réfractaire du milieu ethnique » désigne la capacité des petits groupes ethniques à résister à l'uniformisation que tente de leur imposer le monde extérieur." },
+      { p: "Tu vois que tu n'as pas eu besoin de dictionnaire : le contexte a tout dit." },
+
+      { h: "Un mot clé, ou une phrase entière" },
+      { p: "Quand l'expression contient un mot difficile, ton explication doit faire ressortir le sens de ce mot. Pour « les civilisations les plus rompues à l'écriture », le mot clé est « rompues » : « Cette expression désigne les civilisations les plus habituées à l'écriture, celles qui la pratiquent le mieux. »" },
+      { p: "Quand on te demande d'expliquer une phrase entière, simple à comprendre, explique ce qu'elle veut dire et à quoi elle sert dans le texte. Pour la dernière phrase de Bebey, « Si l'homme était né muet, […] y aurait-il jamais eu d'écriture ? » : « Cette phrase est une question qui n'attend pas de réponse. Par elle, l'auteur affirme que l'écriture est née de l'oralité, et que l'oral est donc à l'origine de l'écrit. »" },
+
+      { h: "Trois pièges à éviter" },
+      { def: [
+        ["Oublier le sens figuré", "Dans un texte sur la propagande, « intoxiquer » ne veut pas dire seulement « empoisonner ». Écris : « Au sens premier, intoxiquer, c'est empoisonner. Mais dans ce texte, le mot désigne un empoisonnement des esprits par la propagande. »"],
+        ["Changer la nature du mot", "Un nom s'explique par un nom, un verbe par un verbe. Le synonyme de « trépas » est « la mort », pas « mourir ». Le synonyme de « s'insurger » est « se révolter », pas « une révolte »."],
+        ["Confondre deux mots qui se ressemblent", "Un accès de colère n'est pas un excès de vitesse ; l'attitude d'une personne n'est pas l'altitude d'une montagne. Lis bien le mot demandé."]
+      ] },
+      { p: "Ouvre le texte et entraîne-toi : explique en contexte « une pointe de mépris » (paragraphe 2) et « la photographie du verbe » (paragraphe 6), en suivant les trois étapes." },
+      { texte: BEBEY },
+      { plie: { titre: "Voir des réponses possibles", liste: [
+        "L'expression « une pointe de mépris » désigne une légère nuance de dédain : ceux qui appellent la tradition orale « populaire » la regardent de haut, comme si elle valait moins que l'écrit.",
+        "L'expression « la photographie du verbe » signifie que l'écrit ne fait que fixer sur le papier la parole, comme une photo fixe une image : l'écrit est une copie de l'oral, qui existait avant lui."
+      ] } }
+    ]
+  },
+  {
+    id: "rediger-reponses", partie: "questions", titre: "Bien rédiger ses réponses", duree: "6 min", blocs: [
+      { p: "Tu sais maintenant trouver les réponses. Reste à bien les écrire. Une bonne réponse a trois qualités : elle est complète, elle est précise, et elle tient compte du contexte. Une réponse juste mais mal écrite perd des points." },
+
+      { h: "1. Une réponse complète" },
+      { p: "On l'a vu : jamais de style télégraphique. Une phrase entière, qui reprend les mots de la question, et qui justifie quand on te le demande." },
+      { def: [
+        ["Réponse maladroite", "Polémique : « nous ne voyons pas pourquoi on ferait l'un supérieur à l'autre »."],
+        ["Bonne réponse", "La tonalité dominante dans ce texte est la tonalité polémique, parce que l'auteur dénonce les prétentions des esclavagistes à la supériorité raciale. La phrase qui le montre est : « Nous ne voyons pas pourquoi on ferait l'un supérieur à l'autre. »"]
+      ] },
+
+      { h: "2. Une réponse précise" },
+      { p: "Précise ne veut pas dire longue. Va droit au but : le correcteur cherche une idée, pas un paragraphe qui tourne autour. On te demande par exemple d'expliquer en contexte : « C'est avec des bulletins de vote et non des balles que l'on dépose un tyran. »" },
+      { def: [
+        ["Réponse qui tourne en rond", "Les bulletins de vote sont des bouts de papier utilisés pour voter. Pendant les élections, il y a plusieurs candidats et chacun choisit celui qui lui plaît. En démocratie, on n'utilise pas de balles, c'est-à-dire qu'il n'y a pas de fusils…"],
+        ["Réponse précise", "En démocratie, c'est par les élections, et non par la violence, qu'un peuple peut se débarrasser d'un dirigeant qui l'opprime."]
+      ] },
+      { p: "Ne donne pas non plus plus que ce qu'on te demande. Si la question dit « Relevez une phrase », relève-en une seule. Si tu en donnes deux et que l'une est fausse, tu peux perdre tous les points de la question." },
+
+      { h: "3. Une réponse qui tient compte du contexte" },
+      { p: "Ta réponse parle de ce texte-là, pas du mot en général. Commence volontiers par « Dans ce texte, … » : cela t'oblige à rester dans le contexte, et le correcteur voit tout de suite que tu l'as fait." },
+
+      { h: "Avant de passer au résumé" },
+      { p: "Relis tes réponses en te posant trois questions. Ma réponse est-elle une phrase complète ? Répond-elle exactement à la question, sans plus ? Parle-t-elle bien du texte ? Si oui, tu peux passer au résumé. Et tu remarqueras que ces réponses t'ont fait comprendre le texte encore mieux : c'est exactement ce dont tu as besoin pour le résumer." }
+    ]
+  },
   { id: "resume", partie: "resume", titre: "Rédiger le résumé (contraction de texte)", duree: "", blocs: [] },
   { id: "production", partie: "production", titre: "La production écrite (essai ou discussion)", duree: "", blocs: [] }
 ];
@@ -210,5 +326,21 @@ export const QUIZ_RS: Record<string, QuestionQuiz[]> = {
     { q: "Une unité significative, c'est…", choix: ["toujours un paragraphe", "un morceau du texte qui développe une seule idée", "une phrase importante"], bonne: 1, pourquoi: "On découpe selon les idées, pas selon les paragraphes, et on donne un titre à chaque unité." },
     { q: "La situation d'énonciation répond à quatre questions. Lesquelles ?", choix: ["Qui parle, à qui, où, quand ?", "Quoi, comment, pourquoi, combien ?", "Thème, thèse, visée, structure ?"], bonne: 0, pourquoi: "Qui parle, à qui il parle, où et quand : c'est le cadre dans lequel le texte est écrit." },
     { q: "Dans « Certes, l'écrit est un progrès. Mais il est né de l'oral », la pensée de l'auteur est surtout…", choix: ["après « certes »", "après « mais »", "dans les deux, à égalité"], bonne: 1, pourquoi: "« Certes » introduit ce que l'auteur accorde aux autres ; « mais » introduit ce qu'il pense vraiment." }
+  ],
+  questions: [
+    { q: "À quoi servent les questions posées avant le résumé ?", choix: ["À vérifier que l'élève a compris le texte", "À noter l'orthographe", "À préparer la conclusion"], bonne: 0, pourquoi: "Les questions permettent au correcteur de vérifier que tu as bien compris le texte." },
+    { q: "Quelle est la meilleure réponse à « Quel est le thème du texte ? »", choix: ["La tradition orale.", "Thème : tradition orale et écriture.", "Le thème abordé dans ce texte est la place de la tradition orale face à l'écriture."], bonne: 2, pourquoi: "On répond toujours par une phrase complète qui reprend les mots de la question." },
+    { q: "Pour répondre sur la visée argumentative, tu peux commencer par…", choix: ["« La visée argumentative de l'auteur est que… »", "« Visée : … »", "« Je pense que… »"], bonne: 0, pourquoi: "C'est le début de phrase qui transforme ton « L'auteur voudrait que… » du brouillon en réponse complète." }
+  ],
+  vocabulaire: [
+    { q: "Le contexte d'un mot, c'est…", choix: ["sa définition dans le dictionnaire", "la phrase qui le contient, celle d'avant et celle d'après", "le titre du texte"], bonne: 1, pourquoi: "Le contexte, ce sont ces trois phrases : c'est là que tu trouves le sens du mot sans dictionnaire." },
+    { q: "Quelle est la bonne méthode pour expliquer un mot en contexte ?", choix: ["Donner tous les sens possibles du mot", "Expliquer les phrases du contexte : le sens du mot en ressort", "Recopier la phrase du texte"], bonne: 1, pourquoi: "En expliquant les phrases autour du mot, son sens logique apparaît." },
+    { q: "Quel est le bon synonyme du nom « trépas » ?", choix: ["mourir", "la mort", "mortel"], bonne: 1, pourquoi: "Un nom s'explique par un nom : le trépas, c'est la mort." },
+    { q: "Dans un texte sur la propagande, que vaut la réponse « intoxiquer, c'est empoisonner » ?", choix: ["Elle est complète", "Elle oublie le sens figuré du mot dans le texte", "Elle est fausse"], bonne: 1, pourquoi: "Il faut donner le sens dans le texte : un empoisonnement des esprits par la propagande." }
+  ],
+  "rediger-reponses": [
+    { q: "On te demande : « Relevez une phrase qui montre les avantages de la démocratie. » Que fais-tu ?", choix: ["J'en relève une seule, la plus juste", "J'en relève trois pour être sûr", "Je résume tout le paragraphe"], bonne: 0, pourquoi: "On ne donne pas plus que demandé : si l'une de tes phrases est fausse, tu peux perdre tous les points." },
+    { q: "Une réponse précise, c'est une réponse…", choix: ["très longue", "qui va droit à l'idée demandée", "écrite en style télégraphique"], bonne: 1, pourquoi: "Précise ne veut pas dire longue : le correcteur cherche une idée claire." },
+    { q: "Pourquoi commencer une explication par « Dans ce texte, … » ?", choix: ["Pour rester dans le contexte du texte", "Pour faire plus de mots", "C'est obligatoire au bac"], bonne: 0, pourquoi: "Cela t'oblige à expliquer le sens du mot dans ce texte-là, pas en général." }
   ]
 };
