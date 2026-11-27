@@ -11,6 +11,7 @@ import { EXERCICES_RS, NOMS_VERBES, exerciceRS, phrasesEssentielles, type Exerci
 import { BILANS_PE, CONNECTEURS_ATELIER, DEBUTS_REPONSES, INTRO_PE, JUGEMENT_PE, PHRASES_INTRO_PE, TECHNIQUES_RS, TRANSITION_PE } from "../data/resume-outils";
 import type { TexteEtudie } from "../data/cc-types";
 import { CarteTexte } from "./Resume";
+import { Segments } from "../components/SujetsOnglets";
 
 // Exercices du résumé de texte : textes corrigés pas à pas, et atelier où l'élève fait tout le sujet, de A à Z.
 // Adresses : #/rs/sujets, #/rs/corrige/<id>, #/rs/atelier/<id>. Tout le travail de l'atelier reste sur l'appareil.
@@ -114,7 +115,7 @@ export function progressionAtelier(e: ExerciceRS) {
 
 // ——— Liste des exercices ———
 
-export function SujetsRS() {
+export function SujetsRS({ vue }: { vue?: string }) {
   const corriges = EXERCICES_RS.filter(e => e.corrige), entrainement = EXERCICES_RS.filter(e => !e.corrige);
   const ligne = (e: ExerciceRS, href: string) => {
     const p = progressionAtelier(e);
@@ -130,22 +131,20 @@ export function SujetsRS() {
       </li>
     );
   };
+  const corrige = vue !== "entrainement";
   return (
     <Page>
+      <Segments groupe="rs-exercices" label="Exercices" items={[
+        { label: "Corrigés", href: "#/rs/sujets", actif: corrige },
+        { label: "Entraînement", href: "#/rs/entrainement", actif: !corrige }
+      ]} />
       <header class="page-header">
-        <h1 class="page-title">Exercices</h1>
-        <p class="lede">Des sujets complets : questions, résumé et production écrite.</p>
+        <h1 class="page-title">{corrige ? "Textes corrigés" : "Entraînement"}</h1>
+        <p class="lede">{corrige
+          ? "Tout le sujet pas à pas, de la lecture à la production écrite. Puis refais-le dans l'atelier."
+          : "L'atelier te guide étape par étape, et te montre ce que tu as oublié."}</p>
       </header>
-      <section class="rs-partie">
-        <h2 class="rs-partie-titre">Textes corrigés pas à pas</h2>
-        <p class="meta rs-partie-aide">Suis tout le travail, de la lecture à la production écrite. Puis refais-le toi-même dans l'atelier.</p>
-        <ol class="list">{corriges.map(e => ligne(e, `#/rs/corrige/${e.id}`))}</ol>
-      </section>
-      <section class="rs-partie">
-        <h2 class="rs-partie-titre">Textes pour t'entraîner</h2>
-        <p class="meta rs-partie-aide">L'atelier te guide étape par étape, et te montre ce que tu as oublié.</p>
-        <ol class="list">{entrainement.map(e => ligne(e, `#/rs/atelier/${e.id}`))}</ol>
-      </section>
+      <ol class="list">{corrige ? corriges.map(e => ligne(e, `#/rs/corrige/${e.id}`)) : entrainement.map(e => ligne(e, `#/rs/atelier/${e.id}`))}</ol>
     </Page>
   );
 }
@@ -307,7 +306,7 @@ function AtelierRSScreen({ id }: { id: string }) {
   const f = fourchette(e);
   const n = nbArguments(e);
   const pour = e.pe.verbe === "discuter" ? 2 : n;
-  const retour = e.corrige ? `#/rs/corrige/${id}` : "#/rs/sujets";
+  const retour = e.corrige ? `#/rs/corrige/${id}` : "#/rs/entrainement";
   const phase = ETAPES[etape].phase;
 
   const relie = blocs.filter(b => plein(a.reformulations[b.cle])).map((b, k) => avecConnecteur(k ? a.connecteurs[b.cle] : undefined, a.reformulations[b.cle]));

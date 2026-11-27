@@ -11,6 +11,7 @@ import { useMethode } from "../lib/methodes";
 import { marquer } from "../lib/progres";
 import { NotFound } from "./NotFound";
 import { Bloc } from "./Lecon";
+import { Segments } from "../components/SujetsOnglets";
 import { TexteCrayon } from "../components/Crayon";
 import { LECONS_RS, PARTIES_RS, QUIZ_RS, type BlocRS } from "../data/resume";
 import type { TexteEtudie } from "../data/cc-types";
@@ -244,7 +245,7 @@ function LeconRS({ id }: { id: string }) {
 const FRACTIONS = [{ d: 4, nom: "au quart" }, { d: 3, nom: "au tiers" }];
 
 /** Calculateur de mots : la fourchette à respecter, puis le compte du résumé de l'élève (règle du bac). */
-function OutilsRS() {
+function OutilsRS({ vue }: { vue?: string }) {
   const [total, setTotal] = useStored<string>("rs-calcul-total", "");
   const [div, setDiv] = useStored<number>("rs-calcul-fraction", 4);
   const [brouillon, setBrouillon] = useStored<string>("rs-calcul-brouillon", "");
@@ -256,11 +257,15 @@ function OutilsRS() {
   const etat = !cible || !compte ? "" : compte < min ? "court" : compte > max ? "long" : "ok";
   return (
     <Page>
+      <Segments groupe="rs-outils" label="Outils" items={[
+        { label: "Calculateur de mots", href: "#/rs/outils", actif: vue !== "aide" },
+        { label: "Aide-mémoire", href: "#/rs/aide", actif: vue === "aide" }
+      ]} />
       <header class="page-header">
-        <h1 class="page-title">Outils</h1>
-        <p class="lede">Le calculateur de mots, et tout ce qu'il faut garder sous la main pour la copie.</p>
+        <h1 class="page-title">{vue === "aide" ? "Aide-mémoire" : "Calculateur de mots"}</h1>
+        <p class="lede">{vue === "aide" ? "Tout ce qu'il faut garder sous la main pour la copie." : "Combien de mots doit faire ton résumé, et combien il en fait."}</p>
       </header>
-      <h2 class="section-title">Calculateur de mots</h2>
+      {vue !== "aide" && <>
       <section class="rs-calcul">
         <label class="rs-calcul-champ">
           <span>Nombre de mots du texte</span>
@@ -298,7 +303,8 @@ function OutilsRS() {
         </div>
         <p class="meta">Compté comme au bac : « l'école » = 2 mots, « c'est-à-dire » = 4 mots, un nombre en chiffres ou un sigle = 1 mot.</p>
       </section>
-      <h2 class="section-title">Pour la copie</h2>
+      </>}
+      {vue === "aide" && <>
       <details class="cc-plie rs-outil">
         <summary>Ce qu'on enlève dans un résumé</summary>
         <ul class="bullets">{["Les exemples et les illustrations", "Les explications et les répétitions", "Les données chiffrées", "Les reformulations de l'auteur (« en d'autres termes », « c'est-à-dire »)", "Les questions : on les transforme en affirmations"].map(x => <li key={x}>{x}</li>)}</ul>
@@ -328,6 +334,7 @@ function OutilsRS() {
           ["Ouverture", "Une question sur un problème voisin."]
         ]} />
       </details>
+      </>}
     </Page>
   );
 }
@@ -343,6 +350,8 @@ export function ResumeScreen({ path }: { path: string[] }) {
   switch (partie) {
     case "cours": return id ? <LeconRS id={id} /> : <CoursRS />;
     case "sujets": return <SujetsRS />;
+    case "entrainement": return <SujetsRS vue="entrainement" />;
+    case "aide": return <OutilsRS vue="aide" />;
     case "corrige": return id ? <CorrigeRS id={id} /> : <SujetsRS />;
     case "atelier": return id ? <AtelierRS id={id} /> : <SujetsRS />;
     case "outils": return <OutilsRS />;
