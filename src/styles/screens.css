@@ -1122,7 +1122,8 @@ html[data-univers="composa"] .bandeau-essai { display: none; }
 
 /* Le crayon : souligner, entourer, encadrer, annoter, gommer */
 .crayon { --encre-bleu: #1f4fa3; --encre-rouge: #c23b22; --encre-vert: #1d7a4c; }
-.crayon-prendre { float: right; display: inline-flex; align-items: center; gap: 6px; min-height: 34px; margin: 0 0 var(--s2) var(--s2); padding: 0 var(--s3); border-radius: 999px; border: 1.5px solid var(--green); background: var(--surface); color: var(--green); font: 600 var(--text-xs) var(--font-text); cursor: pointer; }
+.crayon-prendre-zone { position: sticky; top: calc(var(--topbar-h) + var(--band-h) + 8px); z-index: 5; display: flex; justify-content: flex-end; height: 0; overflow: visible; }
+.crayon-prendre { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; margin-top: -4px; padding: 0 var(--s3); border-radius: 999px; border: 1.5px solid var(--green); background: var(--surface); color: var(--green); font: 600 var(--text-xs) var(--font-text); box-shadow: 0 2px 10px rgba(0,0,0,.15); cursor: pointer; }
 .crayon-barre { position: sticky; top: calc(var(--topbar-h) + var(--band-h)); z-index: 5; margin: 0 0 var(--s2); padding: 6px 0 4px; background: var(--paper); border-bottom: 1px solid var(--line); }
 .rs-carte-texte .crayon-barre { background: var(--ochre-pale); }
 .crayon-ligne { display: flex; align-items: center; gap: 3px; }

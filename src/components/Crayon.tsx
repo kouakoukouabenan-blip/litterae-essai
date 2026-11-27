@@ -133,9 +133,12 @@ export function TexteCrayon({ id, texte, note }: { id: string; texte: string; no
   return (
     <div class={`crayon ${actif ? "is-actif" : ""}`}>
       {!actif ? (
-        <button type="button" class="crayon-prendre" onClick={() => setActif(true)}>
-          <Icon name="edit" size={18} />Crayon
-        </button>
+        // Reste à portée de main pendant qu'on fait défiler le texte.
+        <div class="crayon-prendre-zone">
+          <button type="button" class="crayon-prendre" onClick={() => setActif(true)}>
+            <Icon name="edit" size={18} />Crayon
+          </button>
+        </div>
       ) : (
         <div class="crayon-barre">
           <div class="crayon-ligne" role="toolbar" aria-label="Crayon">
